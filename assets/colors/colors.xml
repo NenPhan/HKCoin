@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Main -->
+    <color name="main01">#ffcb47</color>
+    <color name="main02">#2fc7c4</color>
+    <color name="main03">#00c7c4</color>
+    <color name="lightYellow">#fef1b5</color>
+</resources>
