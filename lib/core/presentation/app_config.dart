@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hkcoin/environment_config.dart';
 
 class AppConfig {
@@ -25,7 +24,7 @@ class AppConfig {
     _config!.flavorName = flavorName;
     _config!.secondsTimeout = secondsTimeout;
     EnvironmentConfig.getInstance(flavorName: flavorName);
-    await dotenv.load(fileName: EnvironmentConfig.fileName);
+    // await dotenv.load(fileName: EnvironmentConfig.fileName);
     return _config!;
   }
 

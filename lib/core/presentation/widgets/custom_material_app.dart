@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/app_config.dart';
 import 'package:hkcoin/core/presentation/app_routes.dart';
 import 'package:hkcoin/core/presentation/widgets/app_navigator_observer.dart';
+import 'package:hkcoin/pages/login_page.dart';
 import 'package:toastification/toastification.dart';
 
 class CustomMaterialApp extends StatelessWidget {
@@ -16,7 +18,7 @@ class CustomMaterialApp extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: ToastificationWrapper(
-        child: MaterialApp(
+        child: GetMaterialApp(
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
@@ -31,15 +33,16 @@ class CustomMaterialApp extends StatelessWidget {
           title: AppConfig().appName,
           theme: AppThemes.lightTheme(context),
           darkTheme: AppThemes.darkTheme(context),
-          themeMode: ThemeMode.light,
-          routes: AppRoutes.routes,
-          initialRoute: "",
+          themeMode: ThemeMode.dark,
+          getPages: AppGetRoutes.routes,
+          initialRoute: LoginPage.route,
           onUnknownRoute: (RouteSettings setting) {
             return MaterialPageRoute(
-              builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text("Coming soon")),
-                body: const Center(child: Text("Building in proccess")),
-              ),
+              builder:
+                  (context) => Scaffold(
+                    appBar: AppBar(title: const Text("Coming soon")),
+                    body: const Center(child: Text("Building in proccess")),
+                  ),
             );
           },
           navigatorObservers: [AppNavigatorObserver()],
