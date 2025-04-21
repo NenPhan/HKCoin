@@ -46,6 +46,7 @@ class CustomMaterialApp extends StatelessWidget {
             );
           },
           navigatorObservers: [AppNavigatorObserver()],
+          defaultTransition: Transition.rightToLeft,
         ),
       ),
     );

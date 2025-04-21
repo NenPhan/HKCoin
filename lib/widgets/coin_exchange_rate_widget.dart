@@ -32,7 +32,10 @@ class _CoinExchangeRateWidgetState extends State<CoinExchangeRateWidget> {
             textAlign: TextAlign.center,
             style: textTheme(context).bodyLarge,
           ),
-          Text("\$${oCcy.format(0.9)}", style: textTheme(context).titleMedium),
+          Text(
+            "\$${oCcy().format(0.9)}",
+            style: textTheme(context).titleMedium,
+          ),
         ],
       ),
     );

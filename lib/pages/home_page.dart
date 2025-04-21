@@ -1,6 +1,8 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/pages/home_body_page.dart';
+import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/models/bottom_bar_item_model.dart';
+import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/notch_bottom_bar.dart';
+import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/notch_bottom_bar_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,39 +13,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List icons = const [Icons.home, Icons.wallet, Icons.store, Icons.person];
+  List<BottomBarItem> items = const [
+    BottomBarItem(inActiveItem: Icon(Icons.home)),
+    BottomBarItem(inActiveItem: Icon(Icons.wallet)),
+    BottomBarItem(inActiveItem: Icon(Icons.qr_code)),
+    BottomBarItem(inActiveItem: Icon(Icons.store)),
+    BottomBarItem(inActiveItem: Icon(Icons.person)),
+  ];
+  var bottomController = NotchBottomBarController(index: 2);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(children: const [HomeBodyPage()]),
-
-      floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        backgroundColor: Colors.deepOrange,
-        onPressed: () {},
-        child: const Icon(Icons.qr_code),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        backgroundColor: Colors.grey[900],
-        activeIndex: 0,
-        gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.defaultEdge,
-        leftCornerRadius: 10,
-        rightCornerRadius: 10,
-
-        onTap: (index) {},
-        itemCount: icons.length,
-        tabBuilder: (index, isActive) {
-          return IconButton(
-            onPressed: () {},
-            icon: Icon(
-              icons[index],
-              color: isActive ? Colors.deepOrange : Colors.white,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView(children: const [HomeBodyPage()]),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: AnimatedNotchBottomBar(
+                notchBottomBarController: bottomController,
+                color: Colors.grey[900]!,
+                notchColor: Colors.deepOrange,
+                bottomBarItems: items,
+                kIconSize: 20,
+                kBottomRadius: 0,
+                showBottomRadius: false,
+                removeMargins: true,
+                showBlurBottomBar: false,
+                onTap: (index) {},
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

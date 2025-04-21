@@ -7,7 +7,6 @@ import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/presentation/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
-import 'package:hkcoin/environment_config.dart';
 
 class DioClient {
   DioClient({
@@ -26,7 +25,7 @@ class DioClient {
   Future<dynamic> call(DioParams fields, {String? contentType}) async {
     String url = '';
     if (fields.url == null) {
-      url = '${EnvironmentConfig.apiUrl}${fields.endpoint}';
+      url = '${AppConfig().apiUrl}${fields.endpoint}';
     } else {
       url = '${fields.url}${fields.endpoint}';
     }
@@ -55,7 +54,7 @@ class DioClient {
     log(logString);
     final rawResponse = (await _connect(
       fields.httpMethod,
-      url: (fields.url ?? EnvironmentConfig.apiUrl) + fields.endpoint,
+      url: (fields.url ?? AppConfig().apiUrl) + fields.endpoint,
       headers: header,
       body: fields.body,
       contentType: contentType,
@@ -68,12 +67,14 @@ class DioClient {
     }
   }
 
-  Future<Response> _connect(HttpMethod method,
-      {required String url,
-      String? contentType,
-      Map<String, String>? headers,
-      dynamic body,
-      Map<String, dynamic>? queryParameters}) async {
+  Future<Response> _connect(
+    HttpMethod method, {
+    required String url,
+    String? contentType,
+    Map<String, String>? headers,
+    dynamic body,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     if (headers != null) {
       dio.options = BaseOptions(
         // dont use because some time in app call more one api
@@ -91,34 +92,15 @@ class DioClient {
 
     switch (method) {
       case HttpMethod.DELETE:
-        return dio.delete(
-          url,
-          data: body,
-          queryParameters: queryParameters,
-        );
+        return dio.delete(url, data: body, queryParameters: queryParameters);
       case HttpMethod.GET:
-        return dio.get(
-          url,
-          queryParameters: queryParameters,
-        );
+        return dio.get(url, queryParameters: queryParameters);
       case HttpMethod.POST:
-        return (dio.post(
-          url,
-          data: body,
-          queryParameters: queryParameters,
-        ));
+        return (dio.post(url, data: body, queryParameters: queryParameters));
       case HttpMethod.PUT:
-        return (dio.put(
-          url,
-          data: body,
-          queryParameters: queryParameters,
-        ));
+        return (dio.put(url, data: body, queryParameters: queryParameters));
       case HttpMethod.PATCH:
-        return (dio.patch(
-          url,
-          data: body,
-          queryParameters: queryParameters,
-        ));
+        return (dio.patch(url, data: body, queryParameters: queryParameters));
     }
   }
 }
@@ -150,7 +132,9 @@ extension ResponseExtension on Response {
           } else if (errors.values.toList()[0][0] is String) {
             errorText = errors.values.toList()[0][0];
           }
-        } else if (data["message"] != null && data["message"] is String && data["message"] != "") {
+        } else if (data["message"] != null &&
+            data["message"] is String &&
+            data["message"] != "") {
           errorText = (data["code"] ?? "").toString() + data["message"];
         } else {
           errorText = defaultErr;
@@ -178,14 +162,16 @@ class DioParams {
   final bool shouldHandleResponse;
   final List<int> allowedStatusCodes;
 
-  DioParams(this.httpMethod,
-      {this.url,
-      required this.endpoint,
-      this.headers,
-      this.params,
-      this.body,
-      this.dynamicResponse = false,
-      this.needAuthrorize = true,
-      this.shouldHandleResponse = true,
-      this.allowedStatusCodes = const [200]});
+  DioParams(
+    this.httpMethod, {
+    this.url,
+    required this.endpoint,
+    this.headers,
+    this.params,
+    this.body,
+    this.dynamicResponse = false,
+    this.needAuthrorize = true,
+    this.shouldHandleResponse = true,
+    this.allowedStatusCodes = const [200],
+  });
 }

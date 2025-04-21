@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,11 +24,13 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const Spacer(),
               // Bitcoin and chart illustration
-              // Image.asset(
-              //   'assets/images/login_illustration.png',
-              //   height: 200,
-              //   fit: BoxFit.contain,
-              // ),
+              Hero(
+                tag: "main-logo",
+                child: Assets.images.hkcLogo.image(
+                  height: 100,
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
               const SizedBox(height: 32),
               const Text(
                 'Let\'s Get Started',

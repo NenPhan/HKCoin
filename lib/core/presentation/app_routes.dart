@@ -10,7 +10,7 @@ class AppRoutes {
 
 class AppGetRoutes {
   static get routes => [
-    GetPage(name: LoginPage.route, page: () => LoginPage()),
-    GetPage(name: HomePage.route, page: () => HomePage()),
+    GetPage(name: LoginPage.route, page: () => const LoginPage()),
+    GetPage(name: HomePage.route, page: () => const HomePage()),
   ];
 }

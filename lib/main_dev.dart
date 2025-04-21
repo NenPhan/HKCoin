@@ -7,10 +7,13 @@ import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await AppConfig.init(
-    appName: "Marketplace",
+  AppConfig.init(
+    appName: "HKCoin",
     flavorName: AppFlavor.DEV,
     secondsTimeout: 30,
+    apiUrl: '',
+    resourceIcon: '',
+    socketUrl: '',
   );
   Injection.setup();
 
