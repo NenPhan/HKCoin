@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hkcoin/pages/home_body_page.dart';
+import 'package:hkcoin/pages/profile_page.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/models/bottom_bar_item_model.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/notch_bottom_bar.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/notch_bottom_bar_controller.dart';
+
+const homeBottomPadding = 100.0;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  PageController controller = PageController(initialPage: 0);
   List<BottomBarItem> items = const [
     BottomBarItem(inActiveItem: Icon(Icons.home)),
     BottomBarItem(inActiveItem: Icon(Icons.wallet)),
@@ -27,7 +31,17 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Stack(
           children: [
-            PageView(children: const [HomeBodyPage()]),
+            PageView(
+              controller: controller,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                const HomeBodyPage(),
+                Container(color: Colors.red),
+                Container(color: Colors.yellow),
+                Container(color: Colors.blue),
+                const ProfilePage(),
+              ],
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedNotchBottomBar(
@@ -40,7 +54,9 @@ class _HomePageState extends State<HomePage> {
                 showBottomRadius: false,
                 removeMargins: true,
                 showBlurBottomBar: false,
-                onTap: (index) {},
+                onTap: (index) {
+                  controller.jumpToPage(index);
+                },
               ),
             ),
           ],

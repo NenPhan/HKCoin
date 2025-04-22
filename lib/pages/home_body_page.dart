@@ -4,7 +4,11 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
+import 'package:hkcoin/pages/home_page.dart';
 import 'package:hkcoin/widgets/coin_exchange_rate_widget.dart';
+import 'package:hkcoin/widgets/home_banner_widget.dart';
+import 'package:hkcoin/widgets/home_product_widget.dart';
+import 'package:hkcoin/widgets/news_widget.dart';
 
 class HomeBodyPage extends StatefulWidget {
   const HomeBodyPage({super.key});
@@ -60,222 +64,13 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              SpacingRow(
-                spacing: 15,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        height: 100,
-                        child: Image.network(
-                          "",
-                          fit: BoxFit.cover,
-                          errorBuilder:
-                              (context, error, stackTrace) => Container(
-                                color: Colors.grey[900],
-                                child: Center(
-                                  child: Text(
-                                    "Banner",
-                                    style: textTheme(context).bodyLarge,
-                                  ),
-                                ),
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        height: 100,
-                        child: Image.network(
-                          "",
-                          fit: BoxFit.cover,
-                          errorBuilder:
-                              (context, error, stackTrace) => Container(
-                                color: Colors.grey[900],
-                                child: Center(
-                                  child: Text(
-                                    "Banner",
-                                    style: textTheme(context).bodyLarge,
-                                  ),
-                                ),
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              const HomeBannerWidget(),
               const CoinExchangeRateWidget(),
-              SpacingRow(
-                spacing: scrSize(context).width * 0.1,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Colors.grey[900],
-                        child: SpacingColumn(
-                          children: [
-                            Image.network(
-                              "https://hakacoin.net/media/1786/file/news/HKCNews-Breaking-5.webp",
-                              fit: BoxFit.fitWidth,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                scrSize(context).width * 0.03,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Monad Seeks \$200 Million Funding from Paradigm",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: textTheme(context).bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "The layer-1 blockchain project Monad is in discussions with several investment funds, including Paradigm, regarding conducting a fundraising round with a value of up to \$200 million.",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: textTheme(context).bodySmall
-                                        ?.copyWith(fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Colors.grey[900],
-                        child: SpacingColumn(
-                          children: [
-                            Image.network(
-                              "https://hakacoin.net/media/1786/file/news/HKCNews-Breaking-5.webp",
-                              fit: BoxFit.fitWidth,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                scrSize(context).width * 0.03,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Monad Seeks \$200 Million Funding from Paradigm",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: textTheme(context).bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "The layer-1 blockchain project Monad is in discussions with several investment funds, including Paradigm, regarding conducting a fundraising round with a value of up to \$200 million.",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: textTheme(context).bodySmall
-                                        ?.copyWith(fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SpacingRow(
-                spacing: scrSize(context).width * 0.1,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Colors.grey[900],
-                        child: SpacingColumn(
-                          children: [
-                            Image.network(
-                              "https://hakacoin.net/media/1786/file/news/HKCNews-Breaking-5.webp",
-                              fit: BoxFit.fitWidth,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                scrSize(context).width * 0.03,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Monad Seeks \$200 Million Funding from Paradigm",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: textTheme(context).bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "The layer-1 blockchain project Monad is in discussions with several investment funds, including Paradigm, regarding conducting a fundraising round with a value of up to \$200 million.",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: textTheme(context).bodySmall
-                                        ?.copyWith(fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Colors.grey[900],
-                        child: SpacingColumn(
-                          children: [
-                            Image.network(
-                              "https://hakacoin.net/media/1786/file/news/HKCNews-Breaking-5.webp",
-                              fit: BoxFit.fitWidth,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(
-                                scrSize(context).width * 0.03,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Monad Seeks \$200 Million Funding from Paradigm",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: textTheme(context).bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "The layer-1 blockchain project Monad is in discussions with several investment funds, including Paradigm, regarding conducting a fundraising round with a value of up to \$200 million.",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: textTheme(context).bodySmall
-                                        ?.copyWith(fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 10),
+              const HomeProductWidget(),
+              const SizedBox(height: 10),
+              const NewsWidget(),
+              const SizedBox(height: homeBottomPadding),
             ],
           ),
         ),
