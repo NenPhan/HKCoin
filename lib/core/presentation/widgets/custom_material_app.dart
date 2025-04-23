@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:hkcoin/core/presentation/app_config.dart';
-import 'package:hkcoin/core/presentation/app_routes.dart';
+import 'package:hkcoin/core/config/app_config.dart';
+import 'package:hkcoin/core/config/app_routes.dart';
 import 'package:hkcoin/core/presentation/widgets/app_navigator_observer.dart';
-import 'package:hkcoin/presentation.pages/login_page.dart';
+import 'package:hkcoin/presentation.pages/splash_page.dart';
 import 'package:toastification/toastification.dart';
 
 class CustomMaterialApp extends StatelessWidget {
@@ -35,7 +35,7 @@ class CustomMaterialApp extends StatelessWidget {
           darkTheme: AppThemes.darkTheme(context),
           themeMode: ThemeMode.dark,
           getPages: AppGetRoutes.routes,
-          initialRoute: LoginPage.route,
+          initialRoute: SplashPage.route,
           onUnknownRoute: (RouteSettings setting) {
             return MaterialPageRoute(
               builder:

@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/err/exception.dart';
-import 'package:hkcoin/core/presentation/app_config.dart';
+import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 
 class DioClient {

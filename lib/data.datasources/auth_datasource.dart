@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
 import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
-import 'package:hkcoin/core/presentation/app_config.dart';
+import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 

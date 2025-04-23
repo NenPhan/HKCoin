@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/injection.dart';
-import 'package:hkcoin/core/presentation/app_config.dart';
+import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
 
 void main() async {
