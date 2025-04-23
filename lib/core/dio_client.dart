@@ -49,13 +49,12 @@ class DioClient {
       header['Authorization'] = 'Bearer ${token ?? ''}';
       logString += '\nAccess Token: $token\n';
     }
-    if (fields.needBearerToken) {
-      String username = 'test';
-      String password = '123£';
-      String basicAuth =
-          'Basic ${base64.encode(utf8.encode('$username:$password'))}';
-      header['Authorization'] = basicAuth;
-      logString += '\n Authorization: $basicAuth\n';
+    if (fields.needBasicAuth) {
+      String? basicAuth = AppConfig().basicAuthorization;
+      if (basicAuth != null) {
+        header['Authorization'] = basicAuth;
+        logString += '\n Authorization: $basicAuth\n';
+      }
     }
     logString +=
         ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n\n=========================');
@@ -130,27 +129,19 @@ extension ResponseExtension on Response {
         String errorText = "";
         if (data is String) {
           errorText = data;
-        } else if (data["errors"] != null) {
-          inspect(data);
-          Map<dynamic, dynamic> errors = data["errors"];
-          if (errors.values.isEmpty ||
-              errors.values.toList()[0] == null ||
-              (errors.values.toList()[0] as List).isEmpty) {
-            errorText = defaultErr;
-          } else if (errors.values.toList()[0][0] is String) {
-            errorText = errors.values.toList()[0][0];
-          }
-        } else if (data["message"] != null &&
-            data["message"] is String &&
-            data["message"] != "") {
-          errorText = (data["code"] ?? "").toString() + data["message"];
+        } else if (data["Message"] != null) {
+          errorText = data["Message"];
         } else {
           errorText = defaultErr;
         }
         throw ServerException(message: errorText);
       }
     } catch (e) {
-      throw ServerException(message: "Network error");
+      if (e is ServerException) {
+        rethrow;
+      } else {
+        throw ServerException(message: "Network error");
+      }
     }
   }
 

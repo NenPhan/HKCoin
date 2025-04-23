@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
+import 'package:hkcoin/presentation.controllers/login_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/widgets/button_loading_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final LoginController controller = LoginController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,60 +48,86 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 32),
               // Phone number input with country code
-              Column(
-                children: [
-                  TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: 'Username',
-                      hintStyle: TextStyle(color: Colors.grey[400]),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
+              Obx(
+                () => IgnorePointer(
+                  ignoring: controller.isLoading.value,
+                  child: Form(
+                    key: controller.formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: controller.usernameController,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            hintText: tr("Account.Login.Fields.UserName"),
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                          ),
+                          validator:
+                              (value) =>
+                                  value != "" && value != null
+                                      ? null
+                                      : tr(
+                                        "Account.Register.Errors.UsernameIsNotProvided",
+                                      ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: controller.passwordController,
+                          style: const TextStyle(color: Colors.white),
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: tr("Account.Login.Fields.Password"),
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                          ),
+                          validator:
+                              (value) =>
+                                  value != "" && value != null
+                                      ? null
+                                      : tr(
+                                        "Account.Register.Errors.PasswordIsNotProvided",
+                                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller:
-                        TextEditingController(), // You'll need to create a new controller for password
-                    style: const TextStyle(color: Colors.white),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      hintStyle: TextStyle(color: Colors.grey[400]),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               const SizedBox(height: 24),
               // Next button
-              ElevatedButton(
-                onPressed: () {
-                  Get.offAllNamed(HomePage.route);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Obx(() {
+                return ElevatedButton(
+                  onPressed: () {
+                    if (controller.isLoading.value) return;
+                    controller.login(() {
+                      Get.offAllNamed(HomePage.route);
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Next',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                  child:
+                      controller.isLoading.value
+                          ? const ButtonLoadingWidget()
+                          : Text(
+                            tr('Account.Login'),
+                            style: textTheme(context).titleSmall,
+                          ),
+                );
+              }),
               const Spacer(),
             ],
           ),

@@ -26,8 +26,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   flutter_svg: ^2.0.16
   get: ^4.7.2
-  # curved_navigation_bar: ^1.0.6
-  # animated_notch_bottom_bar: ^1.0.3
+  flutter_spinkit: ^5.2.1
 
 dev_dependencies:
   build_runner:

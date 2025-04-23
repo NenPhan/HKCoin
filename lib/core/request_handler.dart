@@ -1,11 +1,8 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/toast.dart';
-import 'network/network_info.dart';
 
 Future<T> handleRemoteRequest<T>(
   Future<T> Function() onRequest, {
@@ -15,13 +12,6 @@ Future<T> handleRemoteRequest<T>(
     try {
       var value = await onRequest();
       return value;
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
-        throw NetWorkException(
-          NetworkFailure(message: 'err.connection_timeout'.tr()),
-        );
-      }
-      throw ServerException(message: 'err.an_error_has_occured'.tr());
     } on ServerException {
       rethrow;
     } catch (e) {
@@ -33,26 +23,19 @@ Future<T> handleRemoteRequest<T>(
   }
 }
 
-Future<Either<Failure, T>> handleRepositoryCall<T>(
-  NetworkInfo networkInfo, {
+Future<Either<Failure, T>> handleRepositoryCall<T>({
   required Future<Either<Failure, T>> Function() onRemote,
-  required Future<Either<Failure, T>> Function() onLocal,
+  bool shoudleHandleError = true,
 }) async {
-  if (await networkInfo.isConnected) {
-    try {
-      return await onRemote();
-    } on NetWorkException catch (e) {
-      return Left(NetworkFailure(message: e.failure.message));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    }
-  } else {
-    try {
-      Either<Failure, T> value = await onLocal();
-      return value;
-    } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
-    }
+  if (!shoudleHandleError) {
+    return await onRemote();
+  }
+  try {
+    return await onRemote();
+  } on NetWorkException catch (e) {
+    return Left(NetworkFailure(message: e.failure.message));
+  } on ServerException catch (e) {
+    return Left(ServerFailure(message: e.message));
   }
 }
 

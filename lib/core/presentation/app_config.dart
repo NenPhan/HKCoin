@@ -5,7 +5,7 @@ class AppConfig {
 
   factory AppConfig() {
     if (_config == null) {
-      log('need call init Strorage');
+      log('AppConfig need to call init');
     }
     return _config!;
   }
@@ -19,6 +19,7 @@ class AppConfig {
     required String resourceIcon,
     required String socketUrl,
     required int secondsTimeout,
+    String? basicAuthorization,
   }) {
     _config ??= AppConfig._();
     _config!.appName = appName;
@@ -27,6 +28,7 @@ class AppConfig {
     _config!.resourceIcon = resourceIcon;
     _config!.socketUrl = socketUrl;
     _config!.secondsTimeout = secondsTimeout;
+    _config!.basicAuthorization = basicAuthorization;
     return _config!;
   }
 
@@ -36,6 +38,7 @@ class AppConfig {
   late final String resourceIcon;
   late final String socketUrl;
   late final int secondsTimeout;
+  late final String? basicAuthorization;
 
   bool get isDevelopment => flavorName == AppFlavor.DEV;
 }

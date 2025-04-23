@@ -16,7 +16,7 @@ class Storage {
 
   factory Storage() {
     if (_instance == null) {
-      log('need call init Storage');
+      log('Storage need to call init!!');
     }
     return _instance!;
   }

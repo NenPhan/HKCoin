@@ -8,17 +8,14 @@ import 'package:hkcoin/core/request_handler.dart';
 
 class AuthDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
-  void login(String username, String password) async {
+  Future login(String username, String password) async {
     await handleRemoteRequest(() async {
       var body = {"Username": username, "Password": password};
 
       var response = await dioClient.call(
         DioParams(
           HttpMethod.POST,
-          needBearerToken: false,
           endpoint: Endpoints.login,
-          url: AppConfig().apiUrl,
-          headers: {},
           body: body,
           needBasicAuth: true,
         ),
