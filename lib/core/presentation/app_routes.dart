@@ -1,6 +1,6 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:hkcoin/pages/home_page.dart';
-import 'package:hkcoin/pages/login_page.dart';
+import 'package:hkcoin/presentation.pages/home_page.dart';
+import 'package:hkcoin/presentation.pages/login_page.dart';
 
 class AppRoutes {
   static get routes => {

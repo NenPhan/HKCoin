@@ -1,0 +1,31 @@
+import 'package:dio/dio.dart';
+import 'package:hkcoin/core/constants/endpoint.dart';
+import 'package:hkcoin/core/dio_client.dart';
+import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/core/presentation/app_config.dart';
+import 'package:hkcoin/core/presentation/storage.dart';
+import 'package:hkcoin/core/request_handler.dart';
+
+class AuthDatasource {
+  final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
+  void login(String username, String password) async {
+    await handleRemoteRequest(() async {
+      var body = {"Username": username, "Password": password};
+
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          needBearerToken: false,
+          endpoint: Endpoints.login,
+          url: AppConfig().apiUrl,
+          headers: {},
+          body: body,
+          needBasicAuth: true,
+        ),
+        contentType: "application/json",
+      );
+
+      Storage().saveToken(response["Data"]["accessToken"]);
+    });
+  }
+}

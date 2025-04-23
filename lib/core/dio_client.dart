@@ -40,7 +40,7 @@ class DioClient {
     }
     Map<String, String> header = fields.headers ?? <String, String>{};
     String logString = '======>API REQUEST<======\n';
-    if (fields.needAuthrorize) {
+    if (fields.needBearerToken) {
       //after login succes storage had token, if first init storage dont need init
       if (_storage == null && Storage.hadInited) {
         _storage = Storage();
@@ -48,6 +48,14 @@ class DioClient {
       String? token = _storage?.getToken;
       header['Authorization'] = 'Bearer ${token ?? ''}';
       logString += '\nAccess Token: $token\n';
+    }
+    if (fields.needBearerToken) {
+      String username = 'test';
+      String password = '123£';
+      String basicAuth =
+          'Basic ${base64.encode(utf8.encode('$username:$password'))}';
+      header['Authorization'] = basicAuth;
+      logString += '\n Authorization: $basicAuth\n';
     }
     logString +=
         ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n\n=========================');
@@ -158,7 +166,8 @@ class DioParams {
   final Map<String, String>? headers;
   final Map<String, String>? params;
   final dynamic body;
-  final bool needAuthrorize;
+  final bool needBearerToken;
+  final bool needBasicAuth;
   final bool shouldHandleResponse;
   final List<int> allowedStatusCodes;
 
@@ -170,7 +179,8 @@ class DioParams {
     this.params,
     this.body,
     this.dynamicResponse = false,
-    this.needAuthrorize = true,
+    this.needBearerToken = false,
+    this.needBasicAuth = false,
     this.shouldHandleResponse = true,
     this.allowedStatusCodes = const [200],
   });

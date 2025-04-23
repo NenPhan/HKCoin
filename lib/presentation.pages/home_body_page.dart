@@ -4,7 +4,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
-import 'package:hkcoin/pages/home_page.dart';
+import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/coin_exchange_rate_widget.dart';
 import 'package:hkcoin/widgets/home_banner_widget.dart';
 import 'package:hkcoin/widgets/home_product_widget.dart';

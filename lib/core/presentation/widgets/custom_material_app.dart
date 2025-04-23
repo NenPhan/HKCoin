@@ -5,7 +5,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/app_config.dart';
 import 'package:hkcoin/core/presentation/app_routes.dart';
 import 'package:hkcoin/core/presentation/widgets/app_navigator_observer.dart';
-import 'package:hkcoin/pages/login_page.dart';
+import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:toastification/toastification.dart';
 
 class CustomMaterialApp extends StatelessWidget {

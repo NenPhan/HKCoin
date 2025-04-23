@@ -7,8 +7,10 @@ import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'network/network_info.dart';
 
-Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest,
-    {bool shoudleHandleError = true}) async {
+Future<T> handleRemoteRequest<T>(
+  Future<T> Function() onRequest, {
+  bool shoudleHandleError = true,
+}) async {
   if (shoudleHandleError) {
     try {
       var value = await onRequest();
@@ -16,7 +18,8 @@ Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest,
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
         throw NetWorkException(
-            NetworkFailure(message: 'err.connection_timeout'.tr()));
+          NetworkFailure(message: 'err.connection_timeout'.tr()),
+        );
       }
       throw ServerException(message: 'err.an_error_has_occured'.tr());
     } on ServerException {
@@ -30,9 +33,11 @@ Future<T> handleRemoteRequest<T>(Future<T> Function() onRequest,
   }
 }
 
-Future<Either<Failure, T>> handleRepositoryCall<T>(NetworkInfo networkInfo,
-    {required Future<Either<Failure, T>> Function() onRemote,
-    required Future<Either<Failure, T>> Function() onLocal}) async {
+Future<Either<Failure, T>> handleRepositoryCall<T>(
+  NetworkInfo networkInfo, {
+  required Future<Either<Failure, T>> Function() onRemote,
+  required Future<Either<Failure, T>> Function() onLocal,
+}) async {
   if (await networkInfo.isConnected) {
     try {
       return await onRemote();
@@ -52,11 +57,13 @@ Future<Either<Failure, T>> handleRepositoryCall<T>(NetworkInfo networkInfo,
 }
 
 handleEither<B, T extends Failure, S>(
-    Either<T, S> either, B Function(S r) onResult,
-    {bool shouldHandleError = true,
-    Function(String message)? onError,
-    bool? shouldUseDefaultError,
-    String? defaultError}) {
+  Either<T, S> either,
+  B Function(S r) onResult, {
+  bool shouldHandleError = true,
+  Function(String message)? onError,
+  bool? shouldUseDefaultError,
+  String? defaultError,
+}) {
   either.fold((l) {
     if (onError != null) {
       onError(l.message ?? "");
@@ -72,8 +79,10 @@ handleEither<B, T extends Failure, S>(
 }
 
 handleEitherReturn<B, T extends Failure, S>(
-    Either<T, S> either, B Function(S r) onResult,
-    {Function()? onError}) {
+  Either<T, S> either,
+  B Function(S r) onResult, {
+  Function()? onError,
+}) {
   return either.fold((l) {
     handleError(l.message ?? "");
     if (onError != null) {

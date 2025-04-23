@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
-import 'package:hkcoin/pages/home_page.dart';
+import 'package:hkcoin/presentation.pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               // Phone number input with country code
               Column(
                 children: [
-                  TextField(
+                  TextFormField(
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Username',
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
+                  TextFormField(
                     controller:
                         TextEditingController(), // You'll need to create a new controller for password
                     style: const TextStyle(color: Colors.white),
