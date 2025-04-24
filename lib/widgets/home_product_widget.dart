@@ -29,7 +29,10 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
               var product = widget.products[index];
               return GestureDetector(
                 onTap: () {
-                  Get.toNamed(ProductDetailPage.route);
+                  Get.toNamed(
+                    ProductDetailPage.route,
+                    arguments: ProductDetailPageParam(product: product),
+                  );
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
@@ -37,13 +40,16 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
                     color: Colors.grey[900],
                     child: Stack(
                       children: [
-                        Image.network(
-                          product.image.thumbUrl.contains("http")
-                              ? product.image.thumbUrl
-                              : "https:${product.image.thumbUrl}",
-                          fit: BoxFit.cover,
-                          width: 220,
-                          height: 180,
+                        Hero(
+                          tag: "product${product.id.toString()}",
+                          child: Image.network(
+                            product.image.thumbUrl.contains("http")
+                                ? product.image.thumbUrl
+                                : "https:${product.image.thumbUrl}",
+                            fit: BoxFit.cover,
+                            width: 220,
+                            height: 180,
+                          ),
                         ),
                         Container(
                           width: 220,

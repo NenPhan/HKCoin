@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyStorage {
   final tokenKey = "/token_key";
+  final customerKey = "/customer_key";
 }
 
 class Storage {
@@ -39,7 +42,7 @@ class Storage {
   }
 }
 
-extension TokenStrorage on Storage {
+extension TokenStorage on Storage {
   Future<void> saveToken(String value) async {
     await preferences!.setString(_key.tokenKey, value);
   }
@@ -49,4 +52,20 @@ extension TokenStrorage on Storage {
   }
 
   String? get getToken => preferences!.getString(_key.tokenKey);
+}
+
+extension CustomerStorage on Storage {
+  Future<void> saveCustomer(CustomerInfo value) async {
+    await preferences!.setString(_key.customerKey, jsonEncode(value.toJson()));
+  }
+
+  Future<CustomerInfo?> getCustomer() async {
+    var savedString = preferences!.getString(_key.customerKey);
+    if (savedString == null) return null;
+    return CustomerInfo.fromJson(jsonDecode(savedString));
+  }
+
+  Future deleteCustomer() async {
+    await preferences!.remove(_key.customerKey);
+  }
 }

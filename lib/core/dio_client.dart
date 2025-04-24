@@ -40,13 +40,13 @@ class DioClient {
     }
     Map<String, String> header = fields.headers ?? <String, String>{};
     String logString = '======>API REQUEST<======\n';
-    if (fields.needBearerToken) {
+    if (fields.needAccessToken) {
       //after login succes storage had token, if first init storage dont need init
       if (_storage == null && Storage.hadInited) {
         _storage = Storage();
       }
       String? token = _storage?.getToken;
-      header['Authorization'] = 'Bearer ${token ?? ''}';
+      header['accessToken'] = token ?? "";
       logString += '\nAccess Token: $token\n';
     }
     if (fields.needBasicAuth) {
@@ -157,7 +157,7 @@ class DioParams {
   final Map<String, String>? headers;
   final Map<String, String>? params;
   final dynamic body;
-  final bool needBearerToken;
+  final bool needAccessToken;
   final bool needBasicAuth;
   final bool shouldHandleResponse;
   final List<int> allowedStatusCodes;
@@ -170,7 +170,7 @@ class DioParams {
     this.params,
     this.body,
     this.dynamicResponse = false,
-    this.needBearerToken = false,
+    this.needAccessToken = false,
     this.needBasicAuth = false,
     this.shouldHandleResponse = true,
     this.allowedStatusCodes = const [200],

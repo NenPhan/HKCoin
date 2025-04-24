@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/home_body_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
@@ -57,19 +56,29 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
               const SizedBox(height: 10),
               Text(tr("Ví Tiền Thưởng"), style: textTheme(context).bodyLarge),
               const SizedBox(height: 10),
-              Center(
-                child: Text(
-                  "${oCcy().format(1000.005)} HKC",
-                  style: textTheme(context).titleLarge?.copyWith(
-                    fontSize: scrSize(context).width * 0.08,
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  "≈ \$${oCcy(format: "#,##0").format(100000)}",
-                  style: textTheme(context).titleLarge,
-                ),
+              GetBuilder<HomeBodyController>(
+                id: "wallet-info",
+                builder: (controller) {
+                  return SpacingColumn(
+                    spacing: 10,
+                    children: [
+                      Center(
+                        child: Text(
+                          controller.walletInfo?.walletShopping ?? "",
+                          style: textTheme(context).titleLarge?.copyWith(
+                            fontSize: scrSize(context).width * 0.08,
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          controller.walletInfo?.profitsShopping ?? "",
+                          style: textTheme(context).titleLarge,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 10),
               const HomeBannerWidget(),
