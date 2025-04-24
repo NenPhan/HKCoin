@@ -12,10 +12,10 @@ void main() async {
     flavorName: AppFlavor.DEV,
     secondsTimeout: 30,
     apiUrl: 'https://sandbox.hakacoin.net/odata/v1/',
-    resourceIcon: '',
     socketUrl: '',
     basicAuthorization:
         'Basic NDY2OTc4YjU5YTQ1MzcxMzg1MWFjYTI5OGM0NmY2NjU6NTliZTZmMzljZTdmYWU1YzEyNTkyNmJiOGJkNWNiODU=',
+    language: 'vi-VN',
   );
   Injection.setup();
 

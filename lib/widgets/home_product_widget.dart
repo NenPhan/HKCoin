@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/data.models/product.dart';
+import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 
 class HomeProductWidget extends StatefulWidget {
-  const HomeProductWidget({super.key});
+  const HomeProductWidget({super.key, required this.products});
+  final List<Product> products;
 
   @override
   State<HomeProductWidget> createState() => _HomeProductWidgetState();
@@ -21,47 +25,56 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
           scrollDirection: Axis.horizontal,
           child: SpacingRow(
             spacing: 15,
-            children: List.generate(5, (index) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  color: Colors.grey[900],
-                  child: Stack(
-                    children: [
-                      Image.network(
-                        "https://sandbox.hakacoin.net/media/1251/catalog/Kem%20xoa%20b%C3%B3p%20to%C3%A0n%20th%C3%A2n-01.png?size=550",
-                        fit: BoxFit.cover,
-                        width: 250,
-                        height: 130,
-                      ),
-                      Container(
-                        width: 250,
-                        height: 130,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerRight,
-                            end: Alignment.centerLeft,
-                            colors: [Colors.black87, Colors.transparent],
+            children: List.generate(widget.products.length, (index) {
+              var product = widget.products[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed(ProductDetailPage.route);
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    color: Colors.grey[900],
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          product.image.thumbUrl.contains("http")
+                              ? product.image.thumbUrl
+                              : "https:${product.image.thumbUrl}",
+                          fit: BoxFit.cover,
+                          width: 220,
+                          height: 180,
+                        ),
+                        Container(
+                          width: 220,
+                          height: 180,
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerRight,
+                              end: Alignment.centerLeft,
+                              colors: [Colors.black87, Colors.transparent],
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        right: 20,
-                        top: 50,
-                        child: Column(
-                          children: [
-                            Text(
-                              "Normal",
-                              style: textTheme(context).titleSmall,
-                            ),
-                            Text(
-                              "\$100 - \$499",
-                              style: textTheme(context).bodyLarge,
-                            ),
-                          ],
+                        Positioned(
+                          right: 20,
+                          top: 70,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                product.name,
+                                style: textTheme(context).titleSmall,
+                              ),
+                              Text(
+                                "\$${product.price.minimumCustomerEnteredPrice.toInt()} - \$${product.price.maximumCustomerEnteredPrice.toInt()}",
+                                style: textTheme(context).bodyLarge,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

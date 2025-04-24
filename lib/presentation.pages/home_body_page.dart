@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
+import 'package:hkcoin/presentation.controllers/home_body_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/coin_exchange_rate_widget.dart';
 import 'package:hkcoin/widgets/home_banner_widget.dart';
@@ -18,6 +20,8 @@ class HomeBodyPage extends StatefulWidget {
 }
 
 class _HomeBodyPageState extends State<HomeBodyPage> {
+  final HomeBodyController homeBodyController = Get.put(HomeBodyController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,12 +46,16 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                   const Spacer(),
                   IconButton(
                     onPressed: () {},
+                    icon: const Icon(Icons.shopping_bag, size: 30),
+                  ),
+                  IconButton(
+                    onPressed: () {},
                     icon: const Icon(Icons.notifications, size: 30),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              Text("Ví Tiền Thưởng".tr(), style: textTheme(context).bodyLarge),
+              Text(tr("Ví Tiền Thưởng"), style: textTheme(context).bodyLarge),
               const SizedBox(height: 10),
               Center(
                 child: Text(
@@ -67,7 +75,12 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
               const HomeBannerWidget(),
               const CoinExchangeRateWidget(),
               const SizedBox(height: 10),
-              const HomeProductWidget(),
+              GetBuilder<HomeBodyController>(
+                id: "product-list",
+                builder:
+                    (controller) =>
+                        HomeProductWidget(products: controller.products),
+              ),
               const SizedBox(height: 10),
               const NewsWidget(),
               const SizedBox(height: homeBottomPadding),
