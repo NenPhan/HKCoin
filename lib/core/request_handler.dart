@@ -77,7 +77,7 @@ handleEitherReturn<B, T extends Failure, S>(
 Future handleError(String message, {bool shouldUseDefaultError = true}) async {
   try {
     // because test getit dont init so Thinking to much about injection this AppMessage to all bloc ?
-    Toast().showErrorToast(message);
+    Toast.showErrorToast(message);
     log(message);
   } catch (e) {
     return;

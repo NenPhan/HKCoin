@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
+import 'package:hkcoin/presentation.controllers/cart_controller.dart';
 import 'package:hkcoin/presentation.controllers/home_body_controller.dart';
+import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/coin_exchange_rate_widget.dart';
+import 'package:hkcoin/widgets/custom_icon_button.dart';
 import 'package:hkcoin/widgets/home_banner_widget.dart';
 import 'package:hkcoin/widgets/home_product_widget.dart';
 import 'package:hkcoin/widgets/news_widget.dart';
@@ -43,13 +46,21 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                     child: Assets.images.hkcLogo.image(height: 50),
                   ),
                   const Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.shopping_bag, size: 30),
+                  GetBuilder<CartController>(
+                    id: "home-cart-icon",
+                    builder: (controller) {
+                      return CustomIconButton(
+                        icon: const Icon(Icons.shopping_bag, size: 30),
+                        onTap: () {
+                          Get.toNamed(CartPage.route);
+                        },
+                        noticeBadge: controller.cart?.items.isNotEmpty ?? false,
+                      );
+                    },
                   ),
-                  IconButton(
-                    onPressed: () {},
+                  CustomIconButton(
                     icon: const Icon(Icons.notifications, size: 30),
+                    onTap: () {},
                   ),
                 ],
               ),

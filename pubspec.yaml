@@ -19,7 +19,6 @@ dependencies:
   easy_localization: ^3.0.1
   toastification: ^2.3.0
   carousel_slider: ^5.0.0
-  flutter_html: ^3.0.0-beta.2
   shimmer: ^3.0.0
   dots_indicator: ^4.0.1
   uuid: ^4.5.1

@@ -10,6 +10,7 @@ import 'package:hkcoin/data.models/wallet_info.dart';
 
 class AuthDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
+
   Future login(String username, String password) async {
     await handleRemoteRequest(() async {
       var body = {"Username": username, "Password": password};

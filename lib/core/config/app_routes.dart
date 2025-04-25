@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
@@ -19,5 +20,6 @@ class AppGetRoutes {
       name: ProductDetailPage.route,
       page: () => const ProductDetailPage(),
     ),
+    GetPage(name: CartPage.route, page: () => const CartPage()),
   ];
 }

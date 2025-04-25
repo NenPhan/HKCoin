@@ -129,6 +129,8 @@ extension ResponseExtension on Response {
         String errorText = "";
         if (data is String) {
           errorText = data;
+        } else if (data["message"] != null) {
+          errorText = data["message"];
         } else if (data["Message"] != null) {
           errorText = data["Message"];
         } else {

@@ -44,19 +44,30 @@ class _HomePageState extends State<HomePage> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: AnimatedNotchBottomBar(
-                notchBottomBarController: bottomController,
-                color: Colors.grey[900]!,
-                notchColor: Colors.deepOrange,
-                bottomBarItems: items,
-                kIconSize: 20,
-                kBottomRadius: 0,
-                showBottomRadius: false,
-                removeMargins: true,
-                showBlurBottomBar: false,
-                onTap: (index) {
-                  controller.jumpToPage(index);
-                },
+              child: Container(
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black54,
+                      blurRadius: 10,
+                      offset: Offset(0, 20),
+                    ),
+                  ],
+                ),
+                child: AnimatedNotchBottomBar(
+                  notchBottomBarController: bottomController,
+                  color: Colors.grey[900]!,
+                  notchColor: Colors.deepOrange,
+                  bottomBarItems: items,
+                  kIconSize: 20,
+                  kBottomRadius: 0,
+                  showBottomRadius: false,
+                  removeMargins: true,
+                  showBlurBottomBar: false,
+                  onTap: (index) {
+                    controller.jumpToPage(index);
+                  },
+                ),
               ),
             ),
           ],

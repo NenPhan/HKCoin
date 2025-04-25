@@ -1323,7 +1323,7 @@
   "Enums.ReturnRequestStatus.Received": "Received",
   "Enums.ReturnRequestStatus.RequestRejected": "Request rejected",
   "Enums.ReturnRequestStatus.ReturnAuthorized": "Return authorized",
-  "Enums.RuleScope.Cart": "Cart",
+  "Enums.RuleScope.Cart": "Giỏ hàng",
   "Enums.RuleScope.Cart.Hint": "Rule to grant discounts to the customer or offer shipping and payment methods.",
   "Enums.RuleScope.Customer": "Customer",
   "Enums.RuleScope.Customer.Hint": "Rule to automatically assign customers to customer roles per scheduled task.",
