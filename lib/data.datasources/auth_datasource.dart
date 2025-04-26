@@ -6,6 +6,7 @@ import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
+import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 
 class AuthDatasource {
@@ -26,6 +27,22 @@ class AuthDatasource {
       );
 
       Storage().saveToken(response["Data"]["accessToken"]);
+    });
+  }
+
+  Future register(RegisterForm form) async {
+    await handleRemoteRequest(() async {
+      var body = form.toJson();
+
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.register,
+          body: body,
+          needBasicAuth: true,
+        ),
+        contentType: "application/json",
+      );
     });
   }
 

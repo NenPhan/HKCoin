@@ -3,6 +3,7 @@ import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
+import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
 
 class AppRoutes {
@@ -15,6 +16,7 @@ class AppGetRoutes {
   static get routes => [
     GetPage(name: SplashPage.route, page: () => const SplashPage()),
     GetPage(name: LoginPage.route, page: () => const LoginPage()),
+    GetPage(name: RegisterPage.route, page: () => const RegisterPage()),
     GetPage(name: HomePage.route, page: () => const HomePage()),
     GetPage(
       name: ProductDetailPage.route,

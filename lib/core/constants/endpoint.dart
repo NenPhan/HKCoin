@@ -1,5 +1,6 @@
 class Endpoints {
-  static String login = "customers/Login";
+  static String login = "Customers/Login";
+  static String register = "Customers/Register";
   static String getProduct = "Products";
   static String getCustomerInfo = "Customers/Me/";
   static String getWalletInfo = "Wallets/Dashboard";

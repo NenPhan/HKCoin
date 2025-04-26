@@ -5,6 +5,7 @@ import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/login_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/button_loading_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -26,8 +27,8 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
               // Bitcoin and chart illustration
               Hero(
                 tag: "main-logo",
@@ -79,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: controller.passwordController,
                           style: const TextStyle(color: Colors.white),
-                          obscureText: controller.showPassword.value,
+                          obscureText: !controller.showPassword.value,
                           decoration: InputDecoration(
                             hintText: tr("Account.Login.Fields.Password"),
                             hintStyle: TextStyle(color: Colors.grey[400]),
@@ -139,7 +140,26 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                 );
               }),
-              const Spacer(),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Get.toNamed(RegisterPage.route);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[900],
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child:
+                    controller.isLoading.value
+                        ? const ButtonLoadingWidget()
+                        : Text(
+                          tr('Account.Register'),
+                          style: textTheme(context).titleSmall,
+                        ),
+              ),
             ],
           ),
         ),

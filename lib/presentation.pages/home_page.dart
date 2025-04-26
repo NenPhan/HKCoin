@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
+import 'package:hkcoin/presentation.pages/coming_soon_page.dart';
 import 'package:hkcoin/presentation.pages/home_body_page.dart';
 import 'package:hkcoin/presentation.pages/profile_page.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/models/bottom_bar_item_model.dart';
@@ -77,12 +78,12 @@ class _HomePageState extends State<HomePage> {
             PageView(
               controller: controller,
               physics: const NeverScrollableScrollPhysics(),
-              children: [
-                const HomeBodyPage(),
-                Container(color: Colors.red),
-                Container(color: Colors.yellow),
-                Container(color: Colors.blue),
-                const ProfilePage(),
+              children: const [
+                HomeBodyPage(),
+                ComingSoonPage(),
+                ComingSoonPage(),
+                ComingSoonPage(),
+                ProfilePage(),
               ],
             ),
             Align(

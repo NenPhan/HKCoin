@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/cart.dart';
@@ -8,10 +9,12 @@ class CartController extends GetxController {
   Cart? cart;
 
   void getCartData() async {
-    handleEither(await CartRepository().getCart(), (r) {
-      cart = r;
-    });
-    update(["cart", "home-cart-icon"]);
+    if (Storage().getToken != null) {
+      handleEither(await CartRepository().getCart(), (r) {
+        cart = r;
+      });
+      update(["cart", "home-cart-icon"]);
+    }
   }
 
   Future<bool> addToCart({required int productId, required int price}) async {

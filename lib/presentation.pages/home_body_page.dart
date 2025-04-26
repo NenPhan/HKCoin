@@ -65,31 +65,54 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              Text(tr("Ví Tiền Thưởng"), style: textTheme(context).bodyLarge),
-              const SizedBox(height: 10),
-              GetBuilder<HomeBodyController>(
-                id: "wallet-info",
-                builder: (controller) {
-                  return SpacingColumn(
-                    spacing: 10,
-                    children: [
-                      Center(
-                        child: Text(
-                          controller.walletInfo?.walletShopping ?? "",
-                          style: textTheme(context).titleLarge?.copyWith(
-                            fontSize: scrSize(context).width * 0.08,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          controller.walletInfo?.profitsShopping ?? "",
-                          style: textTheme(context).titleLarge,
-                        ),
-                      ),
-                    ],
-                  );
-                },
+              Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: scrSize(context).width * 0.03,
+                ),
+                decoration: BoxDecoration(
+                  // color: Colors.deepOrange,
+                  gradient: const LinearGradient(
+                    colors: [Colors.black, Colors.deepOrange],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tr("Ví Tiền Thưởng"),
+                      style: textTheme(context).bodyLarge,
+                    ),
+                    const SizedBox(height: 10),
+                    GetBuilder<HomeBodyController>(
+                      id: "wallet-info",
+                      builder: (controller) {
+                        return SpacingColumn(
+                          spacing: 10,
+                          children: [
+                            Center(
+                              child: Text(
+                                controller.walletInfo?.walletShopping ?? "",
+                                style: textTheme(context).titleLarge?.copyWith(
+                                  fontSize: scrSize(context).width * 0.08,
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                controller.walletInfo?.profitsShopping ?? "",
+                                style: textTheme(context).titleLarge,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
               const HomeBannerWidget(),
