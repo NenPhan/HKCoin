@@ -39,6 +39,7 @@ class Storage {
 
   Future<void> dispose() async {
     await preferences?.remove(_key.tokenKey);
+    await preferences?.remove(_key.customerKey);
   }
 }
 

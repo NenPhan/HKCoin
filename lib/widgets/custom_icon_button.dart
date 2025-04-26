@@ -21,6 +21,7 @@ class _CustomIconButtonState extends State<CustomIconButton> {
     return Stack(
       children: [
         IconButton(
+          padding: EdgeInsets.zero,
           onPressed: () {
             widget.onTap.call();
           },

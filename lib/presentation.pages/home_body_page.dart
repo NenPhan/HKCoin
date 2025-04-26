@@ -93,7 +93,14 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
               ),
               const SizedBox(height: 10),
               const HomeBannerWidget(),
-              const CoinExchangeRateWidget(),
+              GetBuilder<HomeBodyController>(
+                id: "exchange-rate",
+                builder: (controller) {
+                  return CoinExchangeRateWidget(
+                    data: controller.rxchangeRateData ?? "",
+                  );
+                },
+              ),
               const SizedBox(height: 10),
               GetBuilder<HomeBodyController>(
                 id: "product-list",

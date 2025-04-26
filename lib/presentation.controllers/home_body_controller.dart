@@ -4,6 +4,7 @@ import 'package:hkcoin/data.models/product.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.repositories/auth_repository.dart';
 import 'package:hkcoin/data.repositories/product_repository.dart';
+import 'package:signalr_core/signalr_core.dart';
 
 class HomeBodyController extends GetxController {
   RxBool isLoadingWallet = false.obs;
@@ -11,11 +12,13 @@ class HomeBodyController extends GetxController {
 
   WalletInfo? walletInfo;
   List<Product> products = [];
+  String? rxchangeRateData;
 
   @override
   void onInit() {
     getProductsData();
     getCustomerData();
+    getKHCoinData();
     super.onInit();
   }
 
@@ -35,5 +38,29 @@ class HomeBodyController extends GetxController {
     });
     isLoadingProduct.value = false;
     update(["product-list"]);
+  }
+
+  void getKHCoinData() async {
+    final connection =
+        HubConnectionBuilder()
+            .withUrl(
+              'https://sandbox.hakacoin.net/hkc-hub/',
+              HttpConnectionOptions(
+                logging: (level, message) {
+                  // print(message);
+                },
+              ),
+            )
+            .build();
+
+    await connection.start();
+
+    connection.on('ReceiveExchangeRateData', (message) {
+      // print(message.toString());
+      if (message != null && message.isNotEmpty) {
+        rxchangeRateData = message.first;
+      }
+      update(["exchange-rate"]);
+    });
   }
 }

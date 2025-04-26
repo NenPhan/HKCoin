@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 
 class CoinExchangeRateWidget extends StatefulWidget {
-  const CoinExchangeRateWidget({super.key});
+  const CoinExchangeRateWidget({super.key, required this.data});
+  final String data;
 
   @override
   State<CoinExchangeRateWidget> createState() => _CoinExchangeRateWidgetState();
@@ -32,10 +32,7 @@ class _CoinExchangeRateWidgetState extends State<CoinExchangeRateWidget> {
             textAlign: TextAlign.center,
             style: textTheme(context).bodyLarge,
           ),
-          Text(
-            "\$${oCcy().format(0.9)}",
-            style: textTheme(context).titleMedium,
-          ),
+          Text(widget.data, style: textTheme(context).titleMedium),
         ],
       ),
     );

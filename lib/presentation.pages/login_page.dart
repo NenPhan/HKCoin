@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
-                              vertical: 12,
+                              vertical: 20,
                             ),
                           ),
                           validator:
@@ -79,14 +79,25 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: controller.passwordController,
                           style: const TextStyle(color: Colors.white),
-                          obscureText: true,
+                          obscureText: controller.showPassword.value,
                           decoration: InputDecoration(
                             hintText: tr("Account.Login.Fields.Password"),
                             hintStyle: TextStyle(color: Colors.grey[400]),
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
-                              vertical: 12,
+                              vertical: 20,
+                            ),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                controller.showPassword.value =
+                                    !controller.showPassword.value;
+                              },
+                              child: Icon(
+                                controller.showPassword.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
                             ),
                           ),
                           validator:

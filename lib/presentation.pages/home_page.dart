@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/presentation.pages/home_body_page.dart';
 import 'package:hkcoin/presentation.pages/profile_page.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/models/bottom_bar_item_model.dart';
@@ -17,14 +18,56 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   PageController controller = PageController(initialPage: 0);
-  List<BottomBarItem> items = const [
-    BottomBarItem(inActiveItem: Icon(Icons.home)),
-    BottomBarItem(inActiveItem: Icon(Icons.wallet)),
-    BottomBarItem(inActiveItem: Icon(Icons.qr_code)),
-    BottomBarItem(inActiveItem: Icon(Icons.store)),
-    BottomBarItem(inActiveItem: Icon(Icons.person)),
+  NotchBottomBarController bottomController = NotchBottomBarController();
+  List<BottomBarItem> items = [
+    const BottomBarItem(inActiveItem: Icon(Icons.qr_code, color: Colors.white)),
   ];
-  var bottomController = NotchBottomBarController(index: 2);
+  void getItems(int index) {
+    items = [
+      BottomBarItem(
+        inActiveItem: Icon(
+          Icons.home,
+          color: index == 0 ? Colors.deepOrange : Colors.white,
+          size: scrSize(context).width * 0.07,
+        ),
+      ),
+      BottomBarItem(
+        inActiveItem: Icon(
+          Icons.wallet,
+          color: index == 1 ? Colors.deepOrange : Colors.white,
+          size: scrSize(context).width * 0.07,
+        ),
+      ),
+      const BottomBarItem(
+        inActiveItem: Icon(Icons.qr_code, color: Colors.white),
+      ),
+      BottomBarItem(
+        inActiveItem: Icon(
+          Icons.store,
+          color: index == 3 ? Colors.deepOrange : Colors.white,
+          size: scrSize(context).width * 0.07,
+        ),
+      ),
+      BottomBarItem(
+        inActiveItem: Icon(
+          Icons.person,
+          color: index == 4 ? Colors.deepOrange : Colors.white,
+          size: scrSize(context).width * 0.07,
+        ),
+      ),
+    ];
+    bottomController.index = 2;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getItems((controller.page ?? 0).toInt());
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +109,7 @@ class _HomePageState extends State<HomePage> {
                   showBlurBottomBar: false,
                   onTap: (index) {
                     controller.jumpToPage(index);
+                    getItems(index);
                   },
                 ),
               ),

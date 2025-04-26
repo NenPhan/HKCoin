@@ -5,14 +5,16 @@ import 'package:hkcoin/data.repositories/auth_repository.dart';
 
 class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();
+
   final TextEditingController usernameController = TextEditingController(
-    text: 'hkccoiner',
+    text: '',
   );
   final TextEditingController passwordController = TextEditingController(
-    text: 'Admin123@',
+    text: '',
   );
 
   RxBool isLoading = false.obs;
+  RxBool showPassword = false.obs;
 
   void login(VoidCallback onLogedIn) async {
     isLoading.value = true;
