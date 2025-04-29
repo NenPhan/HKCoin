@@ -75,4 +75,17 @@ class AuthDatasource {
       return WalletInfo.fromJson(response["Data"]);
     });
   }
+
+  Future logout() async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.logout,
+          needBasicAuth: true,
+          needAccessToken: true,
+        ),
+      );
+    });
+  }
 }

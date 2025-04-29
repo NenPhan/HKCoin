@@ -1,24 +1,29 @@
 import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/data.models/news.dart';
 import 'package:hkcoin/data.models/product.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/news_repository.dart';
 import 'package:hkcoin/data.repositories/product_repository.dart';
 import 'package:signalr_core/signalr_core.dart';
 
 class HomeBodyController extends GetxController {
   RxBool isLoadingWallet = false.obs;
   RxBool isLoadingProduct = false.obs;
+  RxBool isLoadingNews = false.obs;
 
   WalletInfo? walletInfo;
   List<Product> products = [];
   String? rxchangeRateData;
+  List<News> news = [];
 
   @override
   void onInit() {
     getProductsData();
     getCustomerData();
     getKHCoinData();
+    getNewsData();
     super.onInit();
   }
 
@@ -62,5 +67,14 @@ class HomeBodyController extends GetxController {
       }
       update(["exchange-rate"]);
     });
+  }
+
+  void getNewsData() async {
+    isLoadingNews.value = true;
+    await handleEither(await NewsRepository().getNews(), (r) {
+      news = r;
+    });
+    isLoadingNews.value = false;
+    update(["news-list"]);
   }
 }

@@ -119,6 +119,7 @@ extension ResponseExtension on Response {
     try {
       Map<String, dynamic> json;
       if ((allowedStatusCodes.contains(statusCode))) {
+        if (data == "") return {};
         if (data is! Map<String, dynamic>) {
           json = jsonDecode(data);
         } else {
@@ -142,12 +143,12 @@ extension ResponseExtension on Response {
       if (e is ServerException) {
         rethrow;
       } else {
-        throw ServerException(message: "Network error");
+        throw ServerException(message: defaultErr);
       }
     }
   }
 
-  static String defaultErr = 'err.an_error_has_occured'.tr();
+  static String defaultErr = 'Identity.Error.DefaultError'.tr();
   //It seems that the connection was not successful. Please try again.
 }
 

@@ -7,6 +7,7 @@ import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/button_loading_widget.dart';
+import 'package:hkcoin/widgets/main_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -117,27 +118,15 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24),
               // Next button
               Obx(() {
-                return ElevatedButton(
-                  onPressed: () {
+                return MainButton(
+                  isLoading: controller.isLoading.value,
+                  text: tr('Account.Login'),
+                  onTap: () {
                     if (controller.isLoading.value) return;
                     controller.login(() {
                       Get.offAllNamed(HomePage.route);
                     });
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child:
-                      controller.isLoading.value
-                          ? const ButtonLoadingWidget()
-                          : Text(
-                            tr('Account.Login'),
-                            style: textTheme(context).titleSmall,
-                          ),
                 );
               }),
               const SizedBox(height: 10),

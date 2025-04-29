@@ -23,7 +23,7 @@ class CartDatasource {
       );
 
       return Cart.fromJson(response["Data"]);
-    }, shoudleHandleError: false);
+    });
   }
 
   Future<void> addToCart(int productId, int price) async {

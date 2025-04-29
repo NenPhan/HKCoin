@@ -29,6 +29,7 @@ dependencies:
   html: ^0.15.6
   signalr_core: ^1.1.2
   flutter_launcher_icons: ^0.14.3
+  expandable: ^5.0.1
 
 dev_dependencies:
   build_runner:

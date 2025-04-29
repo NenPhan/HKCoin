@@ -13,6 +13,7 @@ import 'package:hkcoin/widgets/custom_icon_button.dart';
 import 'package:hkcoin/widgets/home_banner_widget.dart';
 import 'package:hkcoin/widgets/home_product_widget.dart';
 import 'package:hkcoin/widgets/news_widget.dart';
+import 'package:hkcoin/widgets/shimmer_container.dart';
 
 class HomeBodyPage extends StatefulWidget {
   const HomeBodyPage({super.key});
@@ -65,54 +66,61 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 20,
-                  horizontal: scrSize(context).width * 0.03,
-                ),
-                decoration: BoxDecoration(
-                  // color: Colors.deepOrange,
-                  gradient: const LinearGradient(
-                    colors: [Colors.black, Colors.deepOrange],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      tr("Ví Tiền Thưởng"),
-                      style: textTheme(context).bodyLarge,
-                    ),
-                    const SizedBox(height: 10),
-                    GetBuilder<HomeBodyController>(
-                      id: "wallet-info",
-                      builder: (controller) {
-                        return SpacingColumn(
-                          spacing: 10,
+              GetBuilder<HomeBodyController>(
+                id: "wallet-info",
+                builder: (controller) {
+                  return controller.isLoadingWallet.value
+                      ? ShimmerContainer(
+                        height: (scrSize(context).width * 0.08) * 5,
+                      )
+                      : Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: scrSize(context).width * 0.03,
+                        ),
+                        decoration: BoxDecoration(
+                          // color: Colors.deepOrange,
+                          gradient: const LinearGradient(
+                            colors: [Colors.black, Colors.deepOrange],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Center(
-                              child: Text(
-                                controller.walletInfo?.walletShopping ?? "",
-                                style: textTheme(context).titleLarge?.copyWith(
-                                  fontSize: scrSize(context).width * 0.08,
-                                ),
-                              ),
+                            Text(
+                              tr("Ví Tiền Thưởng"),
+                              style: textTheme(context).bodyLarge,
                             ),
-                            Center(
-                              child: Text(
-                                controller.walletInfo?.profitsShopping ?? "",
-                                style: textTheme(context).titleLarge,
-                              ),
+                            const SizedBox(height: 10),
+                            SpacingColumn(
+                              spacing: 10,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    controller.walletInfo?.walletShopping ?? "",
+                                    style: textTheme(
+                                      context,
+                                    ).titleLarge?.copyWith(
+                                      fontSize: scrSize(context).width * 0.08,
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    controller.walletInfo?.profitsShopping ??
+                                        "",
+                                    style: textTheme(context).titleLarge,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                        ),
+                      );
+                },
               ),
               const SizedBox(height: 10),
               const HomeBannerWidget(),
@@ -132,7 +140,15 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                         HomeProductWidget(products: controller.products),
               ),
               const SizedBox(height: 10),
-              const NewsWidget(),
+              GetBuilder<HomeBodyController>(
+                id: "news-list",
+                builder: (controller) {
+                  return NewsListWidget(
+                    news: controller.news,
+                    isLoading: controller.isLoadingNews.value,
+                  );
+                },
+              ),
               const SizedBox(height: homeBottomPadding),
             ],
           ),

@@ -44,4 +44,13 @@ class AuthRepository {
       },
     );
   }
+
+  Future<Either<Failure, void>> logout() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await AuthDatasource().logout();
+        return const Right(null);
+      },
+    );
+  }
 }

@@ -10,6 +10,7 @@ import 'package:hkcoin/presentation.popups/delete_cart_popup.dart';
 import 'package:hkcoin/presentation.popups/input_price_popup.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/custom_icon_button.dart';
+import 'package:hkcoin/widgets/main_button.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -52,24 +53,12 @@ class _CartPageState extends State<CartPage> {
                               style: textTheme(context).titleMedium,
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
+                          MainButton(
+                            width: null,
+                            text: tr("Trở về trang chủ"),
+                            onTap: () {
                               Get.back();
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                                horizontal: 16,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              tr("Trở về trang chủ"),
-                              style: textTheme(context).titleSmall,
-                            ),
                           ),
                         ],
                       ),
@@ -197,29 +186,15 @@ class _CartPageState extends State<CartPage> {
                     ),
                   ),
                   const Spacer(),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(scrSize(context).width * 0.03),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        var result = await controller.deleteCart();
-                        if (result) {
-                          Get.back();
-                          Toast.showSuccessToast(tr("Thanh toán thành công"));
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        tr("Enums.WalletPostingReason.Purchase"),
-                        style: textTheme(context).titleSmall,
-                      ),
-                    ),
+                  MainButton(
+                    text: tr("Enums.WalletPostingReason.Purchase"),
+                    onTap: () async {
+                      var result = await controller.deleteCart();
+                      if (result) {
+                        Get.back();
+                        Toast.showSuccessToast(tr("Thanh toán thành công"));
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
                 ],

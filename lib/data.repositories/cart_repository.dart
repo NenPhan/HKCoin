@@ -11,7 +11,6 @@ class CartRepository {
         var info = await CartDatasource().getCart();
         return Right(info);
       },
-      shoudleHandleError: false,
     );
   }
 

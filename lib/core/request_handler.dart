@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/toast.dart';
@@ -8,12 +10,15 @@ Future<T> handleRemoteRequest<T>(
   Future<T> Function() onRequest, {
   bool shoudleHandleError = true,
 }) async {
+  String defaultErr = 'Identity.Error.DefaultError'.tr();
   if (shoudleHandleError) {
     try {
       var value = await onRequest();
       return value;
     } on ServerException {
       rethrow;
+    } on DioError {
+      throw ServerException(message: defaultErr);
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -50,9 +55,9 @@ handleEither<B, T extends Failure, S>(
   either.fold((l) {
     if (onError != null) {
       onError(l.message ?? "");
+      log(defaultError ?? l.message ?? "");
     }
     if (shouldHandleError) {
-      log(defaultError ?? l.message ?? "");
       handleError(
         defaultError ?? l.message ?? "",
         shouldUseDefaultError: defaultError != null || l is NetworkFailure,

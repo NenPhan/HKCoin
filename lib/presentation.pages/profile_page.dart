@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
+import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
+import 'package:hkcoin/widgets/expandale_button.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,10 +16,39 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  List items = [
+    {"name": "Rút tiền", "icon": Icons.local_atm},
+    {"name": "Đội của tôi", "icon": Icons.people_alt_outlined},
+    {
+      "name": "Tài Khoản",
+      "items": [
+        {"name": "Thông tin khách hàng", "icon": Icons.person},
+        {"name": "Gói đầu tư của tôi", "icon": Icons.description},
+      ],
+    },
+  ];
   @override
   void initState() {
     Get.put(ProfileController());
     super.initState();
+  }
+
+  _buildButton(Map<String, dynamic> item, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: () {
+        onTap?.call();
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: scrSize(context).height * 0.02),
+        child: SpacingRow(
+          spacing: scrSize(context).width * 0.05,
+          children: [
+            Icon(item["icon"], size: scrSize(context).width * 0.07),
+            Text(tr(item["name"]), style: textTheme(context).bodyLarge),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -26,58 +57,80 @@ class _ProfilePageState extends State<ProfilePage> {
       id: "profile",
       builder: (controller) {
         return Scaffold(
-          body: Padding(
-            padding: EdgeInsets.all(scrSize(context).width * 0.03),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    tr("Profile"),
-                    style: textTheme(context).titleLarge,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  controller.customerInfo?.fullName ?? "",
-                  style: textTheme(context).titleLarge,
-                ),
-                Text(
-                  controller.customerInfo?.email ?? "",
-                  style: textTheme(context).bodyMedium,
-                ),
-                Text(
-                  "0${controller.customerInfo?.phone ?? ""}",
-                  style: textTheme(context).bodyMedium,
-                ),
-                const SizedBox(height: 50),
-                Center(
-                  child: SizedBox(
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(scrSize(context).width * 0.03),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Center(
+                  //   child: Text(
+                  //     tr("Profile"),
+                  //     style: textTheme(context).titleLarge,
+                  //   ),
+                  // ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: scrSize(context).height * 0.02,
+                    ),
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Storage().dispose();
-                        Get.offAllNamed(LoginPage.route);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        'Logout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    height: scrSize(context).height * 0.15,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black,
+                          Colors.deepOrange,
+                          Colors.grey[900]!,
+                        ],
+                        stops: const [0.1, 0.8, 1],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
                       ),
                     ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          controller.customerInfo?.fullName ?? "",
+                          style: textTheme(context).titleLarge,
+                        ),
+                        Text(
+                          controller.customerInfo?.email ?? "",
+                          style: textTheme(context).bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  ...List.generate(items.length, (index) {
+                    if (items[index]["items"] != null) {
+                      return ExpandaleButton(
+                        title: items[index]["name"],
+                        items: List.generate(items[index]["items"].length, (
+                          index2,
+                        ) {
+                          return _buildButton(items[index]["items"][index2]);
+                        }),
+                      );
+                    }
+                    return _buildButton(items[index]);
+                  }),
+                  GetBuilder<ProfileController>(
+                    id: "logout-button",
+                    builder: (controller) {
+                      return _buildButton(
+                        {"name": "Account.Logout", "icon": Icons.logout},
+                        onTap: () {
+                          controller.logout(() {
+                            Storage().dispose();
+                            Get.offAllNamed(LoginPage.route);
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
