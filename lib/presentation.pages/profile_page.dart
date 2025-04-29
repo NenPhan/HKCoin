@@ -58,79 +58,76 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (controller) {
         return Scaffold(
           body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(scrSize(context).width * 0.03),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Center(
-                  //   child: Text(
-                  //     tr("Profile"),
-                  //     style: textTheme(context).titleLarge,
-                  //   ),
-                  // ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: scrSize(context).height * 0.02,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: scrSize(context).height * 0.02,
+                    horizontal: scrSize(context).width * 0.03,
+                  ),
+                  width: double.infinity,
+                  height: scrSize(context).height * 0.15,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.black, Colors.deepOrange, Colors.black],
+                      stops: [0.1, 0.4, 0.9],
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
                     ),
-                    width: double.infinity,
-                    height: scrSize(context).height * 0.15,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black,
-                          Colors.deepOrange,
-                          Colors.grey[900]!,
-                        ],
-                        stops: const [0.1, 0.8, 1],
-                        begin: Alignment.bottomLeft,
-                        end: Alignment.topRight,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.customerInfo?.fullName ?? "",
+                        style: textTheme(context).titleLarge,
                       ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          controller.customerInfo?.fullName ?? "",
-                          style: textTheme(context).titleLarge,
-                        ),
-                        Text(
-                          controller.customerInfo?.email ?? "",
-                          style: textTheme(context).bodyMedium,
-                        ),
-                      ],
-                    ),
+                      Text(
+                        controller.customerInfo?.email ?? "",
+                        style: textTheme(context).bodyMedium,
+                      ),
+                    ],
                   ),
-                  ...List.generate(items.length, (index) {
-                    if (items[index]["items"] != null) {
-                      return ExpandaleButton(
-                        title: items[index]["name"],
-                        items: List.generate(items[index]["items"].length, (
-                          index2,
-                        ) {
-                          return _buildButton(items[index]["items"][index2]);
-                        }),
-                      );
-                    }
-                    return _buildButton(items[index]);
-                  }),
-                  GetBuilder<ProfileController>(
-                    id: "logout-button",
-                    builder: (controller) {
-                      return _buildButton(
-                        {"name": "Account.Logout", "icon": Icons.logout},
-                        onTap: () {
-                          controller.logout(() {
-                            Storage().dispose();
-                            Get.offAllNamed(LoginPage.route);
-                          });
+                ),
+                Padding(
+                  padding: EdgeInsets.all(scrSize(context).width * 0.03),
+                  child: Column(
+                    children: [
+                      ...List.generate(items.length, (index) {
+                        if (items[index]["items"] != null) {
+                          return ExpandaleButton(
+                            title: items[index]["name"],
+                            items: List.generate(items[index]["items"].length, (
+                              index2,
+                            ) {
+                              return _buildButton(
+                                items[index]["items"][index2],
+                              );
+                            }),
+                          );
+                        }
+                        return _buildButton(items[index]);
+                      }),
+                      GetBuilder<ProfileController>(
+                        id: "logout-button",
+                        builder: (controller) {
+                          return _buildButton(
+                            {"name": "Account.Logout", "icon": Icons.logout},
+                            onTap: () {
+                              controller.logout(() {
+                                Storage().dispose();
+                                Get.offAllNamed(LoginPage.route);
+                              });
+                            },
+                          );
                         },
-                      );
-                    },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
