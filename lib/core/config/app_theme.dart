@@ -36,6 +36,10 @@ class AppThemes {
           borderSide: const BorderSide(color: Colors.red, width: 1),
           borderRadius: BorderRadius.circular(size * 0.02),
         ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
         filled: true,
         labelStyle: TextStyle(
           fontSize: size * 0.024, //14
@@ -46,7 +50,7 @@ class AppThemes {
         hintStyle: TextStyle(
           fontSize: size * 0.024, //14
           fontWeight: FontWeight.w500,
-          color: Colors.grey,
+          color: Colors.grey[600],
           fontFamily: FontFamily.googleSans,
         ),
         fillColor: Colors.grey[900],
@@ -125,6 +129,10 @@ class AppThemes {
           borderRadius: BorderRadius.circular(size * 0.02),
         ),
         errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.red, width: 1),
           borderRadius: BorderRadius.circular(size * 0.02),
         ),

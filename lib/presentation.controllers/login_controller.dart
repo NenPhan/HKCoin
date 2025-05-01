@@ -14,7 +14,6 @@ class LoginController extends GetxController {
   );
 
   RxBool isLoading = false.obs;
-  RxBool showPassword = false.obs;
 
   void login(VoidCallback onLogedIn) async {
     isLoading.value = true;

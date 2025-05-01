@@ -6,6 +6,7 @@ import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/register_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/main_text_field.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -40,225 +41,65 @@ class _RegisterPageState extends State<RegisterPage> {
                           spacing: 15,
                           children: [
                             const SizedBox(height: 20),
-                            TextFormField(
+                            MainTextField(
                               controller: registerController.fNameController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Fields.FirstName"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Fields.FirstName"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
+                              label: tr("Account.Fields.FirstName"),
                               validator:
-                                  (
-                                    value,
-                                  ) => requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.FirstNameIsNotProvided",
                                   ),
                             ),
-                            TextFormField(
+                            MainTextField(
                               controller: registerController.lNameController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Fields.LastName"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Fields.LastName"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
-
+                              label: tr("Account.Fields.LastName"),
                               validator:
-                                  (
-                                    value,
-                                  ) => requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.LastNameIsNotProvided",
                                   ),
                             ),
-                            TextFormField(
+                            MainTextField(
                               controller: registerController.emailController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Login.Fields.Email"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Login.Fields.Email"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
+                              label: tr("Account.Login.Fields.Email"),
                               validator:
-                                  (
-                                    value,
-                                  ) => requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.EmailIsNotProvided",
                                   ),
                             ),
-                            TextFormField(
+                            MainTextField(
                               controller: registerController.phoneController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Fields.Phone"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Fields.Phone"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
+                              label: tr("Account.Fields.Phone"),
                               validator:
-                                  (
-                                    value,
-                                  ) => requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.PhoneIsNotProvided",
                                   ),
                             ),
-                            TextFormField(
+                            MainTextField(
                               controller: registerController.passwordController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Fields.Password"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Login.Fields.Password"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
+                              label: tr("Account.Fields.Password"),
                               validator:
-                                  (
-                                    value,
-                                  ) => requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.PasswordIsNotProvided",
                                   ),
                             ),
-                            TextFormField(
+                            MainTextField(
                               controller:
                                   registerController.confirmPasswordController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Fields.ConfirmPassword"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Fields.ConfirmPassword"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
+                              label: tr("Account.Fields.ConfirmPassword"),
                               validator:
-                                  (
-                                    value,
-                                  ) => requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.ConfirmPasswordIsNotProvided",
                                   ),
                             ),
-                            TextFormField(
+                            MainTextField(
                               controller:
                                   registerController.referralCodeController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                label: RichText(
-                                  text: TextSpan(
-                                    text: tr("Account.Register.ReferralCode"),
-                                    children: [
-                                      TextSpan(
-                                        text: "*",
-                                        style: textTheme(context).titleMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                hintText: tr("Account.Register.ReferralCode"),
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 20,
-                                ),
-                              ),
+                              label: tr("Account.Register.ReferralCode"),
                               validator:
                                   (value) => requiredValidator(
                                     value,

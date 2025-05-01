@@ -7,6 +7,7 @@ import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/change_password_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/main_button.dart';
+import 'package:hkcoin/widgets/main_text_field.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -46,37 +47,11 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                               children: [
                                 const SizedBox(height: 20),
 
-                                TextFormField(
+                                MainTextField(
                                   controller: controller.oldPasswordController,
-                                  style: const TextStyle(color: Colors.white),
                                   obscureText: true,
-                                  decoration: InputDecoration(
-                                    label: RichText(
-                                      text: TextSpan(
-                                        text: tr(
-                                          "Account.ChangePassword.Fields.OldPassword",
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: "*",
-                                            style: textTheme(context)
-                                                .titleMedium
-                                                ?.copyWith(color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    hintText: tr(
-                                      "Account.ChangePassword.Fields.OldPassword",
-                                    ),
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey[400],
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 20,
-                                    ),
+                                  label: tr(
+                                    "Account.ChangePassword.Fields.OldPassword",
                                   ),
                                   validator:
                                       (value) => requiredValidator(
@@ -84,77 +59,24 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                         "Account.Register.Errors.PasswordIsNotProvided",
                                       ),
                                 ),
-                                TextFormField(
+                                MainTextField(
                                   controller: controller.newPasswordController,
-                                  style: const TextStyle(color: Colors.white),
                                   obscureText: true,
-                                  decoration: InputDecoration(
-                                    label: RichText(
-                                      text: TextSpan(
-                                        text: tr(
-                                          "Account.ChangePassword.Fields.NewPassword",
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: "*",
-                                            style: textTheme(context)
-                                                .titleMedium
-                                                ?.copyWith(color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    hintText: tr(
-                                      "Account.ChangePassword.Fields.NewPassword",
-                                    ),
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey[400],
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 20,
-                                    ),
+                                  label: tr(
+                                    "Account.ChangePassword.Fields.NewPassword",
                                   ),
-
                                   validator:
                                       (value) => requiredValidator(
                                         value,
                                         "Account.Register.Errors.PasswordIsNotProvided",
                                       ),
                                 ),
-                                TextFormField(
+                                MainTextField(
                                   controller:
                                       controller.confirmPasswordController,
-                                  style: const TextStyle(color: Colors.white),
                                   obscureText: true,
-                                  decoration: InputDecoration(
-                                    label: RichText(
-                                      text: TextSpan(
-                                        text: tr(
-                                          "Account.ChangePassword.Fields.ConfirmNewPassword",
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: "*",
-                                            style: textTheme(context)
-                                                .titleMedium
-                                                ?.copyWith(color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    hintText: tr(
-                                      "Account.ChangePassword.Fields.ConfirmNewPassword",
-                                    ),
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey[400],
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 20,
-                                    ),
+                                  label: tr(
+                                    "Account.ChangePassword.Fields.ConfirmNewPassword",
                                   ),
                                   validator:
                                       (value) => requiredValidator(

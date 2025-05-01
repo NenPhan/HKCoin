@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/widgets/main_text_field.dart';
 
 class InputPricePopup extends StatefulWidget {
   const InputPricePopup({super.key, required this.onConfirm});
@@ -32,20 +33,10 @@ class _InputPricePopupState extends State<InputPricePopup> {
               spacing: scrSize(context).height * 0.02,
               children: [
                 Text("Nhập mức đầu tư", style: textTheme(context).titleSmall),
-                TextFormField(
+                MainTextField(
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   controller: priceController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    // hintText: tr("Account.Login.Fields.UserName"),
-                    hintStyle: TextStyle(color: Colors.grey[400]),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
                   validator:
                       (value) =>
                           value != "" && value != null
