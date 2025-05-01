@@ -3,6 +3,7 @@ import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/auth_datasource.dart';
+import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
@@ -32,6 +33,25 @@ class AuthRepository {
         var info = await AuthDatasource().getCustomerInfo();
         Storage().saveCustomer(info);
         return Right(info);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> updateCustomerInfo(CustomerInfo customerInfo) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var info = await AuthDatasource().updateCustomerInfo(customerInfo);
+        Storage().saveCustomer(info);
+        return const Right(null);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> changePassword(ChangePasswordParam param) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await AuthDatasource().changePassword(param);
+        return const Right(null);
       },
     );
   }

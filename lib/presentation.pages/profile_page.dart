@@ -5,6 +5,8 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
+import 'package:hkcoin/presentation.pages/change_password_page.dart';
+import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
 
@@ -22,9 +24,18 @@ class _ProfilePageState extends State<ProfilePage> {
     {
       "name": "Tài Khoản",
       "items": [
-        {"name": "Thông tin khách hàng", "icon": Icons.person},
+        {
+          "name": "Thông tin khách hàng",
+          "icon": Icons.person,
+          "page": CustomerInfoPage.route,
+        },
         {"name": "Gói đầu tư của tôi", "icon": Icons.description},
       ],
+    },
+    {
+      "name": "Đổi mật khẩu",
+      "icon": Icons.shield_outlined,
+      "page": ChangePasswordPage.route,
     },
   ];
   @override
@@ -37,6 +48,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return InkWell(
       onTap: () {
         onTap?.call();
+        if (item["page"] != null) {
+          Get.toNamed(item["page"]);
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: scrSize(context).height * 0.02),

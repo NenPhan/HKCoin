@@ -7,7 +7,9 @@ TextStyle? defaultStyle(context) => Theme.of(context).textTheme.bodyMedium;
 ThemeData theme(context) => Theme.of(context);
 Size scrSize(context) => MediaQuery.of(context).size;
 EdgeInsets viewPadding(context) => MediaQuery.of(context).viewPadding;
-double avgSize(context) => (MediaQuery.of(context).size.width + MediaQuery.of(context).size.height) / 2;
+double avgSize(context) =>
+    (MediaQuery.of(context).size.width + MediaQuery.of(context).size.height) /
+    2;
 
 class AppThemes {
   static darkTheme(BuildContext context) {
@@ -22,30 +24,37 @@ class AppThemes {
       //       SystemUiOverlayStyle(statusBarColor: AppColor.main01, statusBarIconBrightness: Brightness.dark),
       // ),
       inputDecorationTheme: InputDecorationTheme(
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black, width: 1.2),
-            borderRadius: BorderRadius.circular(size * 0.02),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-            borderRadius: BorderRadius.circular(size * 0.02),
-          ),
-          filled: true,
-          labelStyle: TextStyle(
-            fontSize: size * 0.024, //14
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-            fontFamily: FontFamily.googleSans,
-          ),
-          hintStyle: TextStyle(
-            fontSize: size * 0.024, //14
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-            fontFamily: FontFamily.googleSans,
-          ),
-          fillColor: Colors.grey[900],
-          contentPadding: EdgeInsets.symmetric(
-              vertical: scrSize(context).height * 0.015, horizontal: scrSize(context).width * 0.02)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.black, width: 1.2),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey, width: 1),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        filled: true,
+        labelStyle: TextStyle(
+          fontSize: size * 0.024, //14
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+          fontFamily: FontFamily.googleSans,
+        ),
+        hintStyle: TextStyle(
+          fontSize: size * 0.024, //14
+          fontWeight: FontWeight.w500,
+          color: Colors.grey,
+          fontFamily: FontFamily.googleSans,
+        ),
+        fillColor: Colors.grey[900],
+        contentPadding: EdgeInsets.symmetric(
+          vertical: scrSize(context).height * 0.015,
+          horizontal: scrSize(context).width * 0.02,
+        ),
+      ),
       textTheme: TextTheme(
         bodySmall: TextStyle(
           fontSize: size * 0.019, //12
@@ -107,30 +116,37 @@ class AppThemes {
         selectionHandleColor: AppColor.main01,
       ),
       inputDecorationTheme: InputDecorationTheme(
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white, width: 1.2),
-            borderRadius: BorderRadius.circular(size * 0.02),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-            borderRadius: BorderRadius.circular(size * 0.02),
-          ),
-          filled: true,
-          labelStyle: TextStyle(
-            fontSize: size * 0.024, //14
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-            fontFamily: FontFamily.googleSans,
-          ),
-          hintStyle: TextStyle(
-            fontSize: size * 0.024, //14
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-            fontFamily: FontFamily.googleSans,
-          ),
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(
-              vertical: scrSize(context).height * 0.015, horizontal: scrSize(context).width * 0.02)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white, width: 1.2),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey, width: 1),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+          borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        filled: true,
+        labelStyle: TextStyle(
+          fontSize: size * 0.024, //14
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+          fontFamily: FontFamily.googleSans,
+        ),
+        hintStyle: TextStyle(
+          fontSize: size * 0.024, //14
+          fontWeight: FontWeight.w500,
+          color: Colors.grey,
+          fontFamily: FontFamily.googleSans,
+        ),
+        fillColor: Colors.white,
+        contentPadding: EdgeInsets.symmetric(
+          vertical: scrSize(context).height * 0.015,
+          horizontal: scrSize(context).width * 0.02,
+        ),
+      ),
       textTheme: TextTheme(
         bodySmall: TextStyle(
           fontSize: size * 0.019, //12

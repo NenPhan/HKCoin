@@ -174,7 +174,7 @@ class DioParams {
     this.body,
     this.dynamicResponse = false,
     this.needAccessToken = false,
-    this.needBasicAuth = false,
+    this.needBasicAuth = true,
     this.shouldHandleResponse = true,
     this.allowedStatusCodes = const [200],
   });

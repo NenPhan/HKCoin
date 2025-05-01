@@ -75,6 +75,12 @@ class CustomerInfo {
     "SponsorCode": sponsorCode,
     "Settings": settings.toJson(),
   };
+  Map<String, dynamic> toUpdateJson() => {
+    "FirstName": firstName,
+    "LastName": lastName,
+    "Email": email,
+    "Phone": phone,
+  };
 }
 
 class Settings {

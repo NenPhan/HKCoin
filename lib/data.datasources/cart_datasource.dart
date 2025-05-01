@@ -16,10 +16,8 @@ class CartDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getCart,
           needAccessToken: true,
-          needBasicAuth: true,
           headers: {"Accept-Language": AppConfig().language},
         ),
-        contentType: "application/json",
       );
 
       return Cart.fromJson(response["Data"]);
@@ -39,7 +37,6 @@ class CartDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.addToCart,
           needAccessToken: true,
-          needBasicAuth: true,
           headers: {"Accept-Language": AppConfig().language},
           body: body,
         ),
@@ -60,7 +57,6 @@ class CartDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.updateCartItem(productId),
           needAccessToken: true,
-          needBasicAuth: true,
           headers: {"Accept-Language": AppConfig().language},
           body: body,
         ),
@@ -77,7 +73,6 @@ class CartDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.deleteCart,
           needAccessToken: true,
-          needBasicAuth: true,
           headers: {"Accept-Language": AppConfig().language},
           body: body,
         ),

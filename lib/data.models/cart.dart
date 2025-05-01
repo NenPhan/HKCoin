@@ -71,7 +71,6 @@ class Item {
   String minimumCustomerEnteredPrice;
   String maximumCustomerEnteredPrice;
   Image image;
-  List<dynamic> bundleItems;
   DateTime createdOnUtc;
 
   Item({
@@ -85,7 +84,6 @@ class Item {
     required this.minimumCustomerEnteredPrice,
     required this.maximumCustomerEnteredPrice,
     required this.image,
-    required this.bundleItems,
     required this.createdOnUtc,
   });
 
@@ -100,7 +98,6 @@ class Item {
     minimumCustomerEnteredPrice: json["MinimumCustomerEnteredPrice"],
     maximumCustomerEnteredPrice: json["MaximumCustomerEnteredPrice"],
     image: Image.fromJson(json["Image"]),
-    bundleItems: List<dynamic>.from(json["BundleItems"].map((x) => x)),
     createdOnUtc: DateTime.parse(json["CreatedOnUtc"]),
   );
 
@@ -115,7 +112,6 @@ class Item {
     "MinimumCustomerEnteredPrice": minimumCustomerEnteredPrice,
     "MaximumCustomerEnteredPrice": maximumCustomerEnteredPrice,
     "Image": image.toJson(),
-    "BundleItems": List<dynamic>.from(bundleItems.map((x) => x)),
     "CreatedOnUtc": createdOnUtc.toIso8601String(),
   };
 }

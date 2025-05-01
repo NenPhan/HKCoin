@@ -15,7 +15,6 @@ class NewsDatasource {
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getNews,
-          needBasicAuth: true,
           headers: {"Accept-Language": AppConfig().language},
         ),
       );

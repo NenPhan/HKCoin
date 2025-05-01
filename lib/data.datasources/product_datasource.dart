@@ -15,7 +15,6 @@ class ProductDatasource {
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getProduct,
-          needBasicAuth: true,
           headers: {"Accept-Language": AppConfig().language},
         ),
         contentType: "application/json",

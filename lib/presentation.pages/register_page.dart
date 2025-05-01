@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/register_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 
@@ -66,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (
                                     value,
-                                  ) => registerController.requiredValidator(
+                                  ) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.FirstNameIsNotProvided",
                                   ),
@@ -99,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (
                                     value,
-                                  ) => registerController.requiredValidator(
+                                  ) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.LastNameIsNotProvided",
                                   ),
@@ -131,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (
                                     value,
-                                  ) => registerController.requiredValidator(
+                                  ) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.EmailIsNotProvided",
                                   ),
@@ -163,7 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (
                                     value,
-                                  ) => registerController.requiredValidator(
+                                  ) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.PhoneIsNotProvided",
                                   ),
@@ -195,7 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (
                                     value,
-                                  ) => registerController.requiredValidator(
+                                  ) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.PasswordIsNotProvided",
                                   ),
@@ -228,7 +229,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (
                                     value,
-                                  ) => registerController.requiredValidator(
+                                  ) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.ConfirmPasswordIsNotProvided",
                                   ),
@@ -259,9 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               validator:
-                                  (
-                                    value,
-                                  ) => registerController.requiredValidator(
+                                  (value) => requiredValidator(
                                     value,
                                     "Account.Register.Errors.ReferralCodeIsNotProvided",
                                   ),

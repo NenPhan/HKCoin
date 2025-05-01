@@ -41,7 +41,4 @@ class RegisterController extends GetxController {
       }
     }
   }
-
-  String? requiredValidator(value, String alert) =>
-      value != "" && value != null ? null : tr(alert);
 }

@@ -1,5 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
+import 'package:hkcoin/presentation.pages/change_password_page.dart';
+import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
@@ -23,5 +25,7 @@ class AppGetRoutes {
       page: () => const ProductDetailPage(),
     ),
     GetPage(name: CartPage.route, page: () => const CartPage()),
+    GetPage(name: CustomerInfoPage.route, page: () => const CustomerInfoPage()),
+    GetPage(name: ChangePasswordPage.route, page: () => const ChangePasswordPage()),
   ];
 }

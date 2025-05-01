@@ -41,3 +41,6 @@ Future showPopUpDialog(
     },
   );
 }
+
+String? requiredValidator(value, String alert) =>
+    value != "" && value != null ? null : tr(alert);
