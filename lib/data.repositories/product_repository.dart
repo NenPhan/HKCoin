@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/product_datasource.dart';
+import 'package:hkcoin/data.models/order.dart';
 import 'package:hkcoin/data.models/product.dart';
 
 class ProductRepository {
@@ -9,6 +10,19 @@ class ProductRepository {
     return handleRepositoryCall(
       onRemote: () async {
         return Right(await ProductDatasource().getProducts());
+      },
+    );
+  }
+
+  Future<Either<Failure, OrderPagination>> getOrders({
+    int page = 1,
+    int limit = 10,
+  }) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        return Right(
+          await ProductDatasource().getOrders(page: page, limit: limit),
+        );
       },
     );
   }

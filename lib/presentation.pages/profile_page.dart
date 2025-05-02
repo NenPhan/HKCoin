@@ -8,6 +8,7 @@ import 'package:hkcoin/presentation.controllers/profile_controller.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
+import 'package:hkcoin/presentation.pages/my_orders_page.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -29,7 +30,11 @@ class _ProfilePageState extends State<ProfilePage> {
           "icon": Icons.person,
           "page": CustomerInfoPage.route,
         },
-        {"name": "Gói đầu tư của tôi", "icon": Icons.description},
+        {
+          "name": "Gói đầu tư của tôi",
+          "icon": Icons.description,
+          "page": MyOrdersPage.route,
+        },
       ],
     },
     {

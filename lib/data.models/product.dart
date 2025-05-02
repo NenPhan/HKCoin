@@ -37,17 +37,17 @@ class Product {
 }
 
 class ProductImage {
-  int id;
+  int? id;
   FileClass file;
-  String alt;
-  String title;
-  String path;
+  String? alt;
+  String? title;
+  String? path;
   String thumbUrl;
-  int thumbSize;
-  bool noFallback;
-  bool avataFallback;
-  String host;
-  bool lazyLoad;
+  int? thumbSize;
+  bool? noFallback;
+  bool? avataFallback;
+  String? host;
+  bool? lazyLoad;
 
   ProductImage({
     required this.id,

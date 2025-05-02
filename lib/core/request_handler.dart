@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -20,7 +22,8 @@ Future<T> handleRemoteRequest<T>(
     } on DioError {
       throw ServerException(message: defaultErr);
     } catch (e) {
-      throw ServerException(message: e.toString());
+      bool debug = true;
+      throw ServerException(message: debug ? e.toString() : defaultErr);
     }
   } else {
     var value = await onRequest();

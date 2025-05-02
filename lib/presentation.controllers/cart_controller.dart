@@ -29,7 +29,6 @@ class CartController extends GetxController {
           isSuccess = false;
         }
       },
-      shouldHandleError: false,
     );
     var either2 = await CartRepository().addToCart(productId, price);
     handleEither(

@@ -4,6 +4,7 @@ import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/data.models/order.dart';
 import 'package:hkcoin/data.models/product.dart';
 
 class ProductDatasource {
@@ -23,6 +24,26 @@ class ProductDatasource {
       return (response["Data"] as List)
           .map((e) => Product.fromJson(e))
           .toList();
+    });
+  }
+
+  Future<OrderPagination> getOrders({int page = 1, int limit = 10}) async {
+    return await handleRemoteRequest(() async {
+      Map<String, String> queryParams = {
+        "s": limit.toString(),
+        "page": page.toString(),
+      };
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getOrders,
+          headers: {"Accept-Language": AppConfig().language},
+          params: queryParams,
+          needAccessToken: true,
+        ),
+      );
+
+      return OrderPagination.fromJson(response);
     });
   }
 }
