@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/news.dart';
 import 'package:hkcoin/data.models/product.dart';
+import 'package:hkcoin/data.models/slide.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.repositories/auth_repository.dart';
 import 'package:hkcoin/data.repositories/news_repository.dart';
@@ -12,11 +13,13 @@ class HomeBodyController extends GetxController {
   RxBool isLoadingWallet = false.obs;
   RxBool isLoadingProduct = false.obs;
   RxBool isLoadingNews = false.obs;
+  bool isLoadingSlide = false;
 
   WalletInfo? walletInfo;
   List<Product> products = [];
   String? rxchangeRateData;
   List<News> news = [];
+  List<Slide> slides = [];
 
   @override
   void onInit() {
@@ -24,6 +27,7 @@ class HomeBodyController extends GetxController {
     getCustomerData();
     getKHCoinData();
     getNewsData();
+    getSlideData();
     super.onInit();
   }
 
@@ -76,5 +80,15 @@ class HomeBodyController extends GetxController {
     });
     isLoadingNews.value = false;
     update(["news-list"]);
+  }
+
+  void getSlideData() async {
+    isLoadingSlide = true;
+    update(["home-slide"]);
+    await handleEither(await NewsRepository().getSlides(), (r) {
+      slides = r;
+    });
+    isLoadingSlide = false;
+    update(["home-slide"]);
   }
 }

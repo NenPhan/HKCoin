@@ -1,33 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:hkcoin/data.models/slide.dart';
 
-class HomeBannerWidget extends StatefulWidget {
-  const HomeBannerWidget({super.key});
+class HomeSlideWidget extends StatefulWidget {
+  const HomeSlideWidget({
+    super.key,
+    this.isLoading = false,
+    required this.slides,
+  });
+  final bool isLoading;
+  final List<Slide> slides;
 
   @override
-  State<HomeBannerWidget> createState() => _HomeBannerWidgetState();
+  State<HomeSlideWidget> createState() => _HomeSlideWidgetState();
 }
 
-class _HomeBannerWidgetState extends State<HomeBannerWidget> {
-  PageController controller = PageController(viewportFraction: 0.8);
+class _HomeSlideWidgetState extends State<HomeSlideWidget> {
+  PageController controller = PageController(viewportFraction: 1);
+
+  @override
+  void initState() {
+    if (widget.slides.length > 1) {
+      controller = PageController(viewportFraction: 0.9);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 180,
       child: PageView(
         controller: controller,
         allowImplicitScrolling: true,
         padEnds: false,
 
-        children: List.generate(5, (index) {
+        children: List.generate(widget.slides.length, (index) {
+          String url = widget.slides[index].image?.thumbUrl ?? "";
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 5),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: SizedBox(
-                width: 100,
-                height: 100,
+                // width: 150,
+                // height: 150,
                 child: Image.network(
-                  "https://sandbox.hakacoin.net/media/1251/catalog/Kem%20xoa%20b%C3%B3p%20to%C3%A0n%20th%C3%A2n-01.png?size=550",
+                  url.contains("http") ? url : "https:$url",
                   fit: BoxFit.cover,
                   // errorBuilder:
                   //     (context, error, stackTrace) => Container(

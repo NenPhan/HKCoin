@@ -123,7 +123,15 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                 },
               ),
               const SizedBox(height: 10),
-              const HomeBannerWidget(),
+              GetBuilder<HomeBodyController>(
+                id: "home-slide",
+                builder: (controller) {
+                  return HomeSlideWidget(
+                    isLoading: controller.isLoadingSlide,
+                    slides: controller.slides,
+                  );
+                },
+              ),
               GetBuilder<HomeBodyController>(
                 id: "exchange-rate",
                 builder: (controller) {

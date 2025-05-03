@@ -12,4 +12,5 @@ class Endpoints {
   static String updateCartItem(int id) => "ShoppingCartItems($id)/UpdateItem";
   static String getNews = "NewsItems";
   static String changePassword = "Customers/ChangePassword";
+  static String getSlides = "Sliders";
 }
