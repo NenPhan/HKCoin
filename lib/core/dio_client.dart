@@ -118,7 +118,7 @@ extension ResponseExtension on Response {
     if (data == null) return {};
     try {
       Map<String, dynamic> json;
-      if ((allowedStatusCodes.contains(statusCode))) {
+      if (allowedStatusCodes.contains(statusCode)) {
         if (data == "") return {};
         if (data is! Map<String, dynamic>) {
           json = jsonDecode(data);
@@ -130,10 +130,14 @@ extension ResponseExtension on Response {
         String errorText = "";
         if (data is String) {
           errorText = data;
-        } else if (data["message"] != null) {
+        } else if (data["message"] != null && data["message"] != "") {
           errorText = data["message"];
-        } else if (data["Message"] != null) {
+        } else if (data["Message"] != null && data["Message"] != "") {
           errorText = data["Message"];
+        } else if (data["errors"] != null) {
+          if (data["errors"] is List && (data["errors"] as List).isNotEmpty) {
+            errorText = data["errors"][0];
+          }
         } else {
           errorText = defaultErr;
         }
@@ -176,6 +180,6 @@ class DioParams {
     this.needAccessToken = false,
     this.needBasicAuth = true,
     this.shouldHandleResponse = true,
-    this.allowedStatusCodes = const [200],
+    this.allowedStatusCodes = const [200, 204],
   });
 }

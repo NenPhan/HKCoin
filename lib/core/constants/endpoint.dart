@@ -17,4 +17,8 @@ class Endpoints {
   static String getProvinces({int countryCode = 230}) =>
       "Countries($countryCode)/StateProvinces";
   static String addAddress = "Orders/AddAddress";
+  static String selectAddress = "Orders/SelectBillingAddress";
+  static String checkout = "Orders/Checkout";
+  static String selectPaymentMethod = "Orders/SelectPaymentMethod";
+  static String orderTotal = "Orders/OrderTotal";
 }

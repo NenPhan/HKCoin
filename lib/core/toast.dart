@@ -3,6 +3,7 @@ import 'package:toastification/toastification.dart';
 
 class Toast {
   static void showSuccessToast(String message) {
+    if (message == "") return;
     toastification.show(
       title: Text(message, maxLines: 3, overflow: TextOverflow.ellipsis),
       autoCloseDuration: const Duration(seconds: 3),
@@ -12,6 +13,7 @@ class Toast {
   }
 
   static void showErrorToast(String message) {
+    if (message == "") return;
     toastification.show(
       title: Text(message, maxLines: 3, overflow: TextOverflow.ellipsis),
       autoCloseDuration: const Duration(seconds: 3),

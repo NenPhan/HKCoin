@@ -6,6 +6,7 @@ import 'package:hkcoin/data.repositories/checkout_repository.dart';
 class AddressListController extends GetxController {
   bool isLoading = false;
   List<Address> listAddress = [];
+  int? selectedAddressId;
 
   @override
   void onInit() {
@@ -21,5 +22,19 @@ class AddressListController extends GetxController {
     });
     isLoading = false;
     update(["address-list"]);
+  }
+
+  Future<bool> selectAddress(int? id) async {
+    selectedAddressId = id;
+    update(["address-list"]);
+    return await handleEitherReturn(
+      await CheckoutRepository().selectAddress(id),
+      (r) {
+        return true;
+      },
+      onError: (message) {
+        return false;
+      },
+    );
   }
 }

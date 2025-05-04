@@ -4,14 +4,17 @@ import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/checkout_datasource.dart';
 import 'package:hkcoin/data.models/address.dart';
 import 'package:hkcoin/data.models/cart.dart';
+import 'package:hkcoin/data.models/checkout_data.dart';
+import 'package:hkcoin/data.models/order_total.dart';
+import 'package:hkcoin/data.models/params/add_address_param.dart';
 import 'package:hkcoin/data.models/province.dart';
 
 class CheckoutRepository {
   Future<Either<Failure, Cart>> getCart() {
     return handleRepositoryCall(
       onRemote: () async {
-        var info = await CheckoutDatasource().getCart();
-        return Right(info);
+        var result = await CheckoutDatasource().getCart();
+        return Right(result);
       },
     );
   }
@@ -46,8 +49,8 @@ class CheckoutRepository {
   Future<Either<Failure, List<Address>>> getAddresses() {
     return handleRepositoryCall(
       onRemote: () async {
-        var info = await CheckoutDatasource().getAddresses();
-        return Right(info);
+        var result = await CheckoutDatasource().getAddresses();
+        return Right(result);
       },
     );
   }
@@ -55,8 +58,65 @@ class CheckoutRepository {
   Future<Either<Failure, List<Province>>> getProvinces() {
     return handleRepositoryCall(
       onRemote: () async {
-        var info = await CheckoutDatasource().getProvinces();
-        return Right(info);
+        var result = await CheckoutDatasource().getProvinces();
+        return Right(result);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> addAddress(AddAddressParam param) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await CheckoutDatasource().addAddress(param);
+        return const Right(null);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> selectAddress(int? id) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await CheckoutDatasource().selectAddress(id);
+        return const Right(null);
+      },
+    );
+  }
+
+  Future<Either<Failure, CheckoutData>> getCheckoutData() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await CheckoutDatasource().getCheckoutData();
+        return Right(result);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> selectPaymmentMethod(String? methodName) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await CheckoutDatasource().selectPaymentMethod(methodName);
+        return const Right(null);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> checkout(
+    int? addressId,
+    String? paymentMethodName,
+  ) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await CheckoutDatasource().checkout(addressId, paymentMethodName);
+        return const Right(null);
+      },
+    );
+  }
+
+  Future<Either<Failure, OrderTotal>> getOrderTotal() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await CheckoutDatasource().getOrderTotal();
+        return Right(result);
       },
     );
   }

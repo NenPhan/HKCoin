@@ -6,6 +6,8 @@ import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/address.dart';
 import 'package:hkcoin/data.models/cart.dart';
+import 'package:hkcoin/data.models/checkout_data.dart';
+import 'package:hkcoin/data.models/order_total.dart';
 import 'package:hkcoin/data.models/params/add_address_param.dart';
 import 'package:hkcoin/data.models/province.dart';
 
@@ -127,6 +129,84 @@ class CheckoutDatasource {
           body: param.toJson(),
         ),
       );
+    });
+  }
+
+  Future<void> selectAddress(int? id) async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.selectAddress,
+          needAccessToken: true,
+          headers: {"Accept-Language": AppConfig().language},
+          body: {"AddressId": id},
+        ),
+        contentType: "application/json",
+      );
+    });
+  }
+
+  Future<CheckoutData> getCheckoutData() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.checkout,
+          needAccessToken: true,
+          headers: {"Accept-Language": AppConfig().language},
+        ),
+      );
+
+      return CheckoutData.fromJson(response["Data"]);
+    });
+  }
+
+  Future<void> selectPaymentMethod(String? methodName) async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.selectPaymentMethod,
+          needAccessToken: true,
+          headers: {"Accept-Language": AppConfig().language},
+          body: {"paymentMethodSystemName": methodName},
+        ),
+        contentType: "application/json",
+      );
+    });
+  }
+
+  Future<void> checkout(int? addressId, String? paymentMethodName) async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.checkout,
+          needAccessToken: true,
+          headers: {"Accept-Encoding": AppConfig().language},
+          body: {
+            "AddressId": addressId,
+            "PaymentMethodName": paymentMethodName,
+            "CustomerComment": "",
+          },
+        ),
+        contentType: "application/json",
+      );
+    });
+  }
+
+  Future<OrderTotal> getOrderTotal() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.orderTotal,
+          needAccessToken: true,
+        ),
+      );
+
+      return OrderTotal.fromJson(response["Data"]);
     });
   }
 }

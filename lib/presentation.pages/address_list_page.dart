@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/address_list_controller.dart';
+import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/widgets/address_item_widget.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
@@ -18,6 +19,14 @@ class AddressListPage extends StatefulWidget {
 
 class _AddressListPageState extends State<AddressListPage> {
   final AddressListController controller = Get.put(AddressListController());
+
+  @override
+  void initState() {
+    if (Get.arguments is int) {
+      controller.selectedAddressId = Get.arguments;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,17 @@ class _AddressListPageState extends State<AddressListPage> {
                             return _buildAddButton();
                           }
                           var address = controller.listAddress[index];
-                          return AddressItemWidget(address: address);
+                          return AddressItemWidget(
+                            address: address,
+                            isSelected:
+                                controller.selectedAddressId == address.id,
+                            onSelect: (id) async {
+                              var result = await controller.selectAddress(id);
+                              if (result) {
+                                Get.back();
+                              }
+                            },
+                          );
                         },
                       );
                 },
@@ -55,7 +74,7 @@ class _AddressListPageState extends State<AddressListPage> {
   _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        // Get.toNamed(page)
+        Get.toNamed(AddAddressPage.route);
       },
       child: Container(
         width: double.infinity,

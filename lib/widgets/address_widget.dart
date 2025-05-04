@@ -3,20 +3,28 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/data.models/address.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
 
 class AddressWidget extends StatelessWidget {
-  const AddressWidget({super.key});
+  const AddressWidget({super.key, required this.address, this.onChanged});
+  final Address? address;
+  final Function? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(AddressListPage.route);
+        Get.toNamed(AddressListPage.route, arguments: address?.id)?.then((
+          value,
+        ) {
+          onChanged?.call();
+        });
       },
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(scrSize(context).width * 0.03),
+        margin: EdgeInsets.symmetric(horizontal: scrSize(context).width * 0.03),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.grey[900],
@@ -28,16 +36,20 @@ class AddressWidget extends StatelessWidget {
             SizedBox(width: scrSize(context).width * 0.02),
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SpacingRow(
                     spacing: scrSize(context).width * 0.02,
                     children: [
                       Text(
-                        "Name Name Name",
+                        (address?.lastName ?? "") +
+                            (address?.firstName == null
+                                ? ""
+                                : " ${address!.firstName!}"),
                         style: textTheme(context).bodyLarge,
                       ),
                       Text(
-                        "0123456789",
+                        address?.phoneNumber ?? "",
                         style: textTheme(
                           context,
                         ).bodySmall?.copyWith(color: Colors.grey[300]),
@@ -45,7 +57,7 @@ class AddressWidget extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    "Bến thuyền qua Mars Venus, 9A Đ. Trần Văn Trà, Tân Phú, Quận 7, HCM, VN",
+                    address?.address1 ?? "",
                     style: textTheme(
                       context,
                     ).bodyMedium?.copyWith(color: Colors.grey[300]),

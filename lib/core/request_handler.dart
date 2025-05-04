@@ -52,9 +52,8 @@ handleEither<B, T extends Failure, S>(
   B Function(S r) onResult, {
   bool shouldHandleError = true,
   Function(String message)? onError,
-  bool? shouldUseDefaultError,
   String? defaultError,
-}) {
+}) async {
   either.fold((l) {
     if (onError != null) {
       onError(l.message ?? "");
@@ -72,12 +71,19 @@ handleEither<B, T extends Failure, S>(
 handleEitherReturn<B, T extends Failure, S>(
   Either<T, S> either,
   B Function(S r) onResult, {
-  Function()? onError,
+  Function(String message)? onError,
+  bool shouldHandleError = true,
+  String? defaultError,
 }) {
   return either.fold((l) {
-    handleError(l.message ?? "");
+    if (shouldHandleError) {
+      handleError(
+        defaultError ?? l.message ?? "",
+        shouldUseDefaultError: defaultError != null || l is NetworkFailure,
+      );
+    }
     if (onError != null) {
-      onError();
+      onError(l.message ?? "");
     }
   }, onResult);
 }

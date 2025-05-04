@@ -8,14 +8,21 @@ import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/widgets/custom_icon_button.dart';
 
 class AddressItemWidget extends StatelessWidget {
-  const AddressItemWidget({super.key, required this.address});
+  const AddressItemWidget({
+    super.key,
+    required this.address,
+    this.isSelected = false,
+    required this.onSelect,
+  });
   final Address address;
+  final bool isSelected;
+  final Function(int? id) onSelect;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(AddressListPage.route);
+        onSelect(address.id);
       },
       child: Container(
         width: double.infinity,
@@ -48,9 +55,7 @@ class AddressItemWidget extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       color:
-                          address.isDefault ?? false
-                              ? Colors.deepOrange
-                              : Colors.transparent,
+                          isSelected ? Colors.deepOrange : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -59,6 +64,7 @@ class AddressItemWidget extends StatelessWidget {
               SizedBox(width: scrSize(context).width * 0.02),
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SpacingRow(
                       spacing: scrSize(context).width * 0.02,
@@ -76,7 +82,7 @@ class AddressItemWidget extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "Bến thuyền qua Mars Venus, 9A Đ. Trần Văn Trà, Tân Phú, Quận 7, HCM, VN",
+                      address.address1 ?? "",
                       style: textTheme(
                         context,
                       ).bodyMedium?.copyWith(color: Colors.grey[300]),

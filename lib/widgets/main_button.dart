@@ -24,6 +24,7 @@ class _MainButtonState extends State<MainButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.width,
+      height: 60,
       child: ElevatedButton(
         onPressed: () {
           widget.onTap();
@@ -31,7 +32,7 @@ class _MainButtonState extends State<MainButton> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           padding: EdgeInsets.symmetric(
-            vertical: scrSize(context).height * 0.02,
+            // vertical: scrSize(context).height * 0.02,
             horizontal: scrSize(context).width * 0.03,
           ),
           shape: RoundedRectangleBorder(

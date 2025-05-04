@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
@@ -36,5 +37,6 @@ class AppGetRoutes {
     GetPage(name: MyOrdersPage.route, page: () => const MyOrdersPage()),
     GetPage(name: CheckoutPage.route, page: () => const CheckoutPage()),
     GetPage(name: AddressListPage.route, page: () => const AddressListPage()),
+    GetPage(name: AddAddressPage.route, page: () => const AddAddressPage()),
   ];
 }

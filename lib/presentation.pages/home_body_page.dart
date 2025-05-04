@@ -44,7 +44,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                 children: [
                   Hero(
                     tag: "main-logo",
-                    child: Assets.images.hkcLogo.image(height: 50),
+                    child: Assets.images.hkcLogo.image(height: 45),
                   ),
                   const Spacer(),
                   GetBuilder<CartController>(
