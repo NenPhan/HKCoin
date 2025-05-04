@@ -4,9 +4,12 @@ import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/data.models/address.dart';
 import 'package:hkcoin/data.models/cart.dart';
+import 'package:hkcoin/data.models/params/add_address_param.dart';
+import 'package:hkcoin/data.models/province.dart';
 
-class CartDatasource {
+class CheckoutDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
 
   Future<Cart> getCart() async {
@@ -77,6 +80,52 @@ class CartDatasource {
           body: body,
         ),
         contentType: "application/json",
+      );
+    });
+  }
+
+  Future<List<Address>> getAddresses() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getAddresses,
+          needAccessToken: true,
+        ),
+      );
+
+      return (response["Data"] as List)
+          .map((e) => Address.fromJson(e))
+          .toList();
+    });
+  }
+
+  Future<List<Province>> getProvinces() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getProvinces(),
+          headers: {"Accept-Language": AppConfig().language},
+        ),
+      );
+
+      return (response["value"] as List)
+          .map((e) => Province.fromJson(e))
+          .toList();
+    });
+  }
+
+  Future<void> addAddress(AddAddressParam param) async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.addAddress,
+          needAccessToken: true,
+          headers: {"Accept-Language": AppConfig().language},
+          body: param.toJson(),
+        ),
       );
     });
   }

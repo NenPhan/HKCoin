@@ -13,4 +13,8 @@ class Endpoints {
   static String getNews = "NewsItems";
   static String changePassword = "Customers/ChangePassword";
   static String getSlides = "Sliders";
+  static String getAddresses = "Customers/Addresses";
+  static String getProvinces({int countryCode = 230}) =>
+      "Countries($countryCode)/StateProvinces";
+  static String addAddress = "Orders/AddAddress";
 }

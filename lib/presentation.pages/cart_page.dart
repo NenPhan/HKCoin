@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/cart_controller.dart';
+import 'package:hkcoin/presentation.pages/checkout_page.dart';
 import 'package:hkcoin/presentation.popups/delete_cart_popup.dart';
 import 'package:hkcoin/presentation.popups/input_price_popup.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
@@ -35,7 +35,7 @@ class _CartPageState extends State<CartPage> {
           id: "cart",
           builder: (controller) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 BaseAppBar(title: tr("Enums.RuleScope.Cart")),
                 if (controller.cart == null || controller.cart!.items.isEmpty)
@@ -186,15 +186,21 @@ class _CartPageState extends State<CartPage> {
                     ),
                   ),
                   const Spacer(),
-                  MainButton(
-                    text: tr("Enums.WalletPostingReason.Purchase"),
-                    onTap: () async {
-                      var result = await controller.deleteCart();
-                      if (result) {
-                        Get.back();
-                        Toast.showSuccessToast(tr("Thanh toán thành công"));
-                      }
-                    },
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: scrSize(context).width * 0.03,
+                    ),
+                    child: MainButton(
+                      text: tr("Enums.WalletPostingReason.Purchase"),
+                      onTap: () async {
+                        // var result = await controller.deleteCart();
+                        // if (result) {
+                        //   Get.back();
+                        //   Toast.showSuccessToast(tr("Thanh toán thành công"));
+                        // }
+                        Get.toNamed(CheckoutPage.route);
+                      },
+                    ),
                   ),
                   const SizedBox(height: 20),
                 ],

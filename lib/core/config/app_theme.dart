@@ -81,17 +81,17 @@ class AppThemes {
           fontFamily: FontFamily.googleSans,
         ),
         titleSmall: TextStyle(
-          fontSize: size * 0.03, //16
+          fontSize: size * 0.028, //16
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),
         titleMedium: TextStyle(
-          fontSize: size * 0.032, //20
+          fontSize: size * 0.03, //20
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),
         titleLarge: TextStyle(
-          fontSize: size * 0.036, //25
+          fontSize: size * 0.034, //25
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),
@@ -177,17 +177,17 @@ class AppThemes {
           fontFamily: FontFamily.googleSans,
         ),
         titleSmall: TextStyle(
-          fontSize: size * 0.03, //16
+          fontSize: size * 0.028, //16
           fontWeight: FontWeight.w700,
           color: Colors.black,
         ),
         titleMedium: TextStyle(
-          fontSize: size * 0.032, //20
+          fontSize: size * 0.03, //20
           fontWeight: FontWeight.w700,
           color: Colors.black,
         ),
         titleLarge: TextStyle(
-          fontSize: size * 0.036, //25
+          fontSize: size * 0.034, //25
           fontWeight: FontWeight.w700,
           color: Colors.black,
         ),
