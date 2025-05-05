@@ -24,10 +24,10 @@ class DioClient {
   final Dio dio;
   Future<dynamic> call(DioParams fields, {String? contentType}) async {
     String url = '';
-    if (fields.url == null) {
+    if (fields.host == null) {
       url = '${AppConfig().apiUrl}${fields.endpoint}';
     } else {
-      url = '${fields.url}${fields.endpoint}';
+      url = '${fields.host}${fields.endpoint}';
     }
     if (fields.params != null) {
       url += '?';
@@ -59,9 +59,10 @@ class DioClient {
     logString +=
         ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n\n=========================');
     log(logString);
+    log(header.toString());
     final rawResponse = (await _connect(
       fields.httpMethod,
-      url: (fields.url ?? AppConfig().apiUrl) + fields.endpoint,
+      url: (fields.host ?? AppConfig().apiUrl) + fields.endpoint,
       headers: header,
       body: fields.body,
       contentType: contentType,
@@ -158,7 +159,7 @@ extension ResponseExtension on Response {
 
 class DioParams {
   final HttpMethod httpMethod;
-  final String? url;
+  final String? host;
   final String endpoint;
   final bool dynamicResponse;
   final Map<String, String>? headers;
@@ -171,7 +172,7 @@ class DioParams {
 
   DioParams(
     this.httpMethod, {
-    this.url,
+    this.host,
     required this.endpoint,
     this.headers,
     this.params,

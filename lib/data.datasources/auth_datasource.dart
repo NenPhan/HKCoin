@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
 import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -9,6 +10,7 @@ import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
+import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class AuthDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
@@ -74,7 +76,9 @@ class AuthDatasource {
           endpoint: Endpoints.changePassword,
           needAccessToken: true,
           body: param.toJson(),
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
         ),
         contentType: "application/json",
       );

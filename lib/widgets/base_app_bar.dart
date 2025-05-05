@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';

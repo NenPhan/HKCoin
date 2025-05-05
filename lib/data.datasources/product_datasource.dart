@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
 import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -6,6 +7,7 @@ import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/order.dart';
 import 'package:hkcoin/data.models/product.dart';
+import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class ProductDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
@@ -16,7 +18,9 @@ class ProductDatasource {
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getProduct,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
         ),
         contentType: "application/json",
       );
@@ -37,7 +41,9 @@ class ProductDatasource {
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getOrders,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           params: queryParams,
           needAccessToken: true,
         ),

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/state_manager.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/data.models/address.dart';
-import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/widgets/custom_icon_button.dart';
 
 class AddressItemWidget extends StatelessWidget {

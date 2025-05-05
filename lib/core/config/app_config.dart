@@ -15,32 +15,34 @@ class AppConfig {
   static AppConfig init({
     required String appName,
     required AppFlavor flavorName,
-    required String apiUrl,
-    String? socketUrl,
+    required String host,
+    required String apiPath,
+    String? socketPath,
     required int secondsTimeout,
     String? basicAuthorization,
-    required String language,
   }) {
     _config ??= AppConfig._();
     _config!.appName = appName;
     _config!.flavorName = flavorName;
-    _config!.apiUrl = apiUrl;
-    _config!.socketUrl = socketUrl;
+    _config!.host = host;
+    _config!.apiPath = apiPath;
+    _config!.socketPath = socketPath;
     _config!.secondsTimeout = secondsTimeout;
     _config!.basicAuthorization = basicAuthorization;
-    _config!.language = language;
     return _config!;
   }
 
   late final String appName;
   late final AppFlavor flavorName;
-  late final String apiUrl;
-  late final String? socketUrl;
+  late final String host;
+  late final String apiPath;
+  late final String? socketPath;
   late final int secondsTimeout;
   late final String? basicAuthorization;
-  late final String language;
 
   bool get isDevelopment => flavorName == AppFlavor.DEV;
+  String get apiUrl => host + apiPath;
+  String get socketUrl => host + (socketPath ?? "");
 }
 
 // ignore: constant_identifier_names

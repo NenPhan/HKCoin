@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
 import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -10,6 +11,7 @@ import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/data.models/order_total.dart';
 import 'package:hkcoin/data.models/params/add_address_param.dart';
 import 'package:hkcoin/data.models/province.dart';
+import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class CheckoutDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
@@ -21,7 +23,9 @@ class CheckoutDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getCart,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
         ),
       );
 
@@ -42,7 +46,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.addToCart,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           body: body,
         ),
         contentType: "application/json",
@@ -62,7 +68,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.updateCartItem(productId),
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           body: body,
         ),
         contentType: "application/json",
@@ -78,7 +86,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.deleteCart,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           body: body,
         ),
         contentType: "application/json",
@@ -108,7 +118,9 @@ class CheckoutDatasource {
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getProvinces(),
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
         ),
       );
 
@@ -125,7 +137,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.addAddress,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           body: param.toJson(),
         ),
       );
@@ -139,7 +153,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.selectAddress,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           body: {"AddressId": id},
         ),
         contentType: "application/json",
@@ -154,7 +170,9 @@ class CheckoutDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.checkout,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
         ),
       );
 
@@ -169,7 +187,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.selectPaymentMethod,
           needAccessToken: true,
-          headers: {"Accept-Language": AppConfig().language},
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeString,
+          },
           body: {"paymentMethodSystemName": methodName},
         ),
         contentType: "application/json",
@@ -184,7 +204,9 @@ class CheckoutDatasource {
           HttpMethod.POST,
           endpoint: Endpoints.checkout,
           needAccessToken: true,
-          headers: {"Accept-Encoding": AppConfig().language},
+          headers: {
+            "Accept-Encoding": Get.find<LocaleController>().localeString,
+          },
           body: {
             "AddressId": addressId,
             "PaymentMethodName": paymentMethodName,

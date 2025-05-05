@@ -54,6 +54,25 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                   "Account.Register.Errors.LastNameIsNotProvided",
                                 ),
                           ),
+                          MainTextField(
+                            isRequired: false,
+                            controller: controller.lNameController,
+                            label: tr("Account.Fields.Email"),
+                            validator:
+                                (value) => requiredValidator(
+                                  value,
+                                  "Account.Register.Errors.EmailIsNotProvided",
+                                ),
+                          ),
+                          MainTextField(
+                            controller: controller.lNameController,
+                            label: tr("Account.Fields.Phone"),
+                            validator:
+                                (value) => requiredValidator(
+                                  value,
+                                  "Account.Register.Errors.PhoneIsNotProvided",
+                                ),
+                          ),
                         ],
                       ),
                     ),
