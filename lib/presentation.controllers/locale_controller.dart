@@ -18,10 +18,10 @@ class LocaleController extends GetxController {
     final String? countryCode = language.languageCulture?.split("-").last;
     if (languageCode != null && countryCode != null) {
       locale = Locale(languageCode, countryCode);
-      // await setAppLanguage(newLocale: locale);
+      await setAppLanguage(newLocale: locale);
     } else {
       locale = const Locale("en", "US");
-      // await setAppLanguage(newLocale: locale);
+      await setAppLanguage(newLocale: locale);
     }
   }
 
