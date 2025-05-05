@@ -1,10 +1,52 @@
-import 'dart:convert';
-
-Language languageFromJson(String str) => Language.fromJson(json.decode(str));
-
-String languageToJson(Language data) => json.encode(data.toJson());
-
 class Language {
+  int? id;
+  String? isoCode;
+  String? cultureCode;
+  String? flagImageFileName;
+  String? name;
+  String? shortName;
+  String? localizedName;
+  String? localizedShortName;
+  bool? isDefault;
+
+  Language({
+    this.id,
+    this.isoCode,
+    this.cultureCode,
+    this.flagImageFileName,
+    this.name,
+    this.shortName,
+    this.localizedName,
+    this.localizedShortName,
+    this.isDefault,
+  });
+
+  factory Language.fromJson(Map<String, dynamic> json) => Language(
+    id: json["Id"],
+    isoCode: json["ISOCode"],
+    cultureCode: json["CultureCode"],
+    flagImageFileName: json["FlagImageFileName"],
+    name: json["Name"],
+    shortName: json["ShortName"],
+    localizedName: json["LocalizedName"],
+    localizedShortName: json["LocalizedShortName"],
+    isDefault: json["IsDefault"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "Id": id,
+    "ISOCode": isoCode,
+    "CultureCode": cultureCode,
+    "FlagImageFileName": flagImageFileName,
+    "Name": name,
+    "ShortName": shortName,
+    "LocalizedName": localizedName,
+    "LocalizedShortName": localizedShortName,
+    "IsDefault": isDefault,
+  };
+}
+
+class SetLanguage {
   String? name;
   String? languageCulture;
   String? uniqueSeoCode;
@@ -15,7 +57,7 @@ class Language {
   int? displayOrder;
   int? id;
 
-  Language({
+  SetLanguage({
     this.name,
     this.languageCulture,
     this.uniqueSeoCode,
@@ -27,7 +69,7 @@ class Language {
     this.id,
   });
 
-  factory Language.fromJson(Map<String, dynamic> json) => Language(
+  factory SetLanguage.fromJson(Map<String, dynamic> json) => SetLanguage(
     name: json["Name"],
     languageCulture: json["LanguageCulture"],
     uniqueSeoCode: json["UniqueSeoCode"],

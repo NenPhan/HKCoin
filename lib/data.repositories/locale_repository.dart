@@ -16,10 +16,27 @@ class LocaleRepository {
     );
   }
 
-  Future<Either<Failure, Language>> getLanguage() {
+  Future<Either<Failure, SetLanguage?>> getLanguage() {
     return handleRepositoryCall(
       onRemote: () async {
         return Right(await LocaleDatasource().getLanguage());
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> setLanguage(int? id) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await LocaleDatasource().setLanguage(id);
+        return const Right(null);
+      },
+    );
+  }
+
+  Future<Either<Failure, List<Language>>> getLanguages() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        return Right(await LocaleDatasource().getLanguages());
       },
     );
   }

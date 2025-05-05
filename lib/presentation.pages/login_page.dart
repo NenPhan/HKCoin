@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/login_controller.dart';
-import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/button_loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
+import 'package:restart_app/restart_app.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -98,7 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       if (controller.isLoading.value) return;
                       controller.login(() {
-                        Get.offAllNamed(HomePage.route);
+                        // Get.offAllNamed(HomePage.route);
+                        Restart.restartApp();
                       });
                     },
                   );

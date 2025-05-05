@@ -27,15 +27,15 @@ class LocaleDatasource {
         ),
       );
       final path =
-          "${(await getTemporaryDirectory()).path}/${locale.languageCode}-${locale.countryCode}.json";
+          "${(await getApplicationDocumentsDirectory()).path}/${locale.languageCode}-${locale.countryCode}.json";
       final file = File(path);
 
-      file.writeAsString(jsonEncode(response));
+      await file.writeAsString(jsonEncode(response));
       return file;
     });
   }
 
-  Future<Language> getLanguage() async {
+  Future<SetLanguage?> getLanguage() async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
@@ -45,7 +45,37 @@ class LocaleDatasource {
         ),
       );
 
-      return Language.fromJson(response["Data"]);
+      return SetLanguage.fromJson(response["Data"]);
+    });
+  }
+
+  Future setLanguage(int? id) async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.setLanguage,
+          needAccessToken: true,
+          body: {"Id": id},
+        ),
+        contentType: "application/json",
+      );
+    });
+  }
+
+  Future<List<Language>> getLanguages() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getLanguages,
+          needAccessToken: true,
+        ),
+      );
+
+      return (response["Data"] as List)
+          .map((e) => Language.fromJson(e))
+          .toList();
     });
   }
 }

@@ -2,49 +2,83 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/language.dart';
 import 'package:hkcoin/data.repositories/locale_repository.dart';
 
 class LocaleController extends GetxController {
   File? translationFile;
-  late Locale locale;
-  String get localeString =>
+  List<Language> listLanguage = [];
+
+  Locale locale = const Locale("en", "US");
+  String get localeIsoCode =>
       "${locale.languageCode}-${locale.countryCode ?? ""}";
 
   Future initLocale() async {
-    Language language = await getLanguage();
-    final String? languageCode = language.languageCulture?.split("-").first;
-    final String? countryCode = language.languageCulture?.split("-").last;
-    if (languageCode != null && countryCode != null) {
-      locale = Locale(languageCode, countryCode);
+    await getLanguages();
+    SetLanguage? language = await getLanguage();
+    if (language != null && language.languageCulture != null) {
+      locale = language.languageCulture!.toLocaleFromIsoCode();
       await setAppLanguage(newLocale: locale);
     } else {
-      locale = const Locale("en", "US");
+      if (listLanguage.isNotEmpty) {
+        locale =
+            listLanguage
+                .where((e) => e.isDefault ?? false)
+                .first
+                .isoCode!
+                .toLocaleFromIsoCode();
+      }
       await setAppLanguage(newLocale: locale);
     }
   }
 
-  Future<Language> getLanguage() async {
-    return await handleEitherReturn(await LocaleRepository().getLanguage(), (
-      r,
-    ) {
-      return r;
+  Future<SetLanguage?> getLanguage() async {
+    if (Storage().getToken != null) {
+      return await handleEitherReturn(await LocaleRepository().getLanguage(), (
+        r,
+      ) {
+        return r;
+      });
+    } else {
+      return null;
+    }
+  }
+
+  Future setLanguage(int? id) async {
+    await handleEitherReturn(await LocaleRepository().setLanguage(id), (r) {});
+  }
+
+  Future getLanguages() async {
+    await handleEitherReturn(await LocaleRepository().getLanguages(), (r) {
+      listLanguage = r;
     });
   }
 
   Future setAppLanguage({Locale? newLocale}) async {
     final String defaultLocale = Platform.localeName;
-    final String languageCode = defaultLocale.split("_").first;
-    final String countryCode = defaultLocale.split("_").last;
-    locale = newLocale ?? Locale(languageCode, countryCode);
+    locale = newLocale ?? defaultLocale.toLocaleFromString();
 
     await handleEither(
       await LocaleRepository().getTranslationFile(newLocale ?? locale),
       (r) {
         translationFile = r;
-        update(["app"]);
       },
     );
+  }
+}
+
+extension LocaleExt on String {
+  Locale toLocaleFromString() {
+    final String languageCode = split("_").first;
+    final String countryCode = split("_").last;
+    return Locale(languageCode, countryCode);
+  }
+
+  Locale toLocaleFromIsoCode() {
+    final String languageCode = split("-").first;
+    final String countryCode = split("-").last;
+    return Locale(languageCode, countryCode);
   }
 }

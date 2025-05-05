@@ -19,7 +19,7 @@ class NewsDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getNews,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
       );
@@ -35,7 +35,7 @@ class NewsDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getSlides,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
       );

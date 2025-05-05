@@ -22,5 +22,6 @@ class Endpoints {
   static String selectPaymentMethod = "Orders/SelectPaymentMethod";
   static String orderTotal = "Orders/OrderTotal";
   static String getLanguage = "Languages/GetLanguage";
+  static String getLanguages = "Languages";
   static String setLanguage = "Languages/SetLanguage";
 }

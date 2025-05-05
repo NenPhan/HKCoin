@@ -116,6 +116,7 @@ class DioClient {
 extension ResponseExtension on Response {
   // handle return data from server side to client
   Map<String, dynamic>? handleError(List<int> allowedStatusCodes) {
+    String defaultErr = 'Identity.Error.DefaultError'.tr();
     if (data == null) return {};
     try {
       Map<String, dynamic> json;
@@ -152,9 +153,6 @@ extension ResponseExtension on Response {
       }
     }
   }
-
-  static String defaultErr = 'Identity.Error.DefaultError'.tr();
-  //It seems that the connection was not successful. Please try again.
 }
 
 class DioParams {

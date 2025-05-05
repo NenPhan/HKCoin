@@ -24,7 +24,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.getCart,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
       );
@@ -47,7 +47,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.addToCart,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           body: body,
         ),
@@ -69,7 +69,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.updateCartItem(productId),
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           body: body,
         ),
@@ -87,7 +87,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.deleteCart,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           body: body,
         ),
@@ -119,7 +119,7 @@ class CheckoutDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getProvinces(),
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
       );
@@ -138,7 +138,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.addAddress,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           body: param.toJson(),
         ),
@@ -154,7 +154,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.selectAddress,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           body: {"AddressId": id},
         ),
@@ -171,7 +171,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.checkout,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
       );
@@ -188,7 +188,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.selectPaymentMethod,
           needAccessToken: true,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           body: {"paymentMethodSystemName": methodName},
         ),
@@ -205,7 +205,7 @@ class CheckoutDatasource {
           endpoint: Endpoints.checkout,
           needAccessToken: true,
           headers: {
-            "Accept-Encoding": Get.find<LocaleController>().localeString,
+            "Accept-Encoding": Get.find<LocaleController>().localeIsoCode,
           },
           body: {
             "AddressId": addressId,

@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
+import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
+import 'package:restart_app/restart_app.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -80,35 +83,84 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: scrSize(context).height * 0.02,
-                    horizontal: scrSize(context).width * 0.03,
-                  ),
-                  width: double.infinity,
-                  height: scrSize(context).height * 0.15,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.black, Colors.deepOrange, Colors.black],
-                      stops: [0.1, 0.4, 0.9],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
+                Stack(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: scrSize(context).height * 0.02,
+                        horizontal: scrSize(context).width * 0.03,
+                      ),
+                      width: double.infinity,
+                      height: scrSize(context).height * 0.15,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black,
+                            Colors.deepOrange,
+                            Colors.black,
+                          ],
+                          stops: [0.1, 0.4, 0.9],
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topRight,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            controller.customerInfo?.fullName ?? "",
+                            style: textTheme(context).titleLarge,
+                          ),
+                          Text(
+                            controller.customerInfo?.email ?? "",
+                            style: textTheme(context).bodyMedium,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        controller.customerInfo?.fullName ?? "",
-                        style: textTheme(context).titleLarge,
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: CustomDropDownButton(
+                        buttonWidth: scrSize(context).width * 0.4,
+                        dropdownWidth: scrSize(context).width * 0.4,
+                        selectedValue:
+                            Get.find<LocaleController>().listLanguage
+                                .where(
+                                  (e) =>
+                                      e.isoCode ==
+                                      Get.find<LocaleController>()
+                                          .localeIsoCode,
+                                )
+                                .first,
+                        items: Get.find<LocaleController>().listLanguage,
+                        onChanged: (language) async {
+                          await Get.find<LocaleController>().setLanguage(
+                            language?.id,
+                          );
+                          Restart.restartApp();
+                        },
+                        itemDesign: (item) {
+                          return SpacingRow(
+                            spacing: scrSize(context).width * 0.02,
+                            children: [
+                              Image.network(
+                                item.flagImageFileName ?? "",
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  item.shortName ?? "",
+                                  style: textTheme(context).bodyMedium,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      Text(
-                        controller.customerInfo?.email ?? "",
-                        style: textTheme(context).bodyMedium,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.all(scrSize(context).width * 0.03),

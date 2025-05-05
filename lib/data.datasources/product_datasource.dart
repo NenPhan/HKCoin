@@ -19,7 +19,7 @@ class ProductDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getProduct,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
         contentType: "application/json",
@@ -42,7 +42,7 @@ class ProductDatasource {
           HttpMethod.GET,
           endpoint: Endpoints.getOrders,
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           params: queryParams,
           needAccessToken: true,

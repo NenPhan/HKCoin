@@ -7,7 +7,7 @@ import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.repositories/auth_repository.dart';
 import 'package:hkcoin/data.repositories/news_repository.dart';
 import 'package:hkcoin/data.repositories/product_repository.dart';
-import 'package:signalr_core/signalr_core.dart';
+// import 'package:signalr_netcore/hub_connection_builder.dart';
 
 class HomeBodyController extends GetxController {
   RxBool isLoadingWallet = false.obs;
@@ -50,27 +50,20 @@ class HomeBodyController extends GetxController {
   }
 
   void getKHCoinData() async {
-    final connection =
-        HubConnectionBuilder()
-            .withUrl(
-              'https://sandbox.hakacoin.net/hkc-hub/',
-              HttpConnectionOptions(
-                logging: (level, message) {
-                  // print(message);
-                },
-              ),
-            )
-            .build();
+    // final connection =
+    //     HubConnectionBuilder()
+    //         .withUrl('https://sandbox.hakacoin.net/hkc-hub/')
+    //         .build();
 
-    await connection.start();
+    // await connection.start();
 
-    connection.on('ReceiveExchangeRateData', (message) {
-      // print(message.toString());
-      if (message != null && message.isNotEmpty) {
-        rxchangeRateData = message.first;
-      }
-      update(["exchange-rate"]);
-    });
+    // connection.on('ReceiveExchangeRateData', (message) {
+    //   // print(message.toString());
+    //   if (message != null && message.isNotEmpty) {
+    //     rxchangeRateData = message.first as String;
+    //   }
+    //   update(["exchange-rate"]);
+    // });
   }
 
   void getNewsData() async {

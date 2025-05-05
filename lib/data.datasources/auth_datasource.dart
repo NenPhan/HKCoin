@@ -77,7 +77,7 @@ class AuthDatasource {
           needAccessToken: true,
           body: param.toJson(),
           headers: {
-            "Accept-Language": Get.find<LocaleController>().localeString,
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
         ),
         contentType: "application/json",

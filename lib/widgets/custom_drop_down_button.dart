@@ -105,10 +105,9 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
                             selectedItem?.toString() ??
                                 widget.defautText ??
                                 '...',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: textTheme(
+                              context,
+                            ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -129,6 +128,7 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
                                 : Text(
                                   item.toString(),
                                   overflow: TextOverflow.ellipsis,
+                                  style: textTheme(context).bodyMedium,
                                 ),
                       ),
                     )
@@ -147,9 +147,9 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
                   width: 1,
-                  color: widget.buttonBorderColor ?? Colors.grey[400]!,
+                  color: widget.buttonBorderColor ?? Colors.grey[900]!,
                 ),
-                color: Colors.white,
+                color: Colors.black,
               ),
               elevation: 0,
             ),
@@ -171,7 +171,7 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
               width: widget.dropdownWidth,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: Colors.white,
+                color: Colors.black,
               ),
               elevation: 8,
             ),
