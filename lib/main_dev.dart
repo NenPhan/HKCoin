@@ -27,8 +27,15 @@ void main() async {
       builder: (controller) {
         return EasyLocalization(
           supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
-          path: controller.translationFile.path,
-          assetLoader: const FileAssetLoader(),
+          startLocale: const Locale("en", "US"),
+          path:
+              controller.translationFile != null
+                  ? controller.translationFile!.path
+                  : "assets/translations",
+          assetLoader:
+              controller.translationFile == null
+                  ? const RootBundleAssetLoader()
+                  : const FileAssetLoader(),
           child: const CustomMaterialApp(),
         );
       },

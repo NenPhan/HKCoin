@@ -199,15 +199,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               ),
                                             ),
                                             child: SpacingRow(
-                                              spacing: 15,
+                                              spacing: 20,
                                               children: [
                                                 Image.network(
                                                   method?.brandUrl ?? "",
-                                                  width: 30,
+                                                  width: 25,
                                                 ),
                                                 Expanded(
-                                                  child: Text(
-                                                    method?.name ?? "",
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(method?.name ?? ""),
+                                                      if (method?.fullDescription !=
+                                                              null &&
+                                                          method?.fullDescription !=
+                                                              "")
+                                                        Text(
+                                                          method?.fullDescription ??
+                                                              "",
+                                                          style: textTheme(
+                                                            context,
+                                                          ).bodySmall?.copyWith(
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
                                                 ),
                                                 Container(

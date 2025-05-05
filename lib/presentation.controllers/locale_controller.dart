@@ -7,7 +7,7 @@ import 'package:hkcoin/data.models/language.dart';
 import 'package:hkcoin/data.repositories/locale_repository.dart';
 
 class LocaleController extends GetxController {
-  late File translationFile;
+  File? translationFile;
   late Locale locale;
   String get localeString =>
       "${locale.languageCode}-${locale.countryCode ?? ""}";
@@ -18,7 +18,10 @@ class LocaleController extends GetxController {
     final String? countryCode = language.languageCulture?.split("-").last;
     if (languageCode != null && countryCode != null) {
       locale = Locale(languageCode, countryCode);
-      await setAppLanguage(newLocale: locale);
+      // await setAppLanguage(newLocale: locale);
+    } else {
+      locale = const Locale("en", "US");
+      // await setAppLanguage(newLocale: locale);
     }
   }
 

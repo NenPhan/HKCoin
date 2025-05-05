@@ -40,6 +40,7 @@ class CheckoutController extends GetxController {
       (r) {},
     );
     update(["checkout"]);
+    await getOrderTotal();
   }
 
   Future<bool> checkoutComplete() async {
