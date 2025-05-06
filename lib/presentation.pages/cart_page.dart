@@ -55,7 +55,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                           MainButton(
                             width: null,
-                            text: tr("Trở về trang chủ"),
+                            text: tr("Account.Login.BackHome"),
                             onTap: () {
                               Get.back();
                             },

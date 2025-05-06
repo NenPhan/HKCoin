@@ -59,7 +59,7 @@ class DioClient {
     logString +=
         ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n\n=========================');
     log(logString);
-    log(header.toString());
+    // log(header.toString());
     final rawResponse = (await _connect(
       fields.httpMethod,
       url: (fields.host ?? AppConfig().apiUrl) + fields.endpoint,

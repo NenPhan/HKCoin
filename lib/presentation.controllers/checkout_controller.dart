@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/cart.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
@@ -47,7 +48,7 @@ class CheckoutController extends GetxController {
     if (data != null) {
       isCheckingOut = true;
       update(["checkout-button"]);
-      await handleEither(
+      return await handleEitherReturn<bool, Failure, int?>(
         await CheckoutRepository().checkout(
           data?.existingAddresses?.id,
           data?.paymentMethod?.paymentMethods
@@ -55,13 +56,41 @@ class CheckoutController extends GetxController {
               .firstOrNull
               ?.paymentMethodSystemName,
         ),
-        (r) {
-          return true;
+        (id) async {
+          if (id != null) {
+            var result = await handleEitherReturn(
+              await CheckoutRepository().checkoutComplete(id),
+              (r) async {
+                return true;
+              },
+              onError: (message) {
+                return false;
+              },
+            );
+            if (result) {
+              isCheckingOut = false;
+              update(["checkout-button"]);
+              return result;
+            } else {
+              isCheckingOut = false;
+              update(["checkout-button"]);
+              return result;
+            }
+          } else {
+            isCheckingOut = false;
+            update(["checkout-button"]);
+            return false;
+          }
+        },
+        onError: (message) {
+          isCheckingOut = false;
+          update(["checkout-button"]);
+          return false;
         },
       );
-      isCheckingOut = false;
-      update(["checkout-button"]);
     }
+    isCheckingOut = false;
+    update(["checkout-button"]);
     return false;
   }
 

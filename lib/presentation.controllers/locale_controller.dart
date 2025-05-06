@@ -38,7 +38,7 @@ class LocaleController extends GetxController {
     if (Storage().getToken != null) {
       return await handleEitherReturn(await LocaleRepository().getLanguage(), (
         r,
-      ) {
+      ) async {
         return r;
       });
     } else {
@@ -47,11 +47,14 @@ class LocaleController extends GetxController {
   }
 
   Future setLanguage(int? id) async {
-    await handleEitherReturn(await LocaleRepository().setLanguage(id), (r) {});
+    await handleEitherReturn(
+      await LocaleRepository().setLanguage(id),
+      (r) async {},
+    );
   }
 
   Future getLanguages() async {
-    await handleEitherReturn(await LocaleRepository().getLanguages(), (r) {
+    await handleEitherReturn(await LocaleRepository().getLanguages(), (r) async{
       listLanguage = r;
     });
   }

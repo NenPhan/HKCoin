@@ -68,9 +68,9 @@ handleEither<B, T extends Failure, S>(
   }, onResult);
 }
 
-handleEitherReturn<B, T extends Failure, S>(
-  Either<T, S> either,
-  B Function(S r) onResult, {
+handleEitherReturn<Result, Left extends Failure, Right>(
+  Either<Left, Right> either,
+  Future<Result> Function(Right r) onResult, {
   Function(String message)? onError,
   bool shouldHandleError = true,
   String? defaultError,

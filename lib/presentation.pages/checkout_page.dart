@@ -4,11 +4,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/presentation.controllers/cart_controller.dart';
 import 'package:hkcoin/presentation.controllers/checkout_controller.dart';
-import 'package:hkcoin/presentation.pages/home_page.dart';
+import 'package:hkcoin/presentation.pages/checkout_complete_page.dart';
 import 'package:hkcoin/widgets/address_widget.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/main_button.dart';
@@ -307,12 +306,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     await controller.checkoutComplete();
                                 if (result) {
                                   Get.find<CartController>().getCartData();
-                                  Get.offNamedUntil(
-                                    HomePage.route,
-                                    (route) => false,
-                                  );
-                                  Toast.showSuccessToast(
-                                    "Thanh toán thành công",
+                                  Get.toNamed(
+                                    CheckoutCompletePage.route,
+                                    arguments: result,
                                   );
                                 }
                               },

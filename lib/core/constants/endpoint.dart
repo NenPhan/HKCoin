@@ -19,6 +19,7 @@ class Endpoints {
   static String addAddress = "Orders/AddAddress";
   static String selectAddress = "Orders/SelectBillingAddress";
   static String checkout = "Orders/Checkout";
+  static String checkoutComplete = "Orders/CheckoutComplate";
   static String selectPaymentMethod = "Orders/SelectPaymentMethod";
   static String orderTotal = "Orders/OrderTotal";
   static String getLanguage = "Languages/GetLanguage";

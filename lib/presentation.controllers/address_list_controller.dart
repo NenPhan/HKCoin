@@ -29,7 +29,7 @@ class AddressListController extends GetxController {
     update(["address-list"]);
     return await handleEitherReturn(
       await CheckoutRepository().selectAddress(id),
-      (r) {
+      (r) async {
         return true;
       },
       onError: (message) {

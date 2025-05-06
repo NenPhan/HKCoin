@@ -50,7 +50,7 @@ class CartController extends GetxController {
     var either = await CheckoutRepository().deleteCart();
     return handleEitherReturn(
       either,
-      (r) {
+      (r) async {
         getCartData();
         return true;
       },

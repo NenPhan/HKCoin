@@ -197,9 +197,9 @@ class CheckoutDatasource {
     });
   }
 
-  Future<void> checkout(int? addressId, String? paymentMethodName) async {
-    await handleRemoteRequest(() async {
-      await dioClient.call(
+  Future<int?> checkout(int? addressId, String? paymentMethodName) async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
         DioParams(
           HttpMethod.POST,
           endpoint: Endpoints.checkout,
@@ -212,6 +212,28 @@ class CheckoutDatasource {
             "PaymentMethodName": paymentMethodName,
             "CustomerComment": "",
           },
+        ),
+        contentType: "application/json",
+      );
+      if (response["Data"]["Id"] is int) {
+        return response["Data"]["Id"];
+      } else {
+        return null;
+      }
+    });
+  }
+
+  Future<void> checkoutComplete(int id) async {
+    return await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.checkoutComplete,
+          needAccessToken: true,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+          body: {"Id": id},
         ),
         contentType: "application/json",
       );
