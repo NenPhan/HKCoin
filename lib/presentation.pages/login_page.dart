@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                 Obx(() {
                   return MainButton(
                     isLoading: controller.isLoading.value,
-                    text: tr('Account.Login'),
+                    text: 'Account.Login',
                     onTap: () {
                       if (controller.isLoading.value) return;
                       controller.login(() {

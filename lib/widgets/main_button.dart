@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
@@ -42,7 +43,7 @@ class _MainButtonState extends State<MainButton> {
         child:
             widget.isLoading
                 ? const LoadingWidget()
-                : Text(widget.text, style: textTheme(context).titleSmall),
+                : Text(tr(widget.text), style: textTheme(context).titleSmall),
       ),
     );
   }

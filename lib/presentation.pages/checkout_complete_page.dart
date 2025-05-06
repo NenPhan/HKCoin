@@ -38,7 +38,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 child: const Icon(Icons.check),
               ),
               MainButton(
-                text: tr("Account.Login.BackHome"),
+                text: "Account.Login.BackHome",
                 onTap: () {
                   Get.offNamedUntil(HomePage.route, (route) => false);
                 },

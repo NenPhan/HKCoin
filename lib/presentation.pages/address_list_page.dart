@@ -74,7 +74,9 @@ class _AddressListPageState extends State<AddressListPage> {
   _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(AddAddressPage.route);
+        Get.toNamed(AddAddressPage.route)?.then((value) {
+          controller.getAddressData();
+        });
       },
       child: Container(
         width: double.infinity,

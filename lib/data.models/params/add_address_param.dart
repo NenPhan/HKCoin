@@ -48,8 +48,8 @@ class AddAddressParam {
   Map<String, dynamic> toJson() => {
     "FirstName": firstName,
     "LastName": lastName,
-    "Email": email,
-    "Company": company,
+    "Email": email ?? "",
+    "Company": company ?? "",
     "CountryId": countryId,
     "StateProvinceId": stateProvinceId,
     "City": city,

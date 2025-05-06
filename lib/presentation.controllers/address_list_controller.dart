@@ -10,7 +10,7 @@ class AddressListController extends GetxController {
 
   @override
   void onInit() {
-    getAddressData();
+    // getAddressData();
     super.onInit();
   }
 

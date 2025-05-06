@@ -27,7 +27,7 @@ class ChangePasswordController extends GetxController {
         ),
         (r) {
           Get.back();
-          Toast.showSuccessToast("Đổi mật khẩu thành công");
+          Toast.showSuccessToast("Account.ChangePassword.Success");
         },
       );
     }

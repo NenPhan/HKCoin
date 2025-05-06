@@ -142,6 +142,7 @@ class CheckoutDatasource {
           },
           body: param.toJson(),
         ),
+        contentType: "application/json",
       );
     });
   }

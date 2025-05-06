@@ -94,7 +94,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                           Obx(
                             () => MainButton(
                               isLoading: controller.isLoadingSaveButton.value,
-                              text: tr("Common.Save"),
+                              text: "Common.Save",
                               onTap: () async {
                                 await controller.updateCustomerInfo();
                               },

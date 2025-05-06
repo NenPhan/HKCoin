@@ -40,6 +40,12 @@ class AppThemes {
           borderSide: const BorderSide(color: Colors.red, width: 1),
           borderRadius: BorderRadius.circular(size * 0.02),
         ),
+        errorStyle: TextStyle(
+          fontSize: size * 0.019, //12
+          fontWeight: FontWeight.w500,
+          color: Colors.red[100],
+          fontFamily: FontFamily.googleSans,
+        ),
         filled: true,
         labelStyle: TextStyle(
           fontSize: size * 0.024, //14
@@ -135,6 +141,12 @@ class AppThemes {
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.red, width: 1),
           borderRadius: BorderRadius.circular(size * 0.02),
+        ),
+        errorStyle: TextStyle(
+          fontSize: size * 0.019, //12
+          fontWeight: FontWeight.w500,
+          color: Colors.red,
+          fontFamily: FontFamily.googleSans,
         ),
         filled: true,
         labelStyle: TextStyle(

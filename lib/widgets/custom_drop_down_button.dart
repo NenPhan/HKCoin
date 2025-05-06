@@ -6,7 +6,7 @@ class CustomDropDownButton<T> extends StatefulWidget {
   const CustomDropDownButton({
     Key? key,
     this.buttonWidth,
-    this.buttonHeight = 40,
+    this.buttonHeight = 60,
     this.dropdownWidth = 200,
     this.dropdownMaxHeight = 180,
     @required this.items,
@@ -144,12 +144,12 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
               width: widget.buttonWidth,
               padding: const EdgeInsets.only(left: 10, right: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 1,
                   color: widget.buttonBorderColor ?? Colors.grey[900]!,
                 ),
-                color: Colors.black,
+                color: Colors.grey[900],
               ),
               elevation: 0,
             ),

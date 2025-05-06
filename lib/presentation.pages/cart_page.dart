@@ -55,7 +55,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                           MainButton(
                             width: null,
-                            text: tr("Account.Login.BackHome"),
+                            text: "Account.Login.BackHome",
                             onTap: () {
                               Get.back();
                             },
@@ -191,13 +191,8 @@ class _CartPageState extends State<CartPage> {
                       horizontal: scrSize(context).width * 0.03,
                     ),
                     child: MainButton(
-                      text: tr("Enums.WalletPostingReason.Purchase"),
+                      text: "Enums.WalletPostingReason.Purchase",
                       onTap: () async {
-                        // var result = await controller.deleteCart();
-                        // if (result) {
-                        //   Get.back();
-                        //   Toast.showSuccessToast(tr("Thanh toán thành công"));
-                        // }
                         Get.toNamed(CheckoutPage.route);
                       },
                     ),

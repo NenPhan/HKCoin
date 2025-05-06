@@ -49,7 +49,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   controller.getCheckoutData();
                                 },
                               ),
-                            if (controller.cart != null)
+                            if (controller.cart != null &&
+                                controller.cart!.items.isNotEmpty)
                               Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.all(
@@ -109,7 +110,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   ],
                                 ),
                               ),
-                            if (controller.cart != null)
+                            if (controller.cart != null &&
+                                controller.cart!.items.isNotEmpty)
                               Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.all(
@@ -300,7 +302,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             return MainButton(
                               width: scrSize(context).width * 0.3,
                               isLoading: controller.isCheckingOut,
-                              text: tr("Checkout"),
+                              text: "Checkout",
                               onTap: () async {
                                 var result =
                                     await controller.checkoutComplete();

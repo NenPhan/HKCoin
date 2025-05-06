@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
@@ -37,7 +36,7 @@ class RegisterController extends GetxController {
           },
         );
       } else {
-        Toast.showErrorToast(tr("Identity.Error.PasswordMismatch"));
+        Toast.showErrorToast("Identity.Error.PasswordMismatch");
       }
     }
   }
