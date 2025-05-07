@@ -34,7 +34,7 @@ class _AddressListPageState extends State<AddressListPage> {
       body: SafeArea(
         child: Column(
           children: [
-            BaseAppBar(title: tr("Account.CustomerAddresses")),
+            const BaseAppBar(title: "Account.CustomerAddresses"),
             Expanded(
               child: GetBuilder<AddressListController>(
                 id: "address-list",

@@ -31,7 +31,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BaseAppBar(title: tr("Account.CustomerAddresses.AddNew")),
+            const BaseAppBar(title: "Account.CustomerAddresses.AddNew"),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(

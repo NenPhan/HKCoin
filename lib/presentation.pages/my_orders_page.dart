@@ -23,7 +23,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
       body: SafeArea(
         child: Column(
           children: [
-            BaseAppBar(title: tr("Gói đầu tư của tôi")),
+            const BaseAppBar(title: "Gói đầu tư của tôi"),
             Expanded(
               child: GetBuilder<MyOrdersController>(
                 id: "my-order-list",

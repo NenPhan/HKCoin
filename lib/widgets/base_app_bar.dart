@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -38,7 +39,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                 },
               )
               : const SizedBox(),
-          Text(title ?? "", style: textTheme(context).titleMedium),
+          Text(tr(title ?? ""), style: textTheme(context).titleMedium),
           // if (actionWidget != null) actionWidget!,
           const Spacer(),
           Hero(

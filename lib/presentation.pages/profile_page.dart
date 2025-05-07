@@ -10,6 +10,7 @@ import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
 import 'package:restart_app/restart_app.dart';
@@ -32,6 +33,11 @@ class _ProfilePageState extends State<ProfilePage> {
           "name": "Thông tin khách hàng",
           "icon": Icons.person,
           "page": CustomerInfoPage.route,
+        },
+        {
+          "name": "Account.WalletToken",
+          "icon": Icons.wallet,
+          "page": WalletTokenPage.route,
         },
         {
           "name": "Gói đầu tư của tôi",

@@ -35,7 +35,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    BaseAppBar(title: tr("Checkout")),
+                    const BaseAppBar(title: "Checkout"),
                     Expanded(
                       child: SingleChildScrollView(
                         child: SpacingColumn(

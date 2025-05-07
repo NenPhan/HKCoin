@@ -37,7 +37,7 @@ class _CartPageState extends State<CartPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                BaseAppBar(title: tr("Enums.RuleScope.Cart")),
+                const BaseAppBar(title: "Enums.RuleScope.Cart"),
                 if (controller.cart == null || controller.cart!.items.isEmpty)
                   Expanded(
                     child: SizedBox(
