@@ -83,7 +83,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                   padding: EdgeInsets.all(scrSize(context).width * 0.01),
                   margin: EdgeInsets.all(scrSize(context).width * 0.01),
                   child: SpacingColumn(
-                    spacing: 10,
+                    spacing: 0,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       if (newsDetail.fullDescription.isNotEmpty)                      
@@ -95,7 +95,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                             color: textTheme(context).bodyMedium!.color,
                           ),
                           'img': Style(
-                            margin: Margins.symmetric(vertical: 10),
+                            margin: Margins.symmetric(vertical: 0),                            
                           ),
                         },
                         extensions: [
@@ -108,18 +108,22 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                               return LayoutBuilder(
                                 builder: (context, constraints) {
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Image.network(
-                                      src,
-                                      width: constraints.maxWidth, // full width
-                                      fit: BoxFit.contain,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          const Text('Cant not loading image!'),
-                                      loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) return child;
-                                        return const Center(child: CircularProgressIndicator());
-                                      },
-                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 0),
+                                    child:ConstrainedBox(
+                                      constraints:BoxConstraints(
+                                        maxWidth: constraints.maxWidth
+                                      ),
+                                      child: Image.network(
+                                        src,                                        
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) =>
+                                            const Text('Cant not loading image!'),
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return const Center(child: CircularProgressIndicator());
+                                        },
+                                      ),
+                                    ),                                    
                                   );
                                 },
                               );
