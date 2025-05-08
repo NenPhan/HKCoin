@@ -112,7 +112,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                                     child: Image.network(
                                       src,
                                       width: constraints.maxWidth, // full width
-                                      fit: BoxFit.none,
+                                      fit: BoxFit.contain,
                                       errorBuilder: (context, error, stackTrace) =>
                                           const Text('Cant not loading image!'),
                                       loadingBuilder: (context, child, loadingProgress) {
