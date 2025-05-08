@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:hkcoin/data.models/news_detail.dart';
 import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
@@ -9,6 +10,7 @@ import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
+import 'package:hkcoin/presentation.pages/news_details_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
@@ -29,6 +31,10 @@ class AppGetRoutes {
     GetPage(
       name: ProductDetailPage.route,
       page: () => const ProductDetailPage(),
+    ),
+     GetPage(
+      name: NewsDetailPage.route,
+      page: () => const NewsDetailPage(),
     ),
     GetPage(name: CartPage.route, page: () => const CartPage()),
     GetPage(name: CustomerInfoPage.route, page: () => const CustomerInfoPage()),
