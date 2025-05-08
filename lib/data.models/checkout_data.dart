@@ -159,3 +159,65 @@ class InfoWidget {
     "Prepend": prepend,
   };
 }
+class CheckoutComplateData{
+  String? message;
+  String? notifiesAlert;
+  List<dynamic>? warnings;
+  OrderComplate order;
+  InfoPayment? infoPayment;
+   CheckoutComplateData({
+    this.message,
+    this.notifiesAlert,
+    this.warnings,
+    required this.order,
+    this.infoPayment
+  });
+  factory CheckoutComplateData.fromJson(Map<String, dynamic> json) => CheckoutComplateData(
+    message: json["Message"],
+    notifiesAlert:json["NotifiesAlert"],            
+    order: OrderComplate.fromJson(json["Order"]),
+    infoPayment: InfoPayment.fromJson(json["InfoPayment"])
+  );
+}
+class OrderComplate{
+   String? orderGuid;
+  String? orderNumber;
+  String? orderTotal;
+  String? orderStatus;
+  DateTime? createdOn;
+  String? orderWalletTotalStr;
+  double? orderWalletTotal;
+  OrderComplate({
+    this.orderGuid,
+    this.orderNumber,
+    this.orderTotal,
+    this.orderStatus,
+    this.createdOn,
+    this.orderWalletTotalStr,
+    this.orderWalletTotal
+  });
+  factory OrderComplate.fromJson(Map<String, dynamic> json) => 
+  OrderComplate(
+    orderGuid: json["OrderGuid"],
+    orderNumber:json["OrderNumber"],
+    orderTotal: json["OrderTotal"],
+    orderStatus: json["OrderStatus"],
+    orderWalletTotalStr: json["OrderWalletTotalStr"],
+    orderWalletTotal: json["OrderWalletTotal"],
+    createdOn:
+        json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]),
+  );
+}
+class InfoPayment{
+  String? walletAddress;
+  String? qRCodePayment;
+  InfoPayment({
+    this.walletAddress,
+    this.qRCodePayment
+  });
+  factory InfoPayment.fromJson(Map<String, dynamic> json) =>
+  InfoPayment(
+    walletAddress: json["WalletAddress"],
+    qRCodePayment:json["QRCodePayment"]
+  );
+}
