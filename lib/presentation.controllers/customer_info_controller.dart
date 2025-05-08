@@ -4,7 +4,7 @@ import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
-import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/customer_repository.dart';
 
 class CustomerInfoController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -23,7 +23,7 @@ class CustomerInfoController extends GetxController {
   }
 
   void getCustomerInfo() async {
-    handleEither(await AuthRepository().getCustomerInfo(), (r) {
+    handleEither(await CustomerRepository().getCustomerInfo(), (r) {
       fNameController.text = r.firstName;
       lNameController.text = r.lastName;
       emailController.text = r.email;
@@ -41,12 +41,13 @@ class CustomerInfoController extends GetxController {
       customerInfo.lastName = lNameController.text;
       customerInfo.email = emailController.text;
       customerInfo.phone = phoneController.text;
-      handleEither(await AuthRepository().updateCustomerInfo(customerInfo), (
-        r,
-      ) {
-        Get.back();
-        Toast.showSuccessToast("Lưu thông tin thành công");
-      });
+      handleEither(
+        await CustomerRepository().updateCustomerInfo(customerInfo),
+        (r) {
+          Get.back();
+          Toast.showSuccessToast("Lưu thông tin thành công");
+        },
+      );
     }
 
     isLoadingSaveButton.value = false;

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
-import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/customer_repository.dart';
 
 class ChangePasswordController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -18,7 +18,7 @@ class ChangePasswordController extends GetxController {
     isLoadingSaveButton.value = true;
     if (formKey.currentState?.validate() ?? false) {
       handleEither(
-        await AuthRepository().changePassword(
+        await CustomerRepository().changePassword(
           ChangePasswordParam(
             oldPassword: oldPasswordController.text.trim(),
             newPassword: newPasswordController.text.trim(),

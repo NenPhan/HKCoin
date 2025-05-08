@@ -10,9 +10,10 @@ import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
+import 'package:hkcoin/data.models/wallet_token.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
-class AuthDatasource {
+class CustomerDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
 
   Future login(String username, String password) async {
@@ -96,6 +97,22 @@ class AuthDatasource {
       );
 
       return WalletInfo.fromJson(response["Data"]);
+    });
+  }
+
+  Future<List<WalletToken>> getWalletTokens() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getWalletBalances,
+          needAccessToken: true,
+        ),
+      );
+
+      return (response["Data"]["Tokens"] as List)
+          .map((e) => WalletToken.fromJson(e))
+          .toList();
     });
   }
 

@@ -4,7 +4,7 @@ import 'package:hkcoin/data.models/news.dart';
 import 'package:hkcoin/data.models/product.dart';
 import 'package:hkcoin/data.models/slide.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
-import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/customer_repository.dart';
 import 'package:hkcoin/data.repositories/news_repository.dart';
 import 'package:hkcoin/data.repositories/product_repository.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
@@ -33,7 +33,7 @@ class HomeBodyController extends GetxController {
 
   void getCustomerData() async {
     isLoadingWallet.value = true;
-    handleEither(await AuthRepository().getWalletInfo(), (r) {
+    handleEither(await CustomerRepository().getWalletInfo(), (r) {
       walletInfo = r;
     });
     isLoadingWallet.value = false;

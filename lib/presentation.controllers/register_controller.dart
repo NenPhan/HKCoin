@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/register_form.dart';
-import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/customer_repository.dart';
 
 class RegisterController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -21,7 +21,7 @@ class RegisterController extends GetxController {
       if (passwordController.text.trim() ==
           confirmPasswordController.text.trim()) {
         handleEither(
-          await AuthRepository().register(
+          await CustomerRepository().register(
             RegisterForm(
               firstName: fNameController.text.trim(),
               lastName: lNameController.text.trim(),

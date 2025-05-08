@@ -158,12 +158,12 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 width: scrSize(context).width * 0.6,
               ),
             ),
-          const Text("ID ví: "),
+          Text(tr("ID ví: ")),
           Text(data?.infoPayment?.walletAddress ?? ""),
           MainButton(
             width: scrSize(context).width * 0.25,
             icon: const Icon(Icons.copy, color: Colors.white),
-            text: tr("Common.Copy"),
+            text: "Common.Copy",
             onTap: () {
               try {
                 if (data?.infoPayment?.walletAddress != null) {

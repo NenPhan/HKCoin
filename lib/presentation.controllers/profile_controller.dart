@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
-import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/customer_repository.dart';
 
 class ProfileController extends GetxController {
   CustomerInfo? customerInfo;
@@ -23,7 +23,7 @@ class ProfileController extends GetxController {
   void logout(VoidCallback onLogedOut) async {
     isLoggingOut.value = true;
     update(["logout-button"]);
-    await handleEither(await AuthRepository().logout(), (r) async {
+    await handleEither(await CustomerRepository().logout(), (r) async {
       onLogedOut();
     });
     isLoggingOut.value = false;

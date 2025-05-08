@@ -6,6 +6,7 @@ class Endpoints {
   static String getOrders = "Customers/Orders";
   static String customerInfo = "Customers/Me/";
   static String getWalletInfo = "Wallets/Dashboard";
+  static String getWalletBalances = "Wallets/Balances";
   static String getCart = "ShoppingCartItems/GetCart";
   static String addToCart = "ShoppingCartItems/AddToCart";
   static String deleteCart = "ShoppingCartItems/DeleteCart";

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
-import 'package:hkcoin/data.repositories/auth_repository.dart';
+import 'package:hkcoin/data.repositories/customer_repository.dart';
 
 class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -19,12 +19,12 @@ class LoginController extends GetxController {
     isLoading.value = true;
     if (formKey.currentState!.validate()) {
       handleEither(
-        await AuthRepository().login(
+        await CustomerRepository().login(
           usernameController.text.trim(),
           passwordController.text.trim(),
         ),
         (r) async {
-          handleEither(await AuthRepository().getCustomerInfo(), (r) {
+          handleEither(await CustomerRepository().getCustomerInfo(), (r) {
             onLogedIn();
           });
         },
