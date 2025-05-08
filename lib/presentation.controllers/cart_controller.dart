@@ -54,7 +54,7 @@ class CartController extends GetxController {
         getCartData();
         return true;
       },
-      onError: (message) {
+      onError: (message) async {
         return false;
       },
     );

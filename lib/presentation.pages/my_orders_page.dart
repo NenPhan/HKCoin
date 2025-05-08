@@ -1,7 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
+import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/my_orders_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
@@ -77,9 +77,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                                     Text(
                                       order.createdOn == null
                                           ? ""
-                                          : DateFormat(
-                                            'dd/MM/yyyy HH:mm',
-                                          ).format(order.createdOn!),
+                                          : dateFormat(order.createdOn!),
                                       style: textTheme(context).bodyMedium
                                           ?.copyWith(color: Colors.white),
                                     ),

@@ -159,28 +159,31 @@ class InfoWidget {
     "Prepend": prepend,
   };
 }
-class CheckoutComplateData{
+
+class CheckoutCompleteData {
   String? message;
   String? notifiesAlert;
   List<dynamic>? warnings;
   OrderComplate order;
   InfoPayment? infoPayment;
-   CheckoutComplateData({
+  CheckoutCompleteData({
     this.message,
     this.notifiesAlert,
     this.warnings,
     required this.order,
-    this.infoPayment
+    this.infoPayment,
   });
-  factory CheckoutComplateData.fromJson(Map<String, dynamic> json) => CheckoutComplateData(
-    message: json["Message"],
-    notifiesAlert:json["NotifiesAlert"],            
-    order: OrderComplate.fromJson(json["Order"]),
-    infoPayment: InfoPayment.fromJson(json["InfoPayment"])
-  );
+  factory CheckoutCompleteData.fromJson(Map<String, dynamic> json) =>
+      CheckoutCompleteData(
+        message: json["Message"],
+        notifiesAlert: json["NotifiesAlert"],
+        order: OrderComplate.fromJson(json["Order"]),
+        infoPayment: InfoPayment.fromJson(json["InfoPayment"]),
+      );
 }
-class OrderComplate{
-   String? orderGuid;
+
+class OrderComplate {
+  String? orderGuid;
   String? orderNumber;
   String? orderTotal;
   String? orderStatus;
@@ -194,12 +197,11 @@ class OrderComplate{
     this.orderStatus,
     this.createdOn,
     this.orderWalletTotalStr,
-    this.orderWalletTotal
+    this.orderWalletTotal,
   });
-  factory OrderComplate.fromJson(Map<String, dynamic> json) => 
-  OrderComplate(
+  factory OrderComplate.fromJson(Map<String, dynamic> json) => OrderComplate(
     orderGuid: json["OrderGuid"],
-    orderNumber:json["OrderNumber"],
+    orderNumber: json["OrderNumber"],
     orderTotal: json["OrderTotal"],
     orderStatus: json["OrderStatus"],
     orderWalletTotalStr: json["OrderWalletTotalStr"],
@@ -208,16 +210,13 @@ class OrderComplate{
         json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]),
   );
 }
-class InfoPayment{
+
+class InfoPayment {
   String? walletAddress;
   String? qRCodePayment;
-  InfoPayment({
-    this.walletAddress,
-    this.qRCodePayment
-  });
-  factory InfoPayment.fromJson(Map<String, dynamic> json) =>
-  InfoPayment(
+  InfoPayment({this.walletAddress, this.qRCodePayment});
+  factory InfoPayment.fromJson(Map<String, dynamic> json) => InfoPayment(
     walletAddress: json["WalletAddress"],
-    qRCodePayment:json["QRCodePayment"]
+    qRCodePayment: json["QRCodePayment"],
   );
 }

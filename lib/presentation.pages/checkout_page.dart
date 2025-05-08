@@ -304,13 +304,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               isLoading: controller.isCheckingOut,
                               text: "Checkout",
                               onTap: () async {
-                                var result =
-                                    await controller.checkoutComplete();
-                                if (result) {
+                                int? id = await controller.checkoutComplete();
+                                if (id != null) {
                                   Get.find<CartController>().getCartData();
                                   Get.toNamed(
                                     CheckoutCompletePage.route,
-                                    arguments: result,
+                                    arguments: id,
                                   );
                                 }
                               },

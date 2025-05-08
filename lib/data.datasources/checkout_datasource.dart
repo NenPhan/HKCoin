@@ -224,7 +224,7 @@ class CheckoutDatasource {
     });
   }
 
-  Future<CheckoutComplateData> checkoutComplete(int id) async {
+  Future<CheckoutCompleteData> checkoutComplete(int id) async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
@@ -238,7 +238,7 @@ class CheckoutDatasource {
         ),
         contentType: "application/json",
       );
-      return CheckoutComplateData.fromJson(response["Data"]);
+      return CheckoutCompleteData.fromJson(response["Data"]);
     });
   }
 

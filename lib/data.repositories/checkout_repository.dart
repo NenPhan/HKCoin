@@ -115,11 +115,11 @@ class CheckoutRepository {
     );
   }
 
-  Future<Either<Failure, void>> checkoutComplete(int id) {
+  Future<Either<Failure, CheckoutCompleteData>> checkoutComplete(int id) {
     return handleRepositoryCall(
       onRemote: () async {
-        await CheckoutDatasource().checkoutComplete(id);
-        return const Right(null);
+        var result = await CheckoutDatasource().checkoutComplete(id);
+        return Right(result);
       },
     );
   }

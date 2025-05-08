@@ -44,3 +44,8 @@ Future showPopUpDialog(
 
 String? requiredValidator(value, String alert) =>
     value != "" && value != null ? null : tr(alert);
+
+String dateFormat(DateTime? date, {String format = 'dd/MM/yyyy HH:mm'}) {
+  if (date == null) return "";
+  return DateFormat(format).format(date);
+}

@@ -10,7 +10,7 @@ class AddressListController extends GetxController {
 
   @override
   void onInit() {
-    // getAddressData();
+    getAddressData();
     super.onInit();
   }
 
@@ -32,7 +32,7 @@ class AddressListController extends GetxController {
       (r) async {
         return true;
       },
-      onError: (message) {
+      onError: (message) async {
         return false;
       },
     );

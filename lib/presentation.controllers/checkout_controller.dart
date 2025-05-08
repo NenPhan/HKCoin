@@ -44,11 +44,11 @@ class CheckoutController extends GetxController {
     await getOrderTotal();
   }
 
-  Future<bool> checkoutComplete() async {
+  Future<int?> checkoutComplete() async {
     if (data != null) {
       isCheckingOut = true;
       update(["checkout-button"]);
-      return await handleEitherReturn<bool, Failure, int?>(
+      return await handleEitherReturn<int?, Failure, int?>(
         await CheckoutRepository().checkout(
           data?.existingAddresses?.id,
           data?.paymentMethod?.paymentMethods
@@ -57,41 +57,18 @@ class CheckoutController extends GetxController {
               ?.paymentMethodSystemName,
         ),
         (id) async {
-          if (id != null) {
-            var result = await handleEitherReturn(
-              await CheckoutRepository().checkoutComplete(id),
-              (r) async {
-                return true;
-              },
-              onError: (message) {
-                return false;
-              },
-            );
-            if (result) {
-              isCheckingOut = false;
-              update(["checkout-button"]);
-              return result;
-            } else {
-              isCheckingOut = false;
-              update(["checkout-button"]);
-              return result;
-            }
-          } else {
-            isCheckingOut = false;
-            update(["checkout-button"]);
-            return false;
-          }
+          return id;
         },
-        onError: (message) {
+        onError: (message) async {
           isCheckingOut = false;
           update(["checkout-button"]);
-          return false;
+          return null;
         },
       );
     }
     isCheckingOut = false;
     update(["checkout-button"]);
-    return false;
+    return null;
   }
 
   Future getOrderTotal() async {
