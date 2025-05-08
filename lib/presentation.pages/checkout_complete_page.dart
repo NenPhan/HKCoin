@@ -7,10 +7,12 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
+import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/presentation.controllers/checkout_complete_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
+import 'package:html/parser.dart';
 
 class CheckoutCompletePage extends StatefulWidget {
   const CheckoutCompletePage({super.key});
@@ -31,7 +33,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
         () => SafeArea(
           child:
               controller.isLoading.value
-                  ? const LoadingWidget()
+                  ? const Center(child: LoadingWidget())
                   : SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -87,11 +89,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                             ),
                           ),
                           SizedBox(height: scrSize(context).height * 0.01),
-                          _buildPaymentInfo(
-                            controller.data?.infoPayment?.qRCodePayment,
-                            controller.data?.infoPayment?.walletAddress ?? "",
-                          ),
-                          SizedBox(height: scrSize(context).height * 0.03),
+                          _buildPaymentInfo(controller.data),
                           MainButton(
                             text: "Account.Login.BackHome",
                             onTap: () {
@@ -132,7 +130,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
     );
   }
 
-  _buildPaymentInfo(String? svgString, String address) {
+  _buildPaymentInfo(CheckoutCompleteData? data) {
     return Container(
       padding: EdgeInsets.all(scrSize(context).width * 0.03),
       decoration: BoxDecoration(
@@ -152,21 +150,27 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
             ),
             child: Text(tr("Account.Order.Fields.BillingAddress")),
           ),
-          if (svgString != null)
+          _buildAlert(data?.notifiesAlert ?? ""),
+          if (data?.infoPayment?.qRCodePayment != null)
             Center(
               child: SvgPicture.string(
-                svgString,
+                data!.infoPayment!.qRCodePayment!,
                 width: scrSize(context).width * 0.6,
               ),
             ),
           const Text("ID ví: "),
-          Text(address),
+          Text(data?.infoPayment?.walletAddress ?? ""),
           MainButton(
-            width: scrSize(context).width * 0.2,
+            width: scrSize(context).width * 0.25,
+            icon: const Icon(Icons.copy, color: Colors.white),
             text: tr("Common.Copy"),
             onTap: () {
               try {
-                Clipboard.setData(ClipboardData(text: address));
+                if (data?.infoPayment?.walletAddress != null) {
+                  Clipboard.setData(
+                    ClipboardData(text: data!.infoPayment!.walletAddress!),
+                  );
+                }
                 Toast.showSuccessToast("Common.CopyToClipboard.Succeeded");
               } catch (e) {
                 Toast.showErrorToast("Common.CopyToClipboard.Failded");
@@ -174,6 +178,47 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  _buildAlert(String alert) {
+    var list =
+        parse(alert).querySelectorAll("body").map((e) => e.innerHtml).toList();
+    String alertString = "";
+    if (list.isNotEmpty) {
+      alertString = list.first.replaceAll(" <br>", "\n");
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Flexible(
+              flex: 2,
+              child: Container(
+                color: Colors.red,
+                child: Center(
+                  child: Icon(Icons.warning_rounded, color: Colors.red[50]),
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 8,
+              child: Container(
+                padding: EdgeInsets.all(scrSize(context).width * 0.03),
+                color: Colors.red[100],
+                child: Text(
+                  alertString,
+                  style: textTheme(
+                    context,
+                  ).bodyMedium?.copyWith(color: Colors.red),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

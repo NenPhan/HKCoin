@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
+import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 
 class MainButton extends StatefulWidget {
@@ -10,11 +11,13 @@ class MainButton extends StatefulWidget {
     required this.text,
     required this.onTap,
     this.width,
+    this.icon,
   });
   final bool isLoading;
   final String text;
   final VoidCallback onTap;
   final double? width;
+  final Widget? icon;
 
   @override
   State<MainButton> createState() => _MainButtonState();
@@ -43,7 +46,14 @@ class _MainButtonState extends State<MainButton> {
         child:
             widget.isLoading
                 ? const LoadingWidget()
-                : Text(tr(widget.text), style: textTheme(context).titleSmall),
+                : SpacingRow(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: scrSize(context).width * 0.02,
+                  children: [
+                    if (widget.icon != null) widget.icon!,
+                    Text(tr(widget.text), style: textTheme(context).titleSmall),
+                  ],
+                ),
       ),
     );
   }
