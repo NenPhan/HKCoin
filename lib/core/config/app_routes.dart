@@ -1,5 +1,4 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:hkcoin/data.models/news_detail.dart';
 import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';

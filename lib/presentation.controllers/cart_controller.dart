@@ -7,17 +7,24 @@ import 'package:hkcoin/data.repositories/checkout_repository.dart';
 
 class CartController extends GetxController {
   Cart? cart;
+  bool isAddingToCart = false;
+  bool isLoadingCart = false;
 
   void getCartData() async {
+    isAddingToCart = true;
+    update(["cart", "home-cart-icon"]);
     if (Storage().getToken != null) {
-      handleEither(await CheckoutRepository().getCart(), (r) {
+      await handleEither(await CheckoutRepository().getCart(), (r) {
         cart = r;
       });
-      update(["cart", "home-cart-icon"]);
     }
+    isAddingToCart = false;
+    update(["cart", "home-cart-icon"]);
   }
 
   Future<bool> addToCart({required int productId, required int price}) async {
+    isAddingToCart = true;
+    update(["add-to-cart-button"]);
     bool isSuccess = true;
     var either1 = await CheckoutRepository().deleteCart();
     handleEither(
@@ -38,6 +45,8 @@ class CartController extends GetxController {
         isSuccess = false;
       },
     );
+    isAddingToCart = false;
+    update(["add-to-cart-button"]);
     return isSuccess;
   }
 

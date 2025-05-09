@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -9,6 +8,7 @@ import 'package:hkcoin/presentation.controllers/cart_controller.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.popups/input_price_popup.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/main_button.dart';
 import 'package:html/parser.dart';
 
 class ProductDetailPageParam {
@@ -108,36 +108,34 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
 
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(scrSize(context).width * 0.03),
-                child: ElevatedButton(
-                  onPressed: () {
-                    showPopUpDialog(
-                      context,
-                      InputPricePopup(
-                        onConfirm: (price) async {
-                          var result = await Get.find<CartController>()
-                              .addToCart(productId: product.id, price: price);
-                          if (result) {
-                            Get.offNamed(CartPage.route);
-                          }
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              GetBuilder<CartController>(
+                id: "add-to-cart-button",
+                builder: (controller) {
+                  return Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(scrSize(context).width * 0.03),
+                    child: MainButton(
+                      isLoading: controller.isAddingToCart,
+                      onTap: () {
+                        showPopUpDialog(
+                          context,
+                          InputPricePopup(
+                            onConfirm: (price) async {
+                              var result = await controller.addToCart(
+                                productId: product.id,
+                                price: price,
+                              );
+                              if (result) {
+                                Get.offNamed(CartPage.route);
+                              }
+                            },
+                          ),
+                        );
+                      },
+                      text: "Enums.WalletPostingReason.Purchase",
                     ),
-                  ),
-                  child: Text(
-                    tr("Enums.WalletPostingReason.Purchase"),
-                    style: textTheme(context).titleSmall,
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),

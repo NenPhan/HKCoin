@@ -77,7 +77,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                 _buildTextInfoWidget(
                                   title: "Tổng đơn hàng",
                                   content:
-                                      controller.data?.order.orderTotal ?? "",
+                                      controller.data?.order.orderWalletTotalStr ?? "",
                                   contentStyle: textTheme(
                                     context,
                                   ).bodyMedium?.copyWith(
