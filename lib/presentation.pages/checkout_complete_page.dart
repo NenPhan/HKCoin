@@ -45,20 +45,20 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                         children: [
                           SizedBox(height: scrSize(context).height * 0.02),
                           Text(
-                            tr("Thông tin đơn hàng"),
+                            tr("Checkout.OrderTotals.Information"),
                             style: textTheme(context).titleMedium,
                           ),
                           IntrinsicHeight(
                             child: Row(
                               children: [
                                 _buildTextInfoWidget(
-                                  title: "Ngày đặt hàng",
+                                  title: "Order.OrderDate",
                                   content: dateFormat(
                                     controller.data?.order.createdOn,
                                   ),
                                 ),
                                 _buildTextInfoWidget(
-                                  title: "Mã đơn hàng",
+                                  title: "Order.Order",
                                   content:
                                       controller.data?.order.orderNumber ?? "",
                                 ),
@@ -70,12 +70,12 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildTextInfoWidget(
-                                  title: "Trạng thái đơn hàng",
+                                  title: "Order.OrderStatus",
                                   content:
                                       controller.data?.order.orderStatus ?? "",
                                 ),
                                 _buildTextInfoWidget(
-                                  title: "Tổng đơn hàng",
+                                  title: "Order.OrderTotal",
                                   content:
                                       controller.data?.order.orderWalletTotalStr ?? "",
                                   contentStyle: textTheme(
