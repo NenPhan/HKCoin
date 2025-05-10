@@ -29,7 +29,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
           body: SafeArea(
             child: Column(
               children: [
-                const BaseAppBar(title: "Thông tin khách hàng"),
+                const BaseAppBar(title: "Account.CustomerInfo"),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(

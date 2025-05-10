@@ -58,7 +58,7 @@ class _CartPageState extends State<CartPage> {
                                         Opacity(
                                           opacity: 0.5,
                                           child: Text(
-                                            tr("Giỏ hàng trống"),
+                                            tr("ShoppingCart.Mini.EmptyCart.Title"),
                                             style:
                                                 textTheme(context).titleMedium,
                                           ),
@@ -175,7 +175,7 @@ class _CartPageState extends State<CartPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Mức đầu tư: ${controller.cart!.items.first.unitPrice}",
+                                        tr('AppShoppingCart.Totals.SubTotal',args:["${controller.cart!.items.first.unitPrice}"]),
                                         style: textTheme(context).bodyLarge
                                             ?.copyWith(color: Colors.white),
                                       ),
