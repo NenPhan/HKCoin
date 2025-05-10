@@ -91,7 +91,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              tr("Ví Tiền Thưởng"),
+                              tr("Account.Report.Shopping"),
                               style: textTheme(context).bodyLarge,
                             ),
                             const SizedBox(height: 10),
