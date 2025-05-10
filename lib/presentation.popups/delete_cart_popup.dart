@@ -31,7 +31,7 @@ class _DeleteCartPopupState extends State<DeleteCartPopup> {
               spacing: scrSize(context).height * 0.01,
               children: [
                 Text(
-                  tr("Bạn có chắc muốn xoá giỏ hàng không?"),
+                  tr("ShoppingCart.Deleted"),
                   style: textTheme(context).titleSmall,
                 ),
                 SizedBox(

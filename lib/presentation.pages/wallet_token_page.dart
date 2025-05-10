@@ -37,7 +37,7 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [MainButton(text: "Add token", onTap: () {})],
+                children: [MainButton(text: tr("Account.WalletToken.Btn"), onTap: () {})],
               ),
             ),
             Obx(
@@ -83,7 +83,7 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
                                       item.walletQrCode ?? "",
                                       width: scrSize(context).width * 0.6,
                                     ),
-                                    Text(tr("Địa chỉ ví: ")),
+                                    Text(tr("Account.WalletToken.Address")),
                                     Text(item.walletToken ?? ""),
                                     MainButton(
                                       width: scrSize(context).width * 0.25,

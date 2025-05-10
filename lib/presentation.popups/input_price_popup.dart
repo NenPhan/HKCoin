@@ -32,7 +32,7 @@ class _InputPricePopupState extends State<InputPricePopup> {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: scrSize(context).height * 0.02,
               children: [
-                Text("Nhập mức đầu tư", style: textTheme(context).titleSmall),
+                Text(tr("Products.EnterProductPrice"), style: textTheme(context).titleSmall),
                 MainTextField(
                   autofocus: true,
                   keyboardType: TextInputType.number,

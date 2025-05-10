@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -20,7 +21,7 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Gói đầu tư", style: textTheme(context).titleSmall),
+        Text(tr("Products.RecentlyAddedProducts"), style: textTheme(context).titleSmall),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: SpacingRow(

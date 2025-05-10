@@ -24,30 +24,30 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List items = [
-    {"name": "Rút tiền", "icon": Icons.local_atm},
-    {"name": "Đội của tôi", "icon": Icons.people_alt_outlined},
+    {"name": tr("Account.WithDrawalRequest.Create"), "icon": Icons.local_atm},
+    {"name": tr("Account.Downlines.Customers"), "icon": Icons.people_alt_outlined},
     {
-      "name": "Tài Khoản",
+      "name": tr("Account.Management"),
       "items": [
         {
-          "name": "Thông tin khách hàng",
+          "name": tr("Account.CustomerInfo"),
           "icon": Icons.person,
           "page": CustomerInfoPage.route,
-        },
+        }, 
         {
-          "name": "Account.WalletToken",
+          "name": tr("Account.WalletToken"),
           "icon": Icons.wallet,
           "page": WalletTokenPage.route,
         },
         {
-          "name": "Gói đầu tư của tôi",
+          "name": tr("Account.CustomerOrders"),
           "icon": Icons.description,
           "page": MyOrdersPage.route,
         },
       ],
     },
     {
-      "name": "Đổi mật khẩu",
+      "name": tr("public.store.custome.changepass"),
       "icon": Icons.shield_outlined,
       "page": ChangePasswordPage.route,
     },

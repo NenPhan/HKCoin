@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
@@ -28,7 +29,7 @@ class _CoinExchangeRateWidgetState extends State<CoinExchangeRateWidget> {
         children: [
           Assets.icons.hkcLogoIcon.image(width: 50),
           Text(
-            "HKC/USD\nToday",
+            tr("Tradings.Exchange"),
             textAlign: TextAlign.center,
             style: textTheme(context).bodyLarge,
           ),
