@@ -49,7 +49,7 @@ class _DeleteCartPopupState extends State<DeleteCartPopup> {
                       ),
                     ),
                     child: Text(
-                      tr("Xác nhận"),
+                      tr("Common.Apply"),
                       style: textTheme(context).titleSmall,
                     ),
                   ),
@@ -68,7 +68,7 @@ class _DeleteCartPopupState extends State<DeleteCartPopup> {
                       ),
                     ),
                     child: Text(
-                      tr("Quay lại"),
+                      tr("Common.Back"),
                       style: textTheme(context).titleSmall,
                     ),
                   ),
