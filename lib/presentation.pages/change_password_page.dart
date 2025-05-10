@@ -30,7 +30,7 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
           body: SafeArea(
             child: Column(
               children: [
-                const BaseAppBar(title: "Đổi mật khẩu"),
+                const BaseAppBar(title: "Account.ChangePassword"),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
