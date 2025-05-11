@@ -177,15 +177,15 @@ class _CartPageState extends State<CartPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        tr("AppShoppingCart.Totals.SubTotal"),
+                                        tr("AppShoppingCart.Totals.SubTotal").replaceAll('{0}',controller.cart!.items.first.unitPrice),
                                         style: textTheme(context).bodyLarge
                                             ?.copyWith(color: Colors.white),
                                       ),
-                                      Text(
-                                        controller.cart!.items.first.unitPrice,
-                                        style: textTheme(context).bodyLarge
-                                            ?.copyWith(color: Colors.white),
-                                      ),
+                                      // Text(
+                                      //   controller.cart!.items.first.unitPrice,
+                                      //   style: textTheme(context).bodyLarge
+                                      //       ?.copyWith(color: Colors.white),
+                                      // ),
                                       CustomIconButton(
                                         icon: const Icon(Icons.edit_rounded),
                                         onTap: () {
