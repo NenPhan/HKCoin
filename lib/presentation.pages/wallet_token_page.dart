@@ -37,7 +37,9 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [MainButton(text: tr("Account.WalletToken.Btn"), onTap: () {})],
+                children: [
+                  MainButton(text: tr("Account.WalletToken.Btn"), onTap: () {}),
+                ],
               ),
             ),
             Obx(

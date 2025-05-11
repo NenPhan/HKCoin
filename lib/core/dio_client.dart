@@ -39,7 +39,7 @@ class DioClient {
       }
     }
     Map<String, String> header = fields.headers ?? <String, String>{};
-    String logString = '======>API REQUEST<======\n';
+    String logString = '======>API REQUEST<======';
     if (fields.needAccessToken) {
       //after login succes storage had token, if first init storage dont need init
       if (_storage == null && Storage.hadInited) {
@@ -53,11 +53,11 @@ class DioClient {
       String? basicAuth = AppConfig().basicAuthorization;
       if (basicAuth != null) {
         header['Authorization'] = basicAuth;
-        logString += '\n Authorization: $basicAuth\n';
+        // logString += '\nAuthorization: $basicAuth\n';
       }
     }
     logString +=
-        ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n\n=========================');
+        ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n=========================');
     log(logString);
     // log(header.toString());
     final rawResponse = (await _connect(
