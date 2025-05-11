@@ -121,7 +121,7 @@ class _WalletPageState extends State<WalletPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text(
-                                tr("Account.Report.Coupon"),
+                                tr("Account.Report.OrderTotal"),
                                 style: textTheme(context).bodyLarge,
                               ),
                               Text(
