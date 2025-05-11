@@ -6,6 +6,7 @@ import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
+import 'package:hkcoin/presentation.pages/kyc_page.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
@@ -25,7 +26,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   List items = [
     {"name": tr("Account.WithDrawalRequest.Create"), "icon": Icons.local_atm},
-    {"name": tr("Account.Downlines.Customers"), "icon": Icons.people_alt_outlined},
+    {
+      "name": tr("Account.Downlines.Customers"),
+      "icon": Icons.people_alt_outlined,
+    },
     {
       "name": tr("Account.Management"),
       "items": [
@@ -33,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
           "name": tr("Account.CustomerInfo"),
           "icon": Icons.person,
           "page": CustomerInfoPage.route,
-        }, 
+        },
         {
           "name": tr("Account.WalletToken"),
           "icon": Icons.wallet,
@@ -44,10 +48,15 @@ class _ProfilePageState extends State<ProfilePage> {
           "icon": Icons.description,
           "page": MyOrdersPage.route,
         },
+        {
+          "name": tr("Account.KYC"),
+          "icon": Icons.security,
+          "page": KycPage.route,
+        },
       ],
     },
     {
-      "name": tr("public.store.custome.changepass"),
+      "name": tr("Public.Store.Custome.ChangePass"),
       "icon": Icons.shield_outlined,
       "page": ChangePasswordPage.route,
     },

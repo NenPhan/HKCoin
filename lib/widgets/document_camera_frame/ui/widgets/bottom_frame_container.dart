@@ -1,5 +1,5 @@
-import '../../document_camera_frame.dart';
-import '../../core/app_constants.dart';
+import 'package:hkcoin/core/config/app_theme.dart';
+
 import 'package:flutter/material.dart';
 
 class BottomFrameContainer extends StatelessWidget {
@@ -19,14 +19,14 @@ class BottomFrameContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: .5.sh(context) + (height / 2),
+      top: scrSize(context).height * 0.5 + (height / 2),
       left: 0,
       right: 0,
       child: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           width: width,
-          height: AppConstants.bottomFrameContainerHeight,
+          height: 45,
           decoration: BoxDecoration(
             color: Colors.white,
             border: const Border(

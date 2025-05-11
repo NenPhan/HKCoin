@@ -44,13 +44,22 @@ class DocumentCameraController {
   bool get isInitialized => _cameraService.isInitialized;
 
   Future<void> takeAndCropPicture(
-      double frameWidth, double frameHeight, BuildContext context) async {
+    double w,
+    double h,
+    double frameWidth,
+    double frameHeight,
+    BuildContext context,
+  ) async {
     if (!_cameraService.isInitialized) return;
     try {
       final filePath = await _cameraService.captureImage();
       if (!context.mounted) return;
       _imagePath = _imageProcessingService.cropImageToFrame(
-          filePath, frameWidth, frameHeight, context);
+        filePath,
+        frameWidth + w * 0.01,
+        frameHeight + w * 0.12,
+        context,
+      );
     } catch (e) {
       log('Error capturing or cropping image: $e');
       rethrow;

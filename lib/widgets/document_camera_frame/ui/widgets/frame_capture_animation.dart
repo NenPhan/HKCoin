@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../core/app_constants.dart';
-
 class FrameCaptureAnimation extends StatelessWidget {
   const FrameCaptureAnimation({
     super.key,
@@ -24,14 +22,17 @@ class FrameCaptureAnimation extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        width: frameWidth,
-        height: frameHeight + AppConstants.bottomFrameContainerHeight,
-        color: animationColor ?? Colors.black.withAlpha(127),
-      )
+            width: frameWidth,
+            height: frameHeight,
+            color: animationColor ?? Colors.black.withAlpha(127),
+          )
           .animate(
-              onPlay: (controller) => controller.repeat(
+            onPlay:
+                (controller) => controller.repeat(
                   period:
-                      animationDuration ?? const Duration(milliseconds: 1000)))
+                      animationDuration ?? const Duration(milliseconds: 1000),
+                ),
+          )
           .fade(
             duration: animationDuration ?? const Duration(milliseconds: 1000),
             curve: curve,

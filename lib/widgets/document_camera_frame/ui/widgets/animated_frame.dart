@@ -1,9 +1,8 @@
-import '../../document_camera_frame.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/app_constants.dart';
-
 class AnimatedFrame extends StatefulWidget {
+  final double width;
+  final double height;
   final double frameHeight;
   final double frameWidth;
   final double outerFrameBorderRadius;
@@ -14,6 +13,8 @@ class AnimatedFrame extends StatefulWidget {
 
   const AnimatedFrame({
     super.key,
+    required this.width,
+    required this.height,
     required this.frameHeight,
     required this.frameWidth,
     required this.outerFrameBorderRadius,
@@ -29,7 +30,6 @@ class AnimatedFrame extends StatefulWidget {
 
 class _AnimatedFrameState extends State<AnimatedFrame> {
   double _frameHeight = 0;
-  double _cornerBorderBoxHeight = 0;
 
   @override
   void initState() {
@@ -37,12 +37,7 @@ class _AnimatedFrameState extends State<AnimatedFrame> {
     // Trigger the animation after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        _frameHeight =
-            widget.frameHeight + AppConstants.bottomFrameContainerHeight;
-        _cornerBorderBoxHeight =
-            widget.frameHeight +
-            AppConstants.bottomFrameContainerHeight / 2 -
-            34;
+        _frameHeight = widget.frameHeight;
       });
     });
   }
@@ -50,15 +45,12 @@ class _AnimatedFrameState extends State<AnimatedFrame> {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         // Border of the document frame
         Positioned(
-          bottom:
-              (1.sh(context) -
-                  widget.frameHeight -
-                  AppConstants.bottomFrameContainerHeight) /
-              2,
-          right: (1.sw(context) - widget.frameWidth) / 2,
+          bottom: (widget.height - widget.frameHeight) / 2,
+          right: (widget.width - widget.frameWidth) / 2,
           child: AnimatedContainer(
             width: widget.frameWidth,
             height: _frameHeight,
@@ -76,27 +68,22 @@ class _AnimatedFrameState extends State<AnimatedFrame> {
 
         // CornerBorderBox of the document frame
         Positioned(
-          bottom: (1.sh(context) - widget.frameHeight) / 2 + 17,
+          bottom: (widget.height - widget.frameHeight) / 2,
           left: 0,
           right: 0,
           child: Align(
             child: AnimatedContainer(
-              height: _cornerBorderBoxHeight,
-              width:
-                  widget.frameWidth -
-                  AppConstants.kCornerBorderBoxHorizontalPadding,
+              height: _frameHeight,
+              width: widget.frameWidth,
               duration: widget.animatedFrameDuration,
               curve: widget.animatedFrameCurve,
               child: Stack(
+                clipBehavior: Clip.none,
                 children: [
                   // Top-left corner
                   Positioned(
-                    bottom:
-                        widget.frameHeight +
-                        AppConstants.bottomFrameContainerHeight / 2 -
-                        34 -
-                        18,
-                    left: 0,
+                    top: 10,
+                    left: 10,
                     child: Container(
                       width: 16,
                       height: 16,
@@ -118,12 +105,8 @@ class _AnimatedFrameState extends State<AnimatedFrame> {
 
                   // Top-right corner
                   Positioned(
-                    bottom:
-                        widget.frameHeight +
-                        AppConstants.bottomFrameContainerHeight / 2 -
-                        34 -
-                        18,
-                    right: 0,
+                    top: 10,
+                    right: 10,
                     child: Container(
                       width: 16,
                       height: 16,
@@ -145,8 +128,8 @@ class _AnimatedFrameState extends State<AnimatedFrame> {
 
                   // Bottom-left corner
                   Positioned(
-                    bottom: 0,
-                    left: 0,
+                    bottom: 10,
+                    left: 10,
                     child: Container(
                       width: 16,
                       height: 16,
@@ -168,8 +151,8 @@ class _AnimatedFrameState extends State<AnimatedFrame> {
 
                   // Bottom-right corner
                   Positioned(
-                    bottom: 0,
-                    right: 0,
+                    bottom: 10,
+                    right: 10,
                     child: Container(
                       width: 16,
                       height: 16,

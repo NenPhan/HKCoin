@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../core/app_constants.dart';
-
 class CapturedImagePreview extends StatelessWidget {
   final ValueNotifier<String> capturedImageNotifier;
   final double frameWidth;
@@ -30,7 +28,7 @@ class CapturedImagePreview extends StatelessWidget {
           alignment: Alignment.center,
           child: SizedBox(
             width: frameWidth,
-            height: frameHeight + AppConstants.bottomFrameContainerHeight,
+            height: frameHeight,
             child: Stack(
               children: [
                 Positioned(
@@ -39,8 +37,7 @@ class CapturedImagePreview extends StatelessWidget {
                   right: 3,
                   child: Container(
                     width: frameWidth,
-                    height:
-                        frameHeight + AppConstants.bottomFrameContainerHeight,
+                    height: frameHeight,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: FileImage(File(imagePath)),

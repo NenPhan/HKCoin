@@ -5,8 +5,6 @@ import '../widgets/animated_frame.dart';
 import '../widgets/screen_title.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/app_constants.dart';
-import '../widgets/bottom_frame_container.dart';
 import '../widgets/captured_image_preview.dart';
 
 /// A customizable camera view for capturing and cropping document images.
@@ -233,123 +231,133 @@ class _DocumentCameraFrameState extends State<DocumentCameraFrame> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: ValueListenableBuilder<bool>(
-        valueListenable: isInitializedNotifier,
-        builder: (context, isInitialized, child) => Stack(
-          fit: StackFit.expand,
-          children: [
-            // Display the camera preview
-            if (isInitialized) CameraPreview(_controller.cameraController!),
+    return LayoutBuilder(
+      builder: (context, cons) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: ValueListenableBuilder<bool>(
+            valueListenable: isInitializedNotifier,
+            builder:
+                (context, isInitialized, child) => Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Display the camera preview
+                    if (isInitialized)
+                      CameraPreview(_controller.cameraController!),
 
-            /// Display captured image
-            if (isInitialized)
-              CapturedImagePreview(
-                capturedImageNotifier: capturedImageNotifier,
-                frameWidth: widget.frameWidth,
-                frameHeight: widget.frameHeight,
-                borderRadius: widget.outerFrameBorderRadius,
-              ),
+                    /// Display captured image
+                    if (isInitialized)
+                      CapturedImagePreview(
+                        capturedImageNotifier: capturedImageNotifier,
+                        frameWidth: widget.frameWidth,
+                        frameHeight: widget.frameHeight,
+                        borderRadius: widget.outerFrameBorderRadius,
+                      ),
 
-            /// Frame capture animation when loading
-            if (isInitialized)
-              ValueListenableBuilder<bool>(
-                valueListenable: isLoadingNotifier,
-                builder: (context, isLoading, child) {
-                  if (isLoading) {
-                    return FrameCaptureAnimation(
+                    /// Frame capture animation when loading
+                    if (isInitialized)
+                      ValueListenableBuilder<bool>(
+                        valueListenable: isLoadingNotifier,
+                        builder: (context, isLoading, child) {
+                          if (isLoading) {
+                            return FrameCaptureAnimation(
+                              frameWidth: widget.frameWidth,
+                              frameHeight: widget.frameHeight,
+                              animationDuration:
+                                  widget.capturingAnimationDuration,
+                              animationColor: widget.capturingAnimationColor,
+                              curve: widget.capturingAnimationCurve,
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+
+                    //  Draw the document frame
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: DocumentCameraFramePainter(
+                          frameWidth: widget.frameWidth,
+                          frameHeight: widget.frameHeight,
+                          borderRadius: widget.outerFrameBorderRadius,
+                        ),
+                      ),
+                    ),
+
+                    /// Border of the document frame
+                    ///
+                    /// CornerBorderBox of the document frame
+                    AnimatedFrame(
+                      width: cons.maxWidth,
+                      height: cons.maxHeight,
                       frameWidth: widget.frameWidth,
                       frameHeight: widget.frameHeight,
-                      animationDuration: widget.capturingAnimationDuration,
-                      animationColor: widget.capturingAnimationColor,
-                      curve: widget.capturingAnimationCurve,
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+                      outerFrameBorderRadius: widget.outerFrameBorderRadius,
+                      innerCornerBroderRadius: widget.innerCornerBroderRadius,
+                      animatedFrameDuration: widget.animatedFrameDuration,
+                      animatedFrameCurve: widget.animatedFrameCurve,
+                      border: widget.frameBorder,
+                    ),
 
-            //  Draw the document frame
-            Positioned.fill(
-              child: CustomPaint(
-                painter: DocumentCameraFramePainter(
-                  frameWidth: widget.frameWidth,
-                  frameHeight: widget.frameHeight +
-                      AppConstants.bottomFrameContainerHeight,
-                  borderRadius: widget.outerFrameBorderRadius,
+                    /// Frame Bottom Container
+                    // BottomFrameContainer(
+                    //   width: widget.frameWidth,
+                    //   height: widget.frameHeight,
+                    //   borderRadius: widget.outerFrameBorderRadius,
+                    //   bottomFrameContainerChild: widget.bottomFrameContainerChild,
+                    // ),
+
+                    /// Screen Title
+                    if (widget.title != null || widget.showCloseButton)
+                      ScreenTitle(
+                        title: widget.title,
+                        showCloseButton: widget.showCloseButton,
+                        screenTitleAlignment: widget.screenTitleAlignment,
+                        screenTitlePadding: widget.screenTitlePadding,
+                      ),
+
+                    /// Display action buttons
+                    ActionButtons(
+                      width: cons.maxWidth,
+                      height: cons.maxHeight,
+                      captureOuterCircleRadius: widget.captureOuterCircleRadius,
+                      captureInnerCircleRadius: widget.captureInnerCircleRadius,
+                      captureButtonAlignment: widget.captureButtonAlignment,
+                      captureButtonPadding: widget.captureButtonPadding,
+                      saveButtonPadding: widget.saveButtonPadding,
+                      retakeButtonPadding: widget.retakeButtonPadding,
+                      saveButtonText: widget.saveButtonText,
+                      retakeButtonText: widget.retakeButtonText,
+                      saveButtonTextStyle: widget.saveButtonTextStyle,
+                      retakeButtonTextStyle: widget.retakeButtonTextStyle,
+                      saveButtonStyle: widget.saveButtonStyle,
+                      retakeButtonStyle: widget.retakeButtonStyle,
+                      saveButtonWidth: widget.saveButtonWidth,
+                      saveButtonHeight: widget.saveButtonHeight,
+                      retakeButtonWidth: widget.retakeButtonWidth,
+                      retakeButtonHeight: widget.retakeButtonHeight,
+                      capturedImageNotifier: capturedImageNotifier,
+                      isLoadingNotifier: isLoadingNotifier,
+                      onSave: widget.onSaved,
+                      onRetake: widget.onRetake,
+                      frameWidth: widget.frameWidth,
+                      frameHeight: widget.frameHeight,
+                      controller: _controller,
+                      onCaptured: widget.onCaptured,
+                      onSaved: widget.onSaved,
+                      onCameraSwitched: () async {
+                        isInitializedNotifier.value =
+                            false; // Hide preview temporarily
+                        await _controller.switchCamera();
+                        isInitializedNotifier.value =
+                            true; // Show preview again
+                      },
+                    ),
+                  ],
                 ),
-              ),
-            ),
-
-            /// Border of the document frame
-            ///
-            /// CornerBorderBox of the document frame
-            AnimatedFrame(
-              frameWidth: widget.frameWidth,
-              frameHeight: widget.frameHeight,
-              outerFrameBorderRadius: widget.outerFrameBorderRadius,
-              innerCornerBroderRadius: widget.innerCornerBroderRadius,
-              animatedFrameDuration: widget.animatedFrameDuration,
-              animatedFrameCurve: widget.animatedFrameCurve,
-              border: widget.frameBorder,
-            ),
-
-            /// Frame Bottom Container
-            BottomFrameContainer(
-              width: widget.frameWidth,
-              height: widget.frameHeight,
-              borderRadius: widget.outerFrameBorderRadius,
-              bottomFrameContainerChild: widget.bottomFrameContainerChild,
-            ),
-
-            /// Screen Title
-            if (widget.title != null || widget.showCloseButton)
-              ScreenTitle(
-                title: widget.title,
-                showCloseButton: widget.showCloseButton,
-                screenTitleAlignment: widget.screenTitleAlignment,
-                screenTitlePadding: widget.screenTitlePadding,
-              ),
-
-            /// Display action buttons
-            ActionButtons(
-              captureOuterCircleRadius: widget.captureOuterCircleRadius,
-              captureInnerCircleRadius: widget.captureInnerCircleRadius,
-              captureButtonAlignment: widget.captureButtonAlignment,
-              captureButtonPadding: widget.captureButtonPadding,
-              saveButtonPadding: widget.saveButtonPadding,
-              retakeButtonPadding: widget.retakeButtonPadding,
-              saveButtonText: widget.saveButtonText,
-              retakeButtonText: widget.retakeButtonText,
-              saveButtonTextStyle: widget.saveButtonTextStyle,
-              retakeButtonTextStyle: widget.retakeButtonTextStyle,
-              saveButtonStyle: widget.saveButtonStyle,
-              retakeButtonStyle: widget.retakeButtonStyle,
-              saveButtonWidth: widget.saveButtonWidth,
-              saveButtonHeight: widget.saveButtonHeight,
-              retakeButtonWidth: widget.retakeButtonWidth,
-              retakeButtonHeight: widget.retakeButtonHeight,
-              capturedImageNotifier: capturedImageNotifier,
-              isLoadingNotifier: isLoadingNotifier,
-              onSave: widget.onSaved,
-              onRetake: widget.onRetake,
-              frameWidth: widget.frameWidth,
-              frameHeight: widget.frameHeight,
-              bottomFrameContainerHeight:
-                  AppConstants.bottomFrameContainerHeight,
-              controller: _controller,
-              onCaptured: widget.onCaptured,
-              onSaved: widget.onSaved,
-              onCameraSwitched: () async {
-                isInitializedNotifier.value = false; // Hide preview temporarily
-                await _controller.switchCamera();
-                isInitializedNotifier.value = true; // Show preview again
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

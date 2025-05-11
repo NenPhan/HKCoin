@@ -1,5 +1,4 @@
 export 'controllers/document_camera_controller.dart';
-export 'core/document_camera_context_extensions.dart';
 export 'services/camera_service.dart';
 export 'services/image_processing_service.dart';
 export 'ui/page/document_camera_frame.dart';
