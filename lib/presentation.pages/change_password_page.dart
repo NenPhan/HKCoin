@@ -56,7 +56,7 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                   validator:
                                       (value) => requiredValidator(
                                         value,
-                                        "Account.Register.Errors.PasswordIsNotProvided",
+                                        "Account.ChangePassword.Fields.OldPassword.Requird",
                                       ),
                                 ),
                                 MainTextField(
@@ -68,7 +68,7 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                   validator:
                                       (value) => requiredValidator(
                                         value,
-                                        "Account.Register.Errors.PasswordIsNotProvided",
+                                        "Account.ChangePassword.Fields.NewPassword.Requird",
                                       ),
                                 ),
                                 MainTextField(
@@ -81,7 +81,7 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                   validator:
                                       (value) => requiredValidator(
                                         value,
-                                        "Account.Register.Errors.ConfirmPasswordIsNotProvided",
+                                        "Account.ChangePassword.Fields.ConfirmNewPassword.Requird",
                                       ),
                                 ),
                               ],
