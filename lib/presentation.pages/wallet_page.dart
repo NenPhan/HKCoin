@@ -82,6 +82,10 @@ class _WalletPageState extends State<WalletPage> {
                                 controller.walletInfo!.walletShopping,
                                 style: textTheme(context).titleLarge,
                               ),
+                              Text(
+                                controller.walletInfo!.profitsShopping,
+                                style: textTheme(context).bodyLarge,
+                              ),
                             ],
                           ),
                         ),
