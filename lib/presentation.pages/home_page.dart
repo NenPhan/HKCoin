@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:hkcoin/presentation.pages/camera_view.dart';
 import 'package:hkcoin/presentation.pages/coming_soon_page.dart';
 import 'package:hkcoin/presentation.pages/home_body_page.dart';
 import 'package:hkcoin/presentation.pages/profile_page.dart';
