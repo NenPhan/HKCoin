@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                                     value != "" && value != null
                                         ? null
                                         : tr(
-                                          "Account.Register.Errors.UsernameIsNotProvided",
+                                          "Account.Login.Fields.UserName.Required",
                                         ),
                           ),
                           const SizedBox(height: 16),
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                                     value != "" && value != null
                                         ? null
                                         : tr(
-                                          "Account.Register.Errors.PasswordIsNotProvided",
+                                          "Account.Login.Fields.Password.Required",
                                         ),
                           ),
                         ],
