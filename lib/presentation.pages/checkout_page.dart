@@ -129,10 +129,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      tr("AppShoppingCart.Totals.SubTotal",args:[controller.cart!.items.first.unitPrice]),
+                                      tr(
+                                        "AppShoppingCart.Totals.SubTotal",
+                                        args: [
+                                          controller
+                                              .cart!
+                                              .items
+                                              .first
+                                              .unitPrice,
+                                        ],
+                                      ),
                                       style: textTheme(context).bodyMedium
                                           ?.copyWith(color: Colors.white),
-                                    ),Text(
+                                    ),
+                                    Text(
                                       controller.cart!.items.first.unitPrice,
                                       style: textTheme(context).bodyMedium
                                           ?.copyWith(color: Colors.white),
@@ -311,7 +321,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 int? id = await controller.checkoutComplete();
                                 if (id != null) {
                                   Get.find<CartController>().getCartData();
-                                  Get.toNamed(
+                                  Get.offNamed(
                                     CheckoutCompletePage.route,
                                     arguments: id,
                                   );
