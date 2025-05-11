@@ -136,9 +136,10 @@ extension ResponseExtension on Response {
           errorText = data["message"];
         } else if (data["Message"] != null && data["Message"] != "") {
           errorText = data["Message"];
-          if (data["Errors"] != null && (data["Errors"] as List).isNotEmpty) {                    
-            errorText =  (data["Errors"] as List).join("\n");             
-          }
+          final errors = (data["Errors"] as List?)?.cast<String>() ?? [];
+          if (errors.isNotEmpty) {
+            errorText = '\n${errors.join('\n')}';
+          }       
         } else if (data["Errors"] != null) {          
           if (data["Errors"] is List && (data["Errors"] as List).isNotEmpty) {
             errorText = data["Errors"][0];
