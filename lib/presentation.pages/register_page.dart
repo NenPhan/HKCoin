@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.FirstNameIsNotProvided",
+                                    "Account.Fields.FirstName.Required",
                                   ),
                             ),
                             MainTextField(
@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.LastNameIsNotProvided",
+                                    "Account.Fields.LastName.Required",
                                   ),
                             ),
                             MainTextField(
@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.EmailIsNotProvided",
+                                    "Account.Fields.Email.Required",
                                   ),
                             ),
                             MainTextField(
@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.PhoneIsNotProvided",
+                                    "Account.Fields.Phone.Required",
                                   ),
                             ),
                             MainTextField(
@@ -83,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.PasswordIsNotProvided",
+                                    "Account.Fields.Password.Required",
                                   ),
                             ),
                             MainTextField(
@@ -93,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.ConfirmPasswordIsNotProvided",
+                                    "Account.Fields.ConfirmPassword.Required",
                                   ),
                             ),
                             MainTextField(
@@ -103,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               validator:
                                   (value) => requiredValidator(
                                     value,
-                                    "Account.Register.Errors.ReferralCodeIsNotProvided",
+                                    "Account.Register.ReferralCode.Required",
                                   ),
                             ),
                           ],
