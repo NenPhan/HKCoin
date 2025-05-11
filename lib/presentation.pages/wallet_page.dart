@@ -57,7 +57,7 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.walletMain,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
@@ -80,7 +80,7 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.walletShopping,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
@@ -103,7 +103,7 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.walletCoupon,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
@@ -126,7 +126,7 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.orderCount,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
