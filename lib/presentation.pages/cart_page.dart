@@ -174,8 +174,11 @@ class _CartPageState extends State<CartPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        tr('AppShoppingCart.Totals.SubTotal',args:["${controller.cart!.items.first.unitPrice}"]),
+                                      Text(tr("AppShoppingCart.Totals.SubTotal"),
+                                        style: textTheme(context).bodyLarge
+                                            ?.copyWith(color: Colors.white),
+                                      ),
+                                      Text(controller.cart!.items.first.unitPrice,
                                         style: textTheme(context).bodyLarge
                                             ?.copyWith(color: Colors.white),
                                       ),
