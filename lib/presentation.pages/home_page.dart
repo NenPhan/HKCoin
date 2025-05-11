@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                 HomeBodyPage(),
                 WalletPage(),
                 ComingSoonPage(),
+                ComingSoonPage(),
                 ProfilePage(),
               ],
             ),
