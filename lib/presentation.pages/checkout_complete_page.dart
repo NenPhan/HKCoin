@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -169,9 +170,8 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 data!.infoPayment!.qRCodePayment!,
                 width: scrSize(context).width * 0.6,
               ),
-            ),
-          Text(tr("ID ví: ")),
-          Text(data?.infoPayment?.walletAddress ?? ""),
+            ),          
+          Html(data:tr("Checkout.Billing.Information.WalletAddress").replaceAll("{0}", data?.infoPayment?.walletAddress ?? "")),          
           MainButton(
             width: scrSize(context).width * 0.25,
             icon: const Icon(Icons.copy, color: Colors.white),
