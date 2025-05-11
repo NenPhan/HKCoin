@@ -116,7 +116,7 @@ class DioClient {
 extension ResponseExtension on Response {
   // handle return data from server side to client
   Map<String, dynamic>? handleError(List<int> allowedStatusCodes) {
-    String defaultErr = 'Identity.Error.DefaultError'.tr();
+    String defaultErr = 'Identity.Error.DefaultError'.tr();              
     if (data == null) return {};
     try {
       Map<String, dynamic> json;
@@ -129,23 +129,27 @@ extension ResponseExtension on Response {
         }
         return json;
       } else {
-        String errorText = "";
+        String errorText = "";        
         if (data is String) {
           errorText = data;
         } else if (data["message"] != null && data["message"] != "") {
           errorText = data["message"];
         } else if (data["Message"] != null && data["Message"] != "") {
           errorText = data["Message"];
-        } else if (data["errors"] != null) {
-          if (data["errors"] is List && (data["errors"] as List).isNotEmpty) {
-            errorText = data["errors"][0];
+          if (data["Errors"] != null && (data["Errors"] as List).isNotEmpty) {        
+            List<dynamic> textError =  data["Errors"] as List; 
+            errorText =  textError.join("\n");             
           }
-        } else {
+        } else if (data["Errors"] != null) {          
+          if (data["Errors"] is List && (data["Errors"] as List).isNotEmpty) {
+            errorText = data["Errors"][0];
+          }
+        } else {        
           errorText = defaultErr;
-        }
+        }         
         throw ServerException(message: errorText);
       }
-    } catch (e) {
+    } catch (e) {         
       if (e is ServerException) {
         rethrow;
       } else {
