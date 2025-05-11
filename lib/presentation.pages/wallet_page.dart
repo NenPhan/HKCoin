@@ -57,7 +57,7 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.walletMain,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
@@ -80,6 +80,10 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.walletShopping,
+                                style: textTheme(context).titleLarge,
+                              ),
+                              Text(
+                                controller.walletInfo!.profitsShopping,
                                 style: textTheme(context).bodyLarge,
                               ),
                             ],
@@ -103,7 +107,7 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 controller.walletInfo!.walletCoupon,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
@@ -121,12 +125,12 @@ class _WalletPageState extends State<WalletPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text(
-                                tr("Account.Report.Coupon"),
+                                tr("Account.Report.OrderTotal"),
                                 style: textTheme(context).bodyLarge,
                               ),
                               Text(
                                 controller.walletInfo!.orderCount,
-                                style: textTheme(context).bodyLarge,
+                                style: textTheme(context).titleLarge,
                               ),
                             ],
                           ),
