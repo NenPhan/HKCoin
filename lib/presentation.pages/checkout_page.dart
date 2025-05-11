@@ -129,7 +129,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      tr("AppShoppingCart.Totals.SubTotal").replaceAll('{0}',controller.cart!.items.first.unitPrice),
+                                      tr("AppShoppingCart.Totals.SubTotal",args:[controller.cart!.items.first.unitPrice]),
                                       style: textTheme(context).bodyMedium
                                           ?.copyWith(color: Colors.white),
                                     ),

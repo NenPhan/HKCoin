@@ -77,7 +77,19 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                 _buildTextInfoWidget(
                                   title: "Order.OrderTotal",
                                   content:
-                                      controller.data?.order.orderWalletTotalStr ?? "",
+                                      (controller
+                                                      .data
+                                                      ?.order
+                                                      .orderWalletTotal ??
+                                                  0) >
+                                              0
+                                          ? controller
+                                                  .data
+                                                  ?.order
+                                                  .orderWalletTotalStr ??
+                                              ""
+                                          : controller.data?.order.orderTotal ??
+                                              "",
                                   contentStyle: textTheme(
                                     context,
                                   ).bodyMedium?.copyWith(
