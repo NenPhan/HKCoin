@@ -12,14 +12,15 @@ class CartController extends GetxController {
 
   void getCartData() async {
     isAddingToCart = true;
-    update(["cart", "home-cart-icon"]);
+    update(["cart"]);
     if (Storage().getToken != null) {
       await handleEither(await CheckoutRepository().getCart(), (r) {
         cart = r;
+        update(["home-cart-icon"]);
       });
     }
     isAddingToCart = false;
-    update(["cart", "home-cart-icon"]);
+    update(["cart"]);
   }
 
   Future<bool> addToCart({required int productId, required int price}) async {

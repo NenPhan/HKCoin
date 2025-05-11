@@ -58,7 +58,9 @@ class _CartPageState extends State<CartPage> {
                                         Opacity(
                                           opacity: 0.5,
                                           child: Text(
-                                            tr("ShoppingCart.Mini.EmptyCart.Title"),
+                                            tr(
+                                              "ShoppingCart.Mini.EmptyCart.Title",
+                                            ),
                                             style:
                                                 textTheme(context).titleMedium,
                                           ),
@@ -174,11 +176,13 @@ class _CartPageState extends State<CartPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(tr("AppShoppingCart.Totals.SubTotal"),
+                                      Text(
+                                        tr("AppShoppingCart.Totals.SubTotal"),
                                         style: textTheme(context).bodyLarge
                                             ?.copyWith(color: Colors.white),
                                       ),
-                                      Text(controller.cart!.items.first.unitPrice,
+                                      Text(
+                                        controller.cart!.items.first.unitPrice,
                                         style: textTheme(context).bodyLarge
                                             ?.copyWith(color: Colors.white),
                                       ),
