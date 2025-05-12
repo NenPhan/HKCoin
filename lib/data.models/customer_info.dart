@@ -20,6 +20,7 @@ class CustomerInfo {
   dynamic gender;
   int countryId;
   dynamic sponsorCode;
+  String affiliateLink;
   Settings settings;
 
   CustomerInfo({
@@ -37,6 +38,7 @@ class CustomerInfo {
     required this.gender,
     required this.countryId,
     required this.sponsorCode,
+    required this.affiliateLink,
     required this.settings,
   });
 
@@ -55,6 +57,7 @@ class CustomerInfo {
     gender: json["Gender"],
     countryId: json["CountryId"],
     sponsorCode: json["SponsorCode"],
+    affiliateLink: json["AffiliateLink"]??"",
     settings: Settings.fromJson(json["Settings"]),
   );
 
@@ -73,6 +76,7 @@ class CustomerInfo {
     "Gender": gender,
     "CountryId": countryId,
     "SponsorCode": sponsorCode,
+    "AffiliateLink": affiliateLink,
     "Settings": settings.toJson(),
   };
   Map<String, dynamic> toUpdateJson() => {

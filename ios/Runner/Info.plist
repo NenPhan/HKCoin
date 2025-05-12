@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Ứng dụng cần lưu ảnh QR code vào thư viện ảnh</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ứng dụng cần lưu ảnh QR code vào thư viện ảnh</string>
 </dict>
 </plist>

@@ -1,9 +1,13 @@
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/core/toast.dart';
+import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
 import 'package:hkcoin/presentation.pages/kyc_page.dart';
@@ -14,6 +18,7 @@ import 'package:hkcoin/presentation.pages/my_orders_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
+import 'package:hkcoin/widgets/qrcode_widget.dart';
 import 'package:restart_app/restart_app.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -56,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     },
     {
-      "name": tr("Public.Store.Custome.ChangePass"),
+      "name": tr("Account.ChangePassword"),
       "icon": Icons.shield_outlined,
       "page": ChangePasswordPage.route,
     },
@@ -123,14 +128,111 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            controller.customerInfo?.fullName ?? "",
-                            style: textTheme(context).titleLarge,
+                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                controller.customerInfo?.fullName ?? "",
+                                style: textTheme(context).titleLarge,
+                              ),
+                              Text(
+                                controller.customerInfo?.email ?? "",
+                                style: textTheme(context).bodyMedium,
+                              ),
+                            ],
                           ),
-                          Text(
-                            controller.customerInfo?.email ?? "",
-                            style: textTheme(context).bodyMedium,
-                          ),
+                         const SizedBox(height: 0),
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: () {
+                                try {
+                                  if (controller.customerInfo?.affiliateLink != null) {
+                                    final String qrData = controller.customerInfo?.affiliateLink??"";
+                                    xPopUpDialog(
+                                      context,  
+                                        title: tr("Account.CustomerInfo.Popup.QRCode.Title"),
+                                        description: tr("Account.CustomerInfo.Popup.QRCode.Description"),                                                                          
+                                        child: QRCodeWidget(
+                                        data: qrData, // Dữ liệu QR code
+                                        size: 250, // Kích thước
+                                        backgroundColor: Colors.white, // Màu nền
+                                        foregroundColor: Colors.blueAccent, // Màu QR code
+                                        fileName: 'affiliateLink_${controller.customerInfo!.sponsorCode}.png', // Tùy chọn tên file khi lưu
+                                      ),
+                                      centerTitle: true, // Căn giữa tiêu đề
+                                      centerDescription: true, // Căn giữa mô tả
+                                    );
+                                  }                                  
+                                } catch (e) {
+                                  Toast.showErrorToast("Common.CopyToClipboard.Failded");
+                                }                                
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(6.0),
+                                child: Icon(Icons.qr_code, size: 20, color: Colors.white),
+                              ),
+                            ),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: () {
+                                 try {
+                                  if (controller.customerInfo?.sponsorCode != null) {
+                                    Clipboard.setData(
+                                      ClipboardData(text: controller.customerInfo!.sponsorCode),
+                                    );
+                                  }
+                                  Toast.showSuccessToast("Common.CopyToClipboard.SponsorCode.Succeeded");
+                                } catch (e) {
+                                  Toast.showErrorToast("Common.CopyToClipboard.Failded");
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Row(
+                                   mainAxisSize: MainAxisSize.min, 
+                                   children: [
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        controller.customerInfo?.sponsorCode ?? "",
+                                        style: textTheme(context).labelMedium,
+                                      ),                
+                                      const Icon(Icons.copy_all, size: 20, color: Colors.white),                     
+                                   ],
+                                ),                                
+                              ),
+                            ),                            
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: () {
+                                try {
+                                  if (controller.customerInfo?.affiliateLink !=null) {
+                                    Clipboard.setData(
+                                      ClipboardData(text: controller.customerInfo!.affiliateLink),
+                                    );
+                                  }
+                                  Toast.showSuccessToast("Common.CopyToClipboard.AffiliateLink.Succeeded");
+                                } catch (e) {
+                                  Toast.showErrorToast("Common.CopyToClipboard.Failded");
+                                }
+                              },
+                              child: Padding(
+                                padding:const EdgeInsets.all(6.0),
+                                child: Row(
+                                   mainAxisSize: MainAxisSize.min, 
+                                   children: [
+                                    Transform.rotate(
+                                      angle: -45 * 3.141592653589793 / 180, // Xoay 45 độ (chuyển từ độ sang radian)
+                                      child:const Icon(Icons.link, size: 20, color: Colors.white),
+                                    ),                                                                                                               
+                                   ],
+                                ),                                
+                              ),
+                            ),
+                          ],
+                         ),
                         ],
                       ),
                     ),

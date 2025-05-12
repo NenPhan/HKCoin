@@ -28,7 +28,7 @@ class _WalletPageState extends State<WalletPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  tr("Account.Report.Walletmain"),
+                  tr("Account.Dashboard"),
                   style: textTheme(context).titleLarge,
                 ),
                 const SizedBox(height: 20),
