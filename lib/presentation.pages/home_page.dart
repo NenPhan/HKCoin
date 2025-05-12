@@ -3,6 +3,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/presentation.pages/coming_soon_page.dart';
 import 'package:hkcoin/presentation.pages/home_body_page.dart';
 import 'package:hkcoin/presentation.pages/profile_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_histories_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_page.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/models/bottom_bar_item_model.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/notch_bottom_bar.dart';
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 HomeBodyPage(),
                 WalletPage(),
                 ComingSoonPage(),
-                ComingSoonPage(),
+                WalletHistoryPage(),
                 ProfilePage(),
               ],
             ),

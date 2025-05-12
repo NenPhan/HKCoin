@@ -9,6 +9,7 @@ import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
+import 'package:hkcoin/data.models/wallet_histories.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.models/wallet_token.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
@@ -115,7 +116,27 @@ class CustomerDatasource {
           .toList();
     });
   }
+  Future<WalletHistoriesPagination> getWalletHistoresData({int page = 1, int limit = 10}) async {
+    return await handleRemoteRequest(() async {
+      Map<String, String> queryParams = {
+        "s": limit.toString(),
+        "page": page.toString(),
+      };
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getWalletHistories,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+          params: queryParams,
+          needAccessToken: true,
+        ),
+      );
 
+      return WalletHistoriesPagination.fromJson(response);
+    });
+  }
   Future logout() async {
     await handleRemoteRequest(() async {
       await dioClient.call(

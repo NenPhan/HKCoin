@@ -6,6 +6,7 @@ import 'package:hkcoin/data.datasources/customer_datasource.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
+import 'package:hkcoin/data.models/wallet_histories.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.models/wallet_token.dart';
 
@@ -76,7 +77,18 @@ class CustomerRepository {
       },
     );
   }
-
+  Future<Either<Failure, WalletHistoriesPagination>> getWalletHistories({
+    int page = 1,
+    int limit = 10,
+  }) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        return Right(
+          await CustomerDatasource().getWalletHistoresData(page: page, limit: limit),
+        );
+      },
+    );
+  }
   Future<Either<Failure, void>> logout() {
     return handleRepositoryCall(
       onRemote: () async {
