@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:hkcoin/core/time_converter.dart';
+
 NewsDetail newsFromJson(String str) => NewsDetail.fromJson(json.decode(str));
 
 String newsToJson(NewsDetail data) => json.encode(data.toJson());
@@ -28,7 +30,7 @@ class NewsDetail {
     name: json["Name"],
     shortDescription: json["ShortDescription"],
     fullDescription: json["FullDescription"],    
-    createdOn: DateTime.parse(json["CreatedOn"]),    
+    createdOn: DateTime.parse(json["CreatedOnUtc"]).convertToUserTime(),    
     imageContent: ImageContent.fromJson(json["ImageContent"]),
     views: json["View"]??0
   );
