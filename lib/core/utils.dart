@@ -41,6 +41,33 @@ Future showPopUpDialog(
     },
   );
 }
+// Hiển thị dialog với footer buttons
+
+// ElevatedButton(
+//   onPressed: () {
+//     xPopUpDialog(
+//       context,
+//       title: 'XÁC NHẬN',
+//       description: 'Bạn có chắc chắn muốn thực hiện thao tác này?',
+//       child: const Text('Nội dung chi tiết...'),
+//       footerButtons: [
+//         TextButton(
+//           onPressed: () => Navigator.pop(context),
+//           child: const Text('HỦY'),
+//         ),
+//         const SizedBox(width: 8),
+//         ElevatedButton(
+//           onPressed: () {
+//             // Xử lý khi xác nhận
+//             Navigator.pop(context, true); // Trả về giá trị true
+//           },
+//           child: const Text('XÁC NHẬN'),
+//         ),
+//       ],
+//     );
+//   },
+//   child: const Text('Hiển thị Dialog với Footer Buttons'),
+// )
 Future<T?> xPopUpDialog<T>(
   BuildContext context, {
   Widget? child,

@@ -1,8 +1,10 @@
-import 'dart:typed_data';
 import 'dart:io';
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,7 +14,7 @@ class QRCodeWidget extends StatefulWidget {
   final double size;
   final Color? backgroundColor;
   final Color? foregroundColor;
-  final String? fileName; // Tùy chọn tên file
+  final String? fileName;
 
   const QRCodeWidget({
     Key? key,
@@ -24,7 +26,7 @@ class QRCodeWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _QRCodeWidgetState createState() => _QRCodeWidgetState();
+  State<QRCodeWidget> createState() => _QRCodeWidgetState();
 }
 
 class _QRCodeWidgetState extends State<QRCodeWidget> {
@@ -36,7 +38,6 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // QR Code
         RepaintBoundary(
           key: _qrKey,
           child: Container(
@@ -55,44 +56,23 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
             ),
           ),
         ),
-
         const SizedBox(height: 16),
-
-        // Nút hành động
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Nút chia sẻ
-            ElevatedButton.icon(
-              icon: const Icon(Icons.share),
-              label: const Text('Chia sẻ'),
+            _buildActionButton(
+              icon: Icons.share,
+              label: 'Chia sẻ',
+              color: Colors.blue,
               onPressed: _shareQRCode,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
-              ),
             ),
-
             const SizedBox(width: 16),
-
-            // Nút lưu
-            ElevatedButton.icon(
-              icon: _isSaving
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Icon(Icons.save),
-              label: const Text('Lưu'),
-              onPressed: _isSaving ? null : _saveQRCodeWithShare,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.green,
-              ),
+            _buildActionButton(
+              icon: Icons.save,
+              label: 'Lưu',
+              color: Colors.green,
+              onPressed: _isSaving ? null : _showSaveConfirmationDialog,
+              isLoading: _isSaving,
             ),
           ],
         ),
@@ -100,66 +80,159 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
     );
   }
 
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    VoidCallback? onPressed,
+    bool isLoading = false,
+  }) {
+    return ElevatedButton.icon(
+      icon: isLoading
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
+          : Icon(icon),
+      label: Text(label),
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  Future<void> _showSaveConfirmationDialog() async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(tr('Common.Approve')),
+        content: Text(tr("Common.QRCode.Question")),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tr("Common.Cancel"))),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(tr("Common.Apply"))),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await _saveQRCodeWithShare();
+    }
+  }
+
   Future<void> _shareQRCode() async {
     try {
       final imageBytes = await _captureQrImage();
-      await _shareImage(imageBytes, isShare: true);
+      await _shareImage(imageBytes);
     } catch (e) {
-      _showError('Lỗi khi chia sẻ: ${e.toString()}');
+      _showSnackBar('Lỗi khi chia sẻ: ${e.toString()}', Colors.red);
     }
   }
 
   Future<void> _saveQRCodeWithShare() async {
     setState(() => _isSaving = true);
-    
     try {
-      final imageBytes = await _captureQrImage();
-      await _shareImage(imageBytes, isShare: false);
-    } catch (e) {
-      _showError('Lỗi khi lưu: ${e.toString()}');
-    } finally {
-      if (mounted) {
-        setState(() => _isSaving = false);
+      if (!await _requestStoragePermission()) {
+        _showSnackBar(tr("Common.QRCode.Storage.Denied"), Colors.red);
+        return;
       }
+
+      final imageBytes = await _captureQrImage();
+      final success = await _saveImageToGallery(imageBytes);
+      _showSnackBar(
+        success ? tr("Common.QRCode.Storage.Success") : tr("Common.QRCode.Storage.Failed"),
+        success ? Colors.green : Colors.red,
+      );
+    } catch (e) {
+      _showSnackBar('Error: ${e.toString()}', Colors.red);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
+  }
+
+  Future<bool> _requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      final statuses = await [Permission.storage, Permission.photos].request();
+      return statuses[Permission.storage]!.isGranted;
+    } else if (Platform.isIOS) {
+      return (await Permission.photos.request()).isGranted;
+    }
+    return false;
   }
 
   Future<Uint8List> _captureQrImage() async {
     final boundary = _qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    final image = await boundary.toImage();
+    final image = await boundary.toImage(pixelRatio: 3.0);
     final byteData = await image.toByteData(format: ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
 
-  Future<void> _shareImage(Uint8List imageBytes, {bool isShare = true}) async {
-    // Tạo file tạm
+  Future<void> _shareImage(Uint8List imageBytes) async {
     final tempDir = await getTemporaryDirectory();
     final fileName = widget.fileName ?? 'qrcode_${DateTime.now().millisecondsSinceEpoch}.png';
-    final file = File('${tempDir.path}/$fileName');
-    await file.writeAsBytes(imageBytes);
+    final file = File('${tempDir.path}/$fileName')..writeAsBytesSync(imageBytes);
 
-    // Chia sẻ hoặc lưu
-    if (isShare) {
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'QR Code: ${widget.data}',
-        subject: 'Chia sẻ QR Code',
-      );
-    } else {
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'Lưu QR Code này vào thiết bị của bạn',
-        subject: 'Lưu QR Code',
-      );
+    await Share.shareXFiles([
+      XFile(file.path),
+    ], text: 'QR Code: ${widget.data}', subject: tr("Common.QRCode.Storage.Shared"));
+  }
+
+  Future<bool> _saveImageToGallery(Uint8List imageBytes) async {
+    try {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final name = widget.fileName ?? 'qrcode_$timestamp.png';
+      
+      if (Platform.isAndroid) {
+        // Sử dụng MediaStore cho Android 10+
+        if (await Permission.manageExternalStorage.isGranted || 
+            await Permission.storage.isGranted) {
+          final directory = await getExternalStorageDirectory();
+          final savePath = '${directory?.path}/Pictures';
+          await Directory(savePath).create(recursive: true);
+          
+          final file = File('$savePath/$name');
+          await file.writeAsBytes(imageBytes);
+          
+          // Quét file vào MediaStore
+          await const MethodChannel('flutter.io')
+              .invokeMethod('scanFile', {'path': file.path});
+          return true;
+        }
+        return false;
+      } 
+      else if (Platform.isIOS) {
+        // Cho iOS
+        if (await Permission.photos.isGranted) {
+          final directory = await getApplicationDocumentsDirectory();
+          final file = File('${directory.path}/$name');
+          await file.writeAsBytes(imageBytes);
+          
+          // Lưu vào thư viện ảnh iOS
+          //await ImageGallerySaver.saveFile(file.path);
+          return true;
+        }
+        return false;
+      }
+      
+      return false;
+    } catch (e) {
+      debugPrint('Lỗi khi lưu ảnh: $e');
+      return false;
     }
   }
 
-  void _showError(String message) {
+  void _showSnackBar(String message, Color color) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

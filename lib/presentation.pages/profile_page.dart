@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         backgroundColor: Colors.white, // Màu nền
                                         foregroundColor: Colors.blueAccent, // Màu QR code
                                         fileName: 'affiliateLink_${controller.customerInfo!.sponsorCode}.png', // Tùy chọn tên file khi lưu
-                                      ),
+                                      ),                                      
                                       centerTitle: true, // Căn giữa tiêu đề
                                       centerDescription: true, // Căn giữa mô tả
                                     );
