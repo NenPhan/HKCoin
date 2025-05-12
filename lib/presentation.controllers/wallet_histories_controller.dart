@@ -10,10 +10,10 @@ class WalletHistoryController extends GetxController {
 
   @override
   void onInit() {
-    getWalletHistoresData();
+    getWalletHistoriesData();
     super.onInit();
   }
-  Future getWalletHistoresData({int page = 1, int limit = 10}) async {    
+  Future getWalletHistoriesData({int page = 1, int limit = 15}) async {    
     isLoading.value = true;
     update(["wallet-histories-list"]);
     await handleEither(
