@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/injection.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
+import 'package:hkcoin/core/time_converter.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 void main() async {
@@ -21,7 +22,7 @@ void main() async {
         'Basic NDY2OTc4YjU5YTQ1MzcxMzg1MWFjYTI5OGM0NmY2NjU6NTliZTZmMzljZTdmYWU1YzEyNTkyNmJiOGJkNWNiODU=',
   );
   await Injection.setup();
-
+  TimeConverter.initialize();
   var localeController = Get.find<LocaleController>();
   runApp(
     EasyLocalization(

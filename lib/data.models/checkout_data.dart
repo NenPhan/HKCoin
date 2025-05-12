@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hkcoin/core/time_converter.dart';
 import 'package:hkcoin/data.models/address.dart';
 
 CheckoutData checkoutDataFromJson(String str) =>
@@ -207,7 +208,7 @@ class OrderComplate {
     orderWalletTotalStr: json["OrderWalletTotalStr"],
     orderWalletTotal: json["OrderWalletTotal"],
     createdOn:
-        json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]),
+        json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]).convertToUserTime(),
   );
 }
 

@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert';
+import 'package:hkcoin/core/time_converter.dart';
 
 OrderPagination orderPaginationFromJson(String str) =>
     OrderPagination.fromJson(json.decode(str));
@@ -74,7 +75,7 @@ class Order {
     orderTotal: json["OrderTotal"],
     orderStatus: json["OrderStatus"],
     createdOn:
-        json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]),
+        json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]).convertToUserTime(),
     productName: json["ProductName"],
     productDesc: json["ProductDesc"],
   );
