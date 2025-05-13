@@ -10,7 +10,7 @@ import 'package:hkcoin/widgets/loading_widget.dart';
 
 class NewsDetailPage extends StatefulWidget {
   const NewsDetailPage({super.key});
-  static String route = "/news-detail";
+  static String route = "/newsitem";
 
   @override
   State<NewsDetailPage> createState() => _NewsDetailPageState();

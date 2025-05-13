@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:hkcoin/data.models/slide.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeSlideWidget extends StatefulWidget {
   const HomeSlideWidget({
@@ -36,31 +38,56 @@ class _HomeSlideWidgetState extends State<HomeSlideWidget> {
 
         children: List.generate(widget.slides.length, (index) {
           String url = widget.slides[index].image?.thumbUrl ?? "";
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5),
-            child: ClipRRect(
+          return GestureDetector(
+            onTap: () => {
+                if(widget.slides[index].route !=null){
+                  Get.toNamed(
+                    widget.slides[index].route!.routeName??"",
+                    arguments: widget.slides[index].route!.routeId,
+                  )                 
+                }
+                else{
+                  _launchUrl(widget.slides[index].slideUrl)
+                }
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: SizedBox(
                 // width: 150,
                 // height: 150,
                 child: Image.network(
                   url.contains("http") ? url : "https:$url",
-                  fit: BoxFit.cover,
-                  // errorBuilder:
-                  //     (context, error, stackTrace) => Container(
-                  //       color: Colors.grey[900],
-                  //       child: Center(
-                  //         child: Text(
-                  //           "Banner",
-                  //           style: textTheme(context).bodyLarge,
-                  //         ),
-                  //       ),
-                  //     ),
+                  fit: BoxFit.cover,                 
                 ),
               ),
             ),
-          );
+            ),
+          );          
         }),
+      ),
+    );
+  }
+  Future<void> _launchUrl(String url) async {
+    try {      
+      if (await canLaunch(url)) {        
+        await launch(url);
+      } else {
+        // Xử lý khi không thể mở URL
+      _showSnackBar('Could not launch $url', Colors.red);         
+      }
+    } catch (e) {      
+      _showSnackBar('Error: ${e.toString()}', Colors.red);   
+    }
+  }
+   void _showSnackBar(String message, Color color) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

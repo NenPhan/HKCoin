@@ -10,8 +10,11 @@ class Slide {
   int? displayOrder;
   bool? showText;
   SlideImage? image;
+  Route? route;
+  String slideUrl;
 
-  Slide({this.id, this.name, this.displayOrder, this.showText, this.image});
+  Slide({this.id, this.name, this.displayOrder, this.showText, this.image, this.route,
+    required this.slideUrl});
 
   factory Slide.fromJson(Map<String, dynamic> json) => Slide(
     id: json["Id"],
@@ -19,6 +22,8 @@ class Slide {
     displayOrder: json["DisplayOrder"],
     showText: json["ShowText"],
     image: json["Image"] == null ? null : SlideImage.fromJson(json["Image"]),
+    route:json["Route"] != null ? Route.fromJson(json["Route"]) : null,
+    slideUrl: json["SlideUrl"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -31,8 +36,7 @@ class Slide {
 }
 
 class SlideImage {
-  int? id;
-  FileClass? file;
+  int? id;  
   String? alt;
   String? title;
   String? path;
@@ -44,8 +48,7 @@ class SlideImage {
   bool? lazyLoad;
 
   SlideImage({
-    this.id,
-    this.file,
+    this.id,    
     this.alt,
     this.title,
     this.path,
@@ -54,12 +57,11 @@ class SlideImage {
     this.noFallback,
     this.avataFallback,
     this.host,
-    this.lazyLoad,
+    this.lazyLoad
   });
 
   factory SlideImage.fromJson(Map<String, dynamic> json) => SlideImage(
-    id: json["Id"],
-    file: json["file"] == null ? null : FileClass.fromJson(json["file"]),
+    id: json["Id"],    
     alt: json["Alt"],
     title: json["Title"],
     path: json["Path"],
@@ -67,13 +69,12 @@ class SlideImage {
     thumbSize: json["ThumbSize"],
     noFallback: json["NoFallback"],
     avataFallback: json["AvataFallback"],
-    host: json["Host"],
+    host: json["Host"]??"",
     lazyLoad: json["LazyLoad"],
   );
 
   Map<String, dynamic> toJson() => {
-    "Id": id,
-    "file": file?.toJson(),
+    "Id": id,    
     "Alt": alt,
     "Title": title,
     "Path": path,
@@ -85,7 +86,24 @@ class SlideImage {
     "LazyLoad": lazyLoad,
   };
 }
+class Route {  
+  String? routeName;
+  int? routeId; 
+  Route({
+    this.routeName,
+    this.routeId    
+  });
 
+  factory Route.fromJson(Map<String, dynamic> json) => Route(
+    routeName: "/${json["RouteName"]}",
+    routeId: json["RouteId"],    
+  );
+
+  Map<String, dynamic> toJson() => {
+    "RouteName": routeName,
+    "RouteId":routeId,   
+  };
+}
 class FileClass {
   int? folderId;
   String? name;

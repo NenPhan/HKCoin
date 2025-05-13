@@ -14,13 +14,15 @@ class WalletHistoriesPagination {
   int? pageSize;
   int? totalPages;
   int? totalRecords;
+  bool? hasNextPage;
   List<WalletHistories>? walletHistories;
 
   WalletHistoriesPagination({
     this.pageNumber,
     this.pageSize,
     this.totalPages,
-    this.totalRecords,
+    this.totalRecords,    
+    this.hasNextPage,
     this.walletHistories,
   });
 
@@ -30,6 +32,7 @@ class WalletHistoriesPagination {
         pageSize: json["PageSize"],
         totalPages: json["TotalPages"],
         totalRecords: json["TotalRecords"],
+        hasNextPage: (json["PageNumber"] ?? 1) < (json["TotalPages"] ?? 1),
         walletHistories:
             json["Data"] == null
                 ? null

@@ -3,6 +3,7 @@ class Endpoints {
   static String register = "Customers/Register";
   static String logout = "Customers/Logout";
   static String getProduct = "Products";
+  static String getProductDetail(int id) => "Products($id)";
   static String getOrders = "Customers/Orders";
   static String customerInfo = "Customers/Me/";
   static String getWalletInfo = "Wallets/Dashboard";

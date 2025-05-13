@@ -7,6 +7,7 @@ import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/order.dart';
 import 'package:hkcoin/data.models/product.dart';
+import 'package:hkcoin/data.models/product_detail.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class ProductDatasource {
@@ -29,8 +30,23 @@ class ProductDatasource {
           .map((e) => Product.fromJson(e))
           .toList();
     });
-  }
+  } 
+  Future<ProductDetail> getProductsById(int id) async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getProductDetail(id),
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+        ),
+        contentType: "application/json",
+      );
 
+      return ProductDetail.fromJson(response["Data"]);
+    });
+  }
   Future<OrderPagination> getOrders({int page = 1, int limit = 10}) async {
     return await handleRemoteRequest(() async {
       Map<String, String> queryParams = {
