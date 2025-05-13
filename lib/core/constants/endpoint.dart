@@ -20,6 +20,7 @@ class Endpoints {
   static String getAddresses = "Customers/Addresses";
   static String getProvinces({int countryCode = 230}) =>
       "Countries($countryCode)/StateProvinces";
+  static String getCountry = "Countries";
   static String addAddress = "Orders/AddAddress";
   static String selectAddress = "Orders/SelectBillingAddress";
   static String checkout = "Orders/Checkout";
@@ -31,4 +32,8 @@ class Endpoints {
   static String setLanguage = "Languages/SetLanguage";
   static String getWithDrawalsProfit = "WithDrawals/Profit";
   static String getWithDrawalsHistories = "WithDrawals/Search";
+  static String kycInfo = "Customers/KYC";
+  static String kycStatus = "Customers/KYCStatus";
+  static String kycComplete = "Customers/KycComplate";
+  static String kycValidate = "Customers/Validate";
 }

@@ -112,24 +112,6 @@ class CheckoutDatasource {
     });
   }
 
-  Future<List<Province>> getProvinces() async {
-    return await handleRemoteRequest(() async {
-      var response = await dioClient.call(
-        DioParams(
-          HttpMethod.GET,
-          endpoint: Endpoints.getProvinces(),
-          headers: {
-            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },
-        ),
-      );
-
-      return (response["value"] as List)
-          .map((e) => Province.fromJson(e))
-          .toList();
-    });
-  }
-
   Future<void> addAddress(AddAddressParam param) async {
     await handleRemoteRequest(() async {
       await dioClient.call(

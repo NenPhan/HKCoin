@@ -9,7 +9,7 @@ class DisableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       ignoring: disable,
-      child: Opacity(opacity: 0.7, child: child),
+      child: Opacity(opacity: disable ? 0.7 : 1, child: child),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 
@@ -6,7 +7,7 @@ class CustomDropDownButton<T> extends StatefulWidget {
   const CustomDropDownButton({
     Key? key,
     this.buttonWidth,
-    this.buttonHeight = 60,
+    this.buttonHeight = 62,
     this.dropdownWidth = 200,
     this.dropdownMaxHeight = 180,
     @required this.items,
@@ -28,7 +29,7 @@ class CustomDropDownButton<T> extends StatefulWidget {
   final T? selectedValue;
   final Function(T?)? onChanged;
   final Widget Function(T item)? itemDesign;
-  final Widget? title;
+  final String? title;
   final String? hint;
   final bool? isRequired;
   final double? fontSize;
@@ -65,130 +66,169 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      clipBehavior: Clip.none,
       children: [
-        DropdownButtonHideUnderline(
-          child: DropdownButton2<T>(
-            isExpanded: true,
-            hint:
-                widget.hint != null
-                    ? Row(
-                      children: [
-                        Text(
-                          widget.hint!,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (widget.isRequired ?? false)
-                          Text(
-                            " *",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.red.withValues(alpha: .8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonHideUnderline(
+              child: DropdownButton2<T>(
+                isExpanded: true,
+                hint:
+                    widget.hint != null
+                        ? Row(
+                          children: [
+                            Text(
+                              widget.hint!,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                      ],
-                    )
-                    : Row(
-                      children: [
-                        if (widget.showIconList) ...[
-                          const Icon(Icons.list, size: 16),
-                          const SizedBox(width: 4),
-                        ],
-                        Expanded(
-                          child: Text(
-                            selectedItem?.toString() ??
-                                widget.defautText ??
-                                '...',
-                            style: textTheme(
-                              context,
-                            ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-            items:
-                widget.items
-                    ?.map(
-                      (item) => DropdownMenuItem<T>(
-                        value: item,
-                        child:
-                            widget.itemDesign != null
-                                ? Builder(
-                                  builder: (context) {
-                                    return widget.itemDesign!(item);
-                                  },
-                                )
-                                : Text(
-                                  item.toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: textTheme(context).bodyMedium,
+                            if (widget.isRequired ?? false)
+                              Text(
+                                " *",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red.withValues(alpha: .8),
                                 ),
-                      ),
-                    )
-                    .toList(),
-            value: selectedItem,
-            onChanged: (item) {
-              selectedItem = item;
-              setState(() {});
-              widget.onChanged?.call(item);
-            },
-            buttonStyleData: ButtonStyleData(
-              height: widget.buttonHeight,
-              width: widget.buttonWidth,
-              padding: const EdgeInsets.only(left: 10, right: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  width: 1,
-                  color: widget.buttonBorderColor ?? Colors.grey[900]!,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
+                        )
+                        : Row(
+                          children: [
+                            if (widget.showIconList) ...[
+                              const Icon(Icons.list, size: 16),
+                              const SizedBox(width: 4),
+                            ],
+                            Expanded(
+                              child: Text(
+                                selectedItem?.toString() ??
+                                    widget.defautText ??
+                                    '...',
+                                style: textTheme(context).bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                items:
+                    widget.items
+                        ?.map(
+                          (item) => DropdownMenuItem<T>(
+                            value: item,
+                            child:
+                                widget.itemDesign != null
+                                    ? Builder(
+                                      builder: (context) {
+                                        return widget.itemDesign!(item);
+                                      },
+                                    )
+                                    : Text(
+                                      item.toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textTheme(context).bodyMedium,
+                                    ),
+                          ),
+                        )
+                        .toList(),
+                value: selectedItem,
+                onChanged: (item) {
+                  selectedItem = item;
+                  setState(() {});
+                  widget.onChanged?.call(item);
+                },
+                buttonStyleData: ButtonStyleData(
+                  height: widget.buttonHeight,
+                  width: widget.buttonWidth,
+                  padding: const EdgeInsets.only(left: 10, right: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1,
+                      color: widget.buttonBorderColor ?? Colors.grey[900]!,
+                    ),
+                    color: Colors.grey[900],
+                  ),
+                  elevation: 0,
                 ),
-                color: Colors.grey[900],
+                iconStyleData: const IconStyleData(
+                  icon: Icon(Icons.arrow_drop_down),
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 14, right: 14),
+                  selectedMenuItemBuilder: (context, child) {
+                    return Container(color: Colors.deepOrange, child: child);
+                  },
+                ),
+                dropdownStyleData: DropdownStyleData(
+                  scrollbarTheme: const ScrollbarThemeData(
+                    radius: Radius.circular(40),
+                  ),
+                  maxHeight: widget.dropdownMaxHeight,
+                  width: widget.dropdownWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.black,
+                  ),
+                  elevation: 8,
+                ),
+                style: TextStyle(
+                  fontSize: widget.fontSize,
+                  color: Colors.black,
+                ),
               ),
-              elevation: 0,
             ),
-            iconStyleData: const IconStyleData(
-              icon: Icon(Icons.arrow_drop_down),
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40,
-              padding: const EdgeInsets.only(left: 14, right: 14),
-              selectedMenuItemBuilder: (context, child) {
-                return Container(color: Colors.deepOrange, child: child);
-              },
-            ),
-            dropdownStyleData: DropdownStyleData(
-              scrollbarTheme: const ScrollbarThemeData(
-                radius: Radius.circular(40),
-              ),
-              maxHeight: widget.dropdownMaxHeight,
-              width: widget.dropdownWidth,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.black,
-              ),
-              elevation: 8,
-            ),
-            style: TextStyle(fontSize: widget.fontSize, color: Colors.black),
-          ),
+            widget.validate != '' && widget.validate != null
+                ? Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                  child: Text(
+                    widget.validate ?? '',
+                    style: textTheme(
+                      context,
+                    ).bodySmall!.copyWith(color: Colors.red),
+                  ),
+                )
+                : const SizedBox(),
+          ],
         ),
-        widget.validate != '' && widget.validate != null
-            ? Padding(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
-              child: Text(
-                widget.validate ?? '',
+        if (widget.title != null)
+          Positioned(
+            top: -((avgSize(context) * 0.031) / 2),
+            left: scrSize(context).width * 0.04,
+            child: RichText(
+              text: TextSpan(
+                text: tr(widget.title!),
                 style: textTheme(
                   context,
-                ).bodySmall!.copyWith(color: Colors.red),
+                ).bodySmall?.copyWith(fontSize: avgSize(context) * 0.014),
+                children: [
+                  TextSpan(
+                    text: "*",
+                    style: textTheme(context).titleMedium?.copyWith(
+                      color:
+                          widget.isRequired ?? false
+                              ? Colors.red
+                              : Colors.transparent,
+                      fontSize: avgSize(context) * 0.022,
+                    ),
+                  ),
+                ],
               ),
-            )
-            : const SizedBox(),
+            ),
+            // Text(
+            //   tr(widget.title!),
+            //   style: textTheme(
+            //     context,
+            //   ).bodySmall?.copyWith(fontSize: avgSize(context) * 0.014),
+            // ),
+          ),
       ],
     );
   }

@@ -170,8 +170,12 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 data!.infoPayment!.qRCodePayment!,
                 width: scrSize(context).width * 0.6,
               ),
-            ),          
-          Html(data:tr("Checkout.Billing.Information.WalletAddress").replaceAll("{0}", data?.infoPayment?.walletAddress ?? "")),          
+            ),
+          Html(
+            data: tr(
+              "Checkout.Billing.Information.WalletAddress",
+            ).replaceAll("{0}", data?.infoPayment?.walletAddress ?? ""),
+          ),
           MainButton(
             width: scrSize(context).width * 0.25,
             icon: const Icon(Icons.copy, color: Colors.white),
@@ -207,7 +211,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
       child: IntrinsicHeight(
         child: Row(
           children: [
-            Flexible(
+            Expanded(
               flex: 2,
               child: Container(
                 color: Colors.red,
@@ -216,7 +220,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 ),
               ),
             ),
-            Flexible(
+            Expanded(
               flex: 8,
               child: Container(
                 padding: EdgeInsets.all(scrSize(context).width * 0.03),

@@ -12,6 +12,7 @@ class MainTextField extends StatefulWidget {
     this.isRequired = true,
     this.autofocus = false,
     this.keyboardType,
+    this.onChanged,
   });
   final TextEditingController? controller;
   final String? label;
@@ -21,6 +22,7 @@ class MainTextField extends StatefulWidget {
   final bool isRequired;
   final bool autofocus;
   final TextInputType? keyboardType;
+  final Function(String)? onChanged;
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -51,6 +53,7 @@ class _MainTextFieldState extends State<MainTextField> {
                 : RichText(
                   text: TextSpan(
                     text: widget.label,
+                    style: textTheme(context).bodySmall,
                     children: [
                       if (widget.isRequired)
                         TextSpan(
@@ -83,6 +86,7 @@ class _MainTextFieldState extends State<MainTextField> {
                 ),
       ),
       validator: widget.validator,
+      onChanged: widget.onChanged,
     );
   }
 }

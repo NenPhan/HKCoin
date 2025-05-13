@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/widgets/document_camera_frame/ui/page/document_camera_frame.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 
-class KycPage extends StatefulWidget {
-  const KycPage({super.key});
-  static String route = "/kyc";
+class KycCameraPage extends StatefulWidget {
+  const KycCameraPage({super.key});
+  static String route = "/kyc-camera";
 
   @override
-  State<KycPage> createState() => _KycPageState();
+  State<KycCameraPage> createState() => _KycCameraPageState();
 }
 
-class _KycPageState extends State<KycPage> {
+class _KycCameraPageState extends State<KycCameraPage> {
   bool isInit = true;
 
   @override
@@ -39,6 +40,7 @@ class _KycPageState extends State<KycPage> {
                 // Callback when the document is captured
                 onCaptured: (imgPath) {
                   debugPrint('Captured image path: $imgPath');
+                  Get.back(result: imgPath);
                 },
 
                 // Callback when the document is saved

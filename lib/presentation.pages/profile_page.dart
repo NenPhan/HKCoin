@@ -1,6 +1,3 @@
-
-import 'dart:developer';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,11 +9,11 @@ import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
-import 'package:hkcoin/presentation.pages/kyc_page.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
+import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
@@ -63,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
         {
           "name": tr("Account.KYC"),
           "icon": Icons.security,
-          "page": KycPage.route,
+          "page": UpdateKycPage.route,
         },
       ],
     },
@@ -135,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                           Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -148,98 +145,153 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
-                         const SizedBox(height: 0),
-                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              borderRadius: BorderRadius.circular(50),
-                              onTap: () {
-                                try {
-                                  if (controller.customerInfo?.affiliateLink != null) {
-                                    final String qrData = controller.customerInfo?.affiliateLink??"";
-                                    xPopUpDialog(
-                                      context,  
-                                        title: tr("Account.CustomerInfo.Popup.QRCode.Title"),
-                                        description: tr("Account.CustomerInfo.Popup.QRCode.Description"),                                                                          
+                          const SizedBox(height: 0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(50),
+                                onTap: () {
+                                  try {
+                                    if (controller
+                                            .customerInfo
+                                            ?.affiliateLink !=
+                                        null) {
+                                      final String qrData =
+                                          controller
+                                              .customerInfo
+                                              ?.affiliateLink ??
+                                          "";
+                                      xPopUpDialog(
+                                        context,
+                                        title: tr(
+                                          "Account.CustomerInfo.Popup.QRCode.Title",
+                                        ),
+                                        description: tr(
+                                          "Account.CustomerInfo.Popup.QRCode.Description",
+                                        ),
                                         child: QRCodeWidget(
-                                        data: qrData, // Dữ liệu QR code
-                                        size: 250, // Kích thước
-                                        backgroundColor: Colors.white, // Màu nền
-                                        foregroundColor: Colors.blueAccent, // Màu QR code
-                                        fileName: 'affiliateLink_${controller.customerInfo!.sponsorCode}.png', // Tùy chọn tên file khi lưu
-                                      ),                                      
-                                      centerTitle: true, // Căn giữa tiêu đề
-                                      centerDescription: true, // Căn giữa mô tả
-                                    );
-                                  }                                  
-                                } catch (e) {
-                                  Toast.showErrorToast("Common.CopyToClipboard.Failded");
-                                }                                
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(6.0),
-                                child: Icon(Icons.qr_code, size: 20, color: Colors.white),
-                              ),
-                            ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(50),
-                              onTap: () {
-                                 try {
-                                  if (controller.customerInfo?.sponsorCode != null) {
-                                    Clipboard.setData(
-                                      ClipboardData(text: controller.customerInfo!.sponsorCode),
+                                          data: qrData, // Dữ liệu QR code
+                                          size: 250, // Kích thước
+                                          backgroundColor:
+                                              Colors.white, // Màu nền
+                                          foregroundColor:
+                                              Colors.blueAccent, // Màu QR code
+                                          fileName:
+                                              'affiliateLink_${controller.customerInfo!.sponsorCode}.png', // Tùy chọn tên file khi lưu
+                                        ),
+                                        centerTitle: true, // Căn giữa tiêu đề
+                                        centerDescription:
+                                            true, // Căn giữa mô tả
+                                      );
+                                    }
+                                  } catch (e) {
+                                    Toast.showErrorToast(
+                                      "Common.CopyToClipboard.Failded",
                                     );
                                   }
-                                  Toast.showSuccessToast("Common.CopyToClipboard.SponsorCode.Succeeded");
-                                } catch (e) {
-                                  Toast.showErrorToast("Common.CopyToClipboard.Failded");
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Row(
-                                   mainAxisSize: MainAxisSize.min, 
-                                   children: [
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(6.0),
+                                  child: Icon(
+                                    Icons.qr_code,
+                                    size: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(50),
+                                onTap: () {
+                                  try {
+                                    if (controller.customerInfo?.sponsorCode !=
+                                        null) {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                          text:
+                                              controller
+                                                  .customerInfo!
+                                                  .sponsorCode,
+                                        ),
+                                      );
+                                    }
+                                    Toast.showSuccessToast(
+                                      "Common.CopyToClipboard.SponsorCode.Succeeded",
+                                    );
+                                  } catch (e) {
+                                    Toast.showErrorToast(
+                                      "Common.CopyToClipboard.Failded",
+                                    );
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
                                       const SizedBox(height: 4),
                                       Text(
-                                        controller.customerInfo?.sponsorCode ?? "",
+                                        controller.customerInfo?.sponsorCode ??
+                                            "",
                                         style: textTheme(context).labelMedium,
-                                      ),                
-                                      const Icon(Icons.copy_all, size: 20, color: Colors.white),                     
-                                   ],
-                                ),                                
+                                      ),
+                                      const Icon(
+                                        Icons.copy_all,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),                            
-                            InkWell(
-                              borderRadius: BorderRadius.circular(50),
-                              onTap: () {
-                                try {
-                                  if (controller.customerInfo?.affiliateLink !=null) {
-                                    Clipboard.setData(
-                                      ClipboardData(text: controller.customerInfo!.affiliateLink),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(50),
+                                onTap: () {
+                                  try {
+                                    if (controller
+                                            .customerInfo
+                                            ?.affiliateLink !=
+                                        null) {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                          text:
+                                              controller
+                                                  .customerInfo!
+                                                  .affiliateLink,
+                                        ),
+                                      );
+                                    }
+                                    Toast.showSuccessToast(
+                                      "Common.CopyToClipboard.AffiliateLink.Succeeded",
+                                    );
+                                  } catch (e) {
+                                    Toast.showErrorToast(
+                                      "Common.CopyToClipboard.Failded",
                                     );
                                   }
-                                  Toast.showSuccessToast("Common.CopyToClipboard.AffiliateLink.Succeeded");
-                                } catch (e) {
-                                  Toast.showErrorToast("Common.CopyToClipboard.Failded");
-                                }
-                              },
-                              child: Padding(
-                                padding:const EdgeInsets.all(6.0),
-                                child: Row(
-                                   mainAxisSize: MainAxisSize.min, 
-                                   children: [
-                                    Transform.rotate(
-                                      angle: -45 * 3.141592653589793 / 180, // Xoay 45 độ (chuyển từ độ sang radian)
-                                      child:const Icon(Icons.link, size: 20, color: Colors.white),
-                                    ),                                                                                                               
-                                   ],
-                                ),                                
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Transform.rotate(
+                                        angle:
+                                            -45 *
+                                            3.141592653589793 /
+                                            180, // Xoay 45 độ (chuyển từ độ sang radian)
+                                        child: const Icon(
+                                          Icons.link,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                         ),
+                            ],
+                          ),
                         ],
                       ),
                     ),

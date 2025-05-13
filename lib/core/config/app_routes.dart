@@ -1,7 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
-import 'package:hkcoin/presentation.pages/kyc_page.dart';
+import 'package:hkcoin/presentation.pages/kyc_camera_page.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/checkout_complete_page.dart';
@@ -14,6 +14,7 @@ import 'package:hkcoin/presentation.pages/news_details_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
+import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 
@@ -49,7 +50,11 @@ class AppGetRoutes {
     GetPage(name: AddressListPage.route, page: () => const AddressListPage()),
     GetPage(name: AddAddressPage.route, page: () => const AddAddressPage()),
     GetPage(name: WalletTokenPage.route, page: () => const WalletTokenPage()),
-    GetPage(name: KycPage.route, page: () => const KycPage()),    
-    GetPage(name: WithDrawRequestPage.route, page: () => const WithDrawRequestPage()),    
+    GetPage(
+      name: WithDrawRequestPage.route,
+      page: () => const WithDrawRequestPage(),
+    ),
+    GetPage(name: UpdateKycPage.route, page: () => const UpdateKycPage()),
+    GetPage(name: KycCameraPage.route, page: () => const KycCameraPage()),
   ];
 }

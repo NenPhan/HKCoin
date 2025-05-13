@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/params/add_address_param.dart';
 import 'package:hkcoin/data.models/province.dart';
+import 'package:hkcoin/data.repositories/util_repository.dart';
 import 'package:hkcoin/data.repositories/checkout_repository.dart';
 
 class AddAddressController extends GetxController {
@@ -27,7 +28,7 @@ class AddAddressController extends GetxController {
   }
 
   Future getProvinces() async {
-    handleEither(await CheckoutRepository().getProvinces(), (r) {
+    handleEither(await UtilRepository().getProvinces(), (r) {
       listProvince = r;
       update(["province-drop-down"]);
     });

@@ -55,15 +55,6 @@ class CheckoutRepository {
     );
   }
 
-  Future<Either<Failure, List<Province>>> getProvinces() {
-    return handleRepositoryCall(
-      onRemote: () async {
-        var result = await CheckoutDatasource().getProvinces();
-        return Right(result);
-      },
-    );
-  }
-
   Future<Either<Failure, void>> addAddress(AddAddressParam param) {
     return handleRepositoryCall(
       onRemote: () async {
