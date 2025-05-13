@@ -65,7 +65,7 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
               child: GetBuilder<WalletHistoryController>(
                 id: "wallet-histories-list",
                 builder: (controller) {
-                  if (controller.isLoading.value) {
+                  if (controller.isInitialLoading.value) {
                     return const LoadingWidget();
                   }
 
