@@ -60,10 +60,9 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
               child: GetBuilder<WithDrawalHistoryController>(
                 id: "drawal-histories-list",
                 builder: (controller) {
-                  if (controller.isLoading.value) {
+                  if (controller.isInitialLoading.value) {                    
                     return const LoadingWidget();
                   }
-
                   if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
                     return Center(
                       child: Text(tr("No transactions found")),
