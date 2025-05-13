@@ -49,16 +49,11 @@ class WithDrawalsDatasource {
       };
       var response = await dioClient.call(
         DioParams(
-          HttpMethod.POST,
+          HttpMethod.GET,
           endpoint: Endpoints.getWithDrawalsHistories,
           headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },
-            body: {
-            "WithDrawalRequestStatusIds": [],
-            "StartDate": null,
-            "EndDate": null,
-          },
+          },          
           params: queryParams,
           needAccessToken: true,
         ),
