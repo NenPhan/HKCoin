@@ -29,4 +29,6 @@ class Endpoints {
   static String getLanguage = "Languages/GetLanguage";
   static String getLanguages = "Languages";
   static String setLanguage = "Languages/SetLanguage";
+  static String getWithDrawalsProfit = "WithDrawals/Profit";
+  static String getWithDrawalsHistories = "WithDrawals/Search";
 }

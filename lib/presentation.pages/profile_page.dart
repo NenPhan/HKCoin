@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +18,7 @@ import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
+import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
@@ -30,7 +33,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List items = [
-    {"name": tr("Account.WithDrawalRequest.Create"), "icon": Icons.local_atm},
+    {
+      "name": tr("Account.WithDrawalRequest.Create"), 
+      "icon": Icons.local_atm,
+      "page": WithDrawRequestPage.route
+    },      
     {
       "name": tr("Account.Downlines.Customers"),
       "icon": Icons.people_alt_outlined,
@@ -76,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return InkWell(
       onTap: () {
         onTap?.call();
-        if (item["page"] != null) {
+        if (item["page"] != null) {               
           Get.toNamed(item["page"]);
         }
       },

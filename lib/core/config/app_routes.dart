@@ -15,6 +15,7 @@ import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
+import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 
 class AppRoutes {
   static get routes => {
@@ -48,6 +49,7 @@ class AppGetRoutes {
     GetPage(name: AddressListPage.route, page: () => const AddressListPage()),
     GetPage(name: AddAddressPage.route, page: () => const AddAddressPage()),
     GetPage(name: WalletTokenPage.route, page: () => const WalletTokenPage()),
-    GetPage(name: KycPage.route, page: () => const KycPage()),
+    GetPage(name: KycPage.route, page: () => const KycPage()),    
+    GetPage(name: WithDrawRequestPage.route, page: () => const WithDrawRequestPage()),    
   ];
 }
