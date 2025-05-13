@@ -52,119 +52,114 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-         body: SafeArea(
-            child: Column(
-              children: [           
-                Expanded(
-                  child: GetBuilder<WithDrawalHistoryController>(
-                    id: "drawal-histories-list",
-                    builder: (controller) {  
-                      if (controller.isInitialLoading.value) {               
-                        return const LoadingWidget();
-                      }
-                      if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
-                        return Center(
-                          child: Text(tr("No transactions found")),
-                        );
-                      }
-                      return RefreshIndicator(
-                        onRefresh: _refreshData,
-                        child: PaginationScrollWidget(
-                          scrollController: _verticalScrollController,
-                          hasMoreData: controller.withDrawalHistoriesPagination?.hasNextPage ?? false,
-                          onLoadMore: _loadMoreData,
-                          child: Scrollbar(
-                            controller: _horizontalScrollController,
-                            thumbVisibility: true,
-                            child: SingleChildScrollView(
-                              controller: _horizontalScrollController,
-                              scrollDirection: Axis.horizontal,
-                              child: DataTable(
-                                columnSpacing: 20,
-                                horizontalMargin: scrSize(context).width * 0.03,
-                                headingRowColor: WidgetStateProperty.resolveWith<Color>(
-                                  (Set<WidgetState> states) => Colors.grey[900]!,
-                                ),
-                                columns: List.generate(
-                                  controller.listColumn.length,
-                                  (index) {
-                                    return DataColumn(
-                                      label: Text(
-                                        tr(controller.listColumn[index]),
-                                        style: textTheme(context).bodyMedium?.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                        maxLines: 3,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                rows: controller
-                                    .withDrawalHistoriesPagination!
-                                    .withDrawalHistories!
-                                    .map(
-                                      (histories) => DataRow(
-                                        cells: [
-                                          _buildDataCell(
-                                            text: histories.amount ?? '-',
-                                          ),
-                                          _buildDataCell(
-                                            text: histories.amountSwap?.toString() ?? '-',
-                                          ),
-                                          _buildDataCell(
-                                            text: histories.withDrawalSwap ?? '-',
-                                          ),
-                                          _buildDataCell(
-                                            widget: Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: 8,
-                                                vertical: 4,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: _getStatusColor(histories.requestStatusId),
-                                                borderRadius: BorderRadius.circular(4),
-                                              ),
-                                              child: Text(
-                                                histories.status.toString(),
-                                                style: textTheme(context).bodySmall?.copyWith(
-                                                      color: Colors.white,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                          _buildDataCell(
-                                            text: histories.reason ?? '-',
-                                          ),
-                                          _buildDataCell(
-                                            text: histories.customerComments ?? '-',
-                                          ),
-                                          _buildDataCell(
-                                            text: dateFormat(histories.createdOnUtc),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [           
+            Expanded(
+              child: GetBuilder<WithDrawalHistoryController>(
+                id: "drawal-histories-list",
+                builder: (controller) {  
+                  if (controller.isInitialLoading.value) {               
+                    return const LoadingWidget();
+                  }
+                  if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
+                    return Center(
+                      child: Text(tr("No transactions found")),
+                    );
+                  }
+                  return RefreshIndicator(
+                    onRefresh: _refreshData,
+                    child: PaginationScrollWidget(
+                      scrollController: _verticalScrollController,
+                      hasMoreData: controller.withDrawalHistoriesPagination?.hasNextPage ?? false,
+                      onLoadMore: _loadMoreData,
+                      child: Scrollbar(
+                        controller: _horizontalScrollController,
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          controller: _horizontalScrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columnSpacing: 20,
+                            horizontalMargin: scrSize(context).width * 0.03,
+                            headingRowColor: WidgetStateProperty.resolveWith<Color>(
+                              (Set<WidgetState> states) => Colors.grey[900]!,
                             ),
+                            columns: List.generate(
+                              controller.listColumn.length,
+                              (index) {
+                                return DataColumn(
+                                  label: Text(
+                                    tr(controller.listColumn[index]),
+                                    style: textTheme(context).bodyMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                    maxLines: 3,
+                                  ),
+                                );
+                              },
+                            ),
+                            rows: controller
+                                .withDrawalHistoriesPagination!
+                                .withDrawalHistories!
+                                .map(
+                                  (histories) => DataRow(
+                                    cells: [
+                                      _buildDataCell(
+                                        text: histories.amount ?? '-',
+                                      ),
+                                      _buildDataCell(
+                                        text: histories.amountSwap?.toString() ?? '-',
+                                      ),
+                                      _buildDataCell(
+                                        text: histories.withDrawalSwap ?? '-',
+                                      ),
+                                      _buildDataCell(
+                                        widget: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: _getStatusColor(histories.requestStatusId),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: Text(
+                                            histories.status.toString(),
+                                            style: textTheme(context).bodySmall?.copyWith(
+                                                  color: Colors.white,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                      _buildDataCell(
+                                        text: histories.reason ?? '-',
+                                      ),
+                                      _buildDataCell(
+                                        text: histories.customerComments ?? '-',
+                                      ),
+                                      _buildDataCell(
+                                        text: dateFormat(histories.createdOnUtc),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
-                      );                  
-                    },
-                  ),
-                ),
-                const SizedBox(height: homeBottomPadding),
-              ],
+                      ),
+                    ),
+                  );                  
+                },
+              ),
             ),
-          ),
+            const SizedBox(height: homeBottomPadding),
+          ],
+        ),
       ),
     );
-    // return Scaffold(
-      
-    // );
   }
 
   DataCell _buildDataCell({String? text, Widget? widget}) {
