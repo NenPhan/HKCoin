@@ -10,11 +10,11 @@ class CustomerInfo {
   String customerGuid;
   String username;
   String email;
-  String phone;
+  String? phone;
   bool active;
-  String firstName;
-  String lastName;
-  String fullName;
+  String? firstName;
+  String? lastName;
+  String? fullName;
   String customerNumber;
   dynamic birthDate;
   dynamic gender;
@@ -28,11 +28,11 @@ class CustomerInfo {
     required this.customerGuid,
     required this.username,
     required this.email,
-    required this.phone,
+    this.phone,
     required this.active,
-    required this.firstName,
-    required this.lastName,
-    required this.fullName,
+    this.firstName,
+    this.lastName,
+    this.fullName,
     required this.customerNumber,
     required this.birthDate,
     required this.gender,

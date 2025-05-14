@@ -24,8 +24,8 @@ class CustomerInfoController extends GetxController {
 
   void getCustomerInfo() async {
     handleEither(await CustomerRepository().getCustomerInfo(), (r) {
-      fNameController.text = r.firstName;
-      lNameController.text = r.lastName;
+      fNameController.text = r.firstName??"";
+      lNameController.text = r.lastName??"";
       emailController.text = r.email;
       phoneController.text = "0${r.phone}";
       usernameController.text = r.username;
