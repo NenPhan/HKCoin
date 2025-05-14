@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_profit_controller.dart';
+import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/disable_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 
 class ProfitWithdrawalContentPage extends StatefulWidget {
   const ProfitWithdrawalContentPage({super.key});
+  static String route = "/withdrawal-profit";
 
   @override
   State<ProfitWithdrawalContentPage> createState() => _ProfitWithdrawalContentPageState();
@@ -18,6 +20,7 @@ class ProfitWithdrawalContentPage extends StatefulWidget {
 
 class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPage> {
   final WithdrawalProfitController controller = Get.put(WithdrawalProfitController());
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -28,7 +31,8 @@ class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPag
         return Scaffold(
           body: SafeArea(
             child: Column(
-              children: [                
+              children: [     
+                 const BaseAppBar(title: "Account.WithDrawalRequest.Profits.Title"),           
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -37,33 +41,7 @@ class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPag
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: SpacingColumn(
-                              spacing: size.height * 0.01, 
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    tr("Account.Report.Shopping"),
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontSize: size.width * 0.05,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey[300], // Using theme color
-                                    ),
-                                  ),
-                                  Text(
-                                    controller.withDrawalsProfit!.walletAmountProfits??"",
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontSize: size.width * 0.05,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white, // Using theme color
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                            ),
-                          ),
+                        children: [                          
                           _buildAssetTab(
                               size: size,
                               content: [
@@ -91,6 +69,15 @@ class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPag
                                     label: tr("Account.Fields.Username"),
                                   ),
                                 ),
+                                //  CustomDropDownButton(
+                                //   items: controller.availableProfit,
+                                //   isRequired: true,
+                                //   selectedValue: controller.selectedCountry,
+                                //   title: "Account.KYC.Fields.Country",
+                                //   onChanged: (p0) {
+                                //     controller.validate();
+                                //   },
+                                // ),
                                 // MainTextField(
                                 //   controller: controller.fNameController,
                                 //   label: tr("Account.Fields.FirstName"),
