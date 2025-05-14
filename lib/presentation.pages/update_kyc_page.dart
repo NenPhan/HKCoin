@@ -120,7 +120,7 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                     title: "Account.KYC.Fields.Country",
                     onChanged: (p0) {
                       controller.selectedCountry = p0;
-                      controller.validate();  
+                      controller.validate();
                     },
                   ),
                   Row(
