@@ -71,10 +71,11 @@ class KycDatasource {
       });
       await dioClient.call(
         DioParams(
-          HttpMethod.GET,
+          HttpMethod.POST,
           endpoint: Endpoints.kycValidate,
           needAccessToken: true,
           body: formData,
+          params: {"step": "${name.replaceAll("Id", "")}Upload"},
         ),
       );
     });

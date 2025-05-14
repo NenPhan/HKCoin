@@ -86,15 +86,18 @@ Future<T?> xPopUpDialog<T>(
   bool centerTitle = true,
   bool centerDescription = true,
   List<Widget>? footerButtons, // Thêm footer buttons
-  MainAxisAlignment footerButtonsAlignment = MainAxisAlignment.end, // Căn chỉnh footer buttons
-  EdgeInsets footerButtonsPadding = const EdgeInsets.only(top: 16), // Padding cho footer buttons
+  MainAxisAlignment footerButtonsAlignment =
+      MainAxisAlignment.end, // Căn chỉnh footer buttons
+  EdgeInsets footerButtonsPadding = const EdgeInsets.only(
+    top: 16,
+  ), // Padding cho footer buttons
 }) async {
   final size = MediaQuery.of(context).size;
   final theme = Theme.of(context);
 
   return await showGeneralDialog<T>(
     useRootNavigator: useRootNavigator,
-    barrierColor: barrierColor ?? Colors.black.withOpacity(0.7),
+    barrierColor: barrierColor ?? Colors.black.withAlpha((255 * 0.7).toInt()),
     transitionBuilder: (context, a1, a2, widget) {
       final curvedAnimation = CurvedAnimation(
         parent: a1,
@@ -129,7 +132,10 @@ Future<T?> xPopUpDialog<T>(
                             padding: const EdgeInsets.symmetric(horizontal: 32),
                             child: Text(
                               title,
-                              textAlign: centerTitle ? TextAlign.center : TextAlign.start,
+                              textAlign:
+                                  centerTitle
+                                      ? TextAlign.center
+                                      : TextAlign.start,
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -156,7 +162,10 @@ Future<T?> xPopUpDialog<T>(
                   if (description != null) ...[
                     Text(
                       description,
-                      textAlign: centerDescription ? TextAlign.center : TextAlign.start,
+                      textAlign:
+                          centerDescription
+                              ? TextAlign.center
+                              : TextAlign.start,
                       style: theme.textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 16),
@@ -164,9 +173,7 @@ Future<T?> xPopUpDialog<T>(
 
                   // Main content
                   if (child != null)
-                    isCenter
-                        ? Center(child: child)
-                        : Flexible(child: child),
+                    isCenter ? Center(child: child) : Flexible(child: child),
 
                   // Footer buttons
                   if (footerButtons != null && footerButtons.isNotEmpty) ...[
@@ -174,12 +181,17 @@ Future<T?> xPopUpDialog<T>(
                       padding: footerButtonsPadding,
                       child: Row(
                         mainAxisAlignment: footerButtonsAlignment,
-                        children: footerButtons
-                            .map((button) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                                  child: button,
-                                ))
-                            .toList(),
+                        children:
+                            footerButtons
+                                .map(
+                                  (button) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                    ),
+                                    child: button,
+                                  ),
+                                )
+                                .toList(),
                       ),
                     ),
                   ],
@@ -197,6 +209,7 @@ Future<T?> xPopUpDialog<T>(
     pageBuilder: (context, animation1, animation2) => const SizedBox(),
   );
 }
+
 String? requiredValidator(value, String alert) =>
     value != "" && value != null ? null : tr(alert);
 

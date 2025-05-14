@@ -31,6 +31,7 @@ class UpdateKycController extends GetxController {
   RxBool isLoadingSaveButton = false.obs;
   RxBool canSave = false.obs;
   bool isLoading = false;
+  bool verifyKyc = false;
 
   List<Country> listCountry = [];
   KycStatus? kycStatus;
@@ -43,7 +44,7 @@ class UpdateKycController extends GetxController {
     super.onInit();
   }
 
-  initData() async {
+  Future initData() async {
     isLoading = true;
     update(["update-kyc-page"]);
     await getKycStatus();
@@ -93,6 +94,7 @@ class UpdateKycController extends GetxController {
           selectedICardType = item;
         }
       }
+      verifyKyc = r.verifyKyc ?? false;
     });
   }
 
@@ -135,7 +137,7 @@ class UpdateKycController extends GetxController {
     await handleEitherReturn(
       await KycRepository().kycValidate(name: name, file: file),
       (r) async {
-        initData();
+        await initData();
       },
     );
   }

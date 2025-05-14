@@ -157,13 +157,18 @@ class ActionButtons extends StatelessWidget {
                   child: ActionButton(
                     text: saveButtonText ?? 'Use this photo',
                     onPressed: () => _saveImage(onSaved),
-                    style: saveButtonStyle,
+                    style:
+                        retakeButtonStyle ??
+                        ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: const BorderSide(width: 1, color: Colors.white),
+                        ),
                     textStyle:
-                        saveButtonTextStyle ??
+                        retakeButtonTextStyle ??
                         const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                     width: saveButtonWidth,
                     height: saveButtonHeight,

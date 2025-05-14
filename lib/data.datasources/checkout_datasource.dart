@@ -10,7 +10,6 @@ import 'package:hkcoin/data.models/cart.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/data.models/order_total.dart';
 import 'package:hkcoin/data.models/params/add_address_param.dart';
-import 'package:hkcoin/data.models/province.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class CheckoutDatasource {

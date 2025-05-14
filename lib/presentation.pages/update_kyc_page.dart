@@ -77,7 +77,11 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 20),
-            _buildAlert(controller.kycStatus?.message ?? ""),
+            _buildAlert(
+              controller.verifyKyc
+                  ? "Account.KYC.Veryfied"
+                  : controller.kycStatus?.message ?? "",
+            ),
             Form(
               key: controller.formKey,
               child: SpacingColumn(
@@ -115,7 +119,8 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                     selectedValue: controller.selectedCountry,
                     title: "Account.KYC.Fields.Country",
                     onChanged: (p0) {
-                      controller.validate();
+                      controller.selectedCountry = p0;
+                      controller.validate();  
                     },
                   ),
                   Row(
@@ -137,6 +142,7 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                           isRequired: true,
                           selectedValue: controller.selectedICardType,
                           onChanged: (p0) {
+                            controller.selectedICardType = p0;
                             controller.validate();
                           },
                         ),
@@ -148,18 +154,21 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
             ),
             const SizedBox(height: 24),
             Obx(
-              () => MainButton(
-                isLoading: controller.isLoadingSaveButton.value,
-                enable: controller.canSave.value,
-                icon: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: textTheme(context).titleLarge?.fontSize,
+              () => Visibility(
+                visible: !controller.verifyKyc,
+                child: MainButton(
+                  isLoading: controller.isLoadingSaveButton.value,
+                  enable: controller.canSave.value,
+                  icon: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: textTheme(context).titleLarge?.fontSize,
+                  ),
+                  text: "Common.Save",
+                  onTap: () async {
+                    controller.updateKycInfo();
+                  },
                 ),
-                text: "Common.Save",
-                onTap: () async {
-                  controller.updateKycInfo();
-                },
               ),
             ),
           ],
@@ -184,7 +193,7 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
               enable: index == 0,
               isUploaded: index > 0,
               onChanged: (file) async {
-                controller.kycValidatePhoto(name: "FrontId", file: file);
+                await controller.kycValidatePhoto(name: "FrontId", file: file);
               },
             ),
             UploadPhotoButton(
@@ -192,14 +201,14 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
               enable: index == 1,
               isUploaded: index > 1,
               onChanged: (file) async {
-                controller.kycValidatePhoto(name: "BackId", file: file);
+                await controller.kycValidatePhoto(name: "BackId", file: file);
               },
             ),
             UploadPhotoButton(
               name: "Account.KYC.Card.Fields.MediaFilePortrait",
               enable: index == 2,
               onChanged: (file) async {
-                controller.kycValidatePhoto(name: "Portrait", file: file);
+                await controller.kycValidatePhoto(name: "Portrait", file: file);
               },
             ),
           ],
@@ -226,7 +235,7 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                 padding: EdgeInsets.all(scrSize(context).width * 0.03),
                 color: Colors.white,
                 child: Text(
-                  alert,
+                  tr(alert),
                   style: textTheme(
                     context,
                   ).bodyMedium?.copyWith(color: Colors.indigo[900]),
@@ -311,12 +320,18 @@ class _UploadPhotoButtonState extends State<UploadPhotoButton> {
                       onTap: () async {
                         isLoading = true;
                         setState(() {});
-                        var result = await Get.toNamed(KycCameraPage.route);
+                        var result = await Get.toNamed(
+                          KycCameraPage.route,
+                          arguments:
+                              widget.name.toLowerCase().contains("portrait")
+                                  ? PhotoRatio.portrait
+                                  : PhotoRatio.cid,
+                        );
                         if (result is String) {
                           await widget.onChanged(File(result));
                         }
                         isLoading = false;
-                        setState(() {});
+                        if (mounted) setState(() {});
                       },
                       text: 'Camera',
                     ),

@@ -14,9 +14,13 @@ class KycCameraPage extends StatefulWidget {
 
 class _KycCameraPageState extends State<KycCameraPage> {
   bool isInit = true;
+  PhotoRatio photoRatio = PhotoRatio.cid;
 
   @override
   void initState() {
+    if (Get.arguments is PhotoRatio) {
+      photoRatio = Get.arguments as PhotoRatio;
+    }
     super.initState();
   }
 
@@ -34,18 +38,21 @@ class _KycCameraPageState extends State<KycCameraPage> {
               height: trueHeight,
               child: DocumentCameraFrame(
                 // Document frame dimensions
-                frameWidth: 300,
-                frameHeight: 300 / (8.5 / 5.6),
+                frameWidth: photoRatio == PhotoRatio.cid ? 300 : 130,
+                frameHeight:
+                    (photoRatio == PhotoRatio.cid
+                        ? 300 / (8.5 / 5.6)
+                        : 130 / (4 / 6)),
 
                 // Callback when the document is captured
                 onCaptured: (imgPath) {
                   debugPrint('Captured image path: $imgPath');
-                  Get.back(result: imgPath);
                 },
 
                 // Callback when the document is saved
                 onSaved: (imgPath) {
                   debugPrint('Saved image path: $imgPath');
+                  Get.back(result: imgPath);
                 },
 
                 // Callback when the retake button is pressed
@@ -61,3 +68,5 @@ class _KycCameraPageState extends State<KycCameraPage> {
         : const Center(child: LoadingWidget());
   }
 }
+
+enum PhotoRatio { portrait, cid }
