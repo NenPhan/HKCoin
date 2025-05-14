@@ -17,6 +17,7 @@ class WithdrawalProfitController extends GetxController {
   bool isSubmitting = false;
   String? errorMessage;
   WithDrawalsProfit? withDrawalsProfit;
+  //List<Country> listCountry = [];
   @override
   void onInit() {
     getWithDrawalsProfit();

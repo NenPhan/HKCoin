@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/WithDrawalRequestController.dart';
+import 'package:hkcoin/presentation.pages/withdrawal_profit_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_histories_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 
@@ -114,10 +115,9 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center, // Distribute buttons evenly
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            // Action for Button 1
-                            print("Button 1 with icon pressed");
+                        ElevatedButton.icon(                          
+                          onPressed: () {                
+                            Get.toNamed(ProfitWithdrawalContentPage.route);                                         
                           },
                           icon: const Icon(Icons.download), // Icon for Button 1
                           label: Text(tr("Account.WithDrawalRequest.Profits.Title")), // Replace with your localized text

@@ -60,8 +60,10 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
               child: GetBuilder<WithDrawalHistoryController>(
                 id: "drawal-histories-list",
                 builder: (controller) {  
-                  if (controller.isInitialLoading.value) {               
-                    return const LoadingWidget();
+                  if (controller.isInitialLoading.value) {     
+                    return const Center(
+                      child: LoadingWidget(),
+                    );                            
                   }
                   if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
                     return Center(
