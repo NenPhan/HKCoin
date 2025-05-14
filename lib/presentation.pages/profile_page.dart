@@ -178,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           foregroundColor:
                                               Colors.blueAccent, // Màu QR code
                                           fileName:
-                                              'affiliateLink_${controller.customerInfo!.sponsorCode}.png', // Tùy chọn tên file khi lưu
+                                              'affiliateLink_${controller.customerInfo!.customerNumber}.png', // Tùy chọn tên file khi lưu
                                         ),
                                         centerTitle: true, // Căn giữa tiêu đề
                                         centerDescription:
@@ -204,14 +204,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius: BorderRadius.circular(50),
                                 onTap: () {
                                   try {
-                                    if (controller.customerInfo?.sponsorCode !=
+                                    if (controller.customerInfo?.customerNumber !=
                                         null) {
                                       Clipboard.setData(
                                         ClipboardData(
                                           text:
                                               controller
                                                   .customerInfo!
-                                                  .sponsorCode,
+                                                  .customerNumber,
                                         ),
                                       );
                                     }
@@ -231,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     children: [
                                       const SizedBox(height: 4),
                                       Text(
-                                        controller.customerInfo?.sponsorCode ??
+                                        controller.customerInfo?.customerNumber ??
                                             "",
                                         style: textTheme(context).labelMedium,
                                       ),

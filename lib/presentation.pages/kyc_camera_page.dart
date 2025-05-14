@@ -38,11 +38,11 @@ class _KycCameraPageState extends State<KycCameraPage> {
               height: trueHeight,
               child: DocumentCameraFrame(
                 // Document frame dimensions
-                frameWidth: photoRatio == PhotoRatio.cid ? 300 : 300,
+                frameWidth: photoRatio == PhotoRatio.cid ? 300 : 230,
                 frameHeight:
                     (photoRatio == PhotoRatio.cid
                         ? 300 / (8.5 / 5.6)
-                        : 300 / (4 / 6)),
+                        : 230 / (4 / 6)),
 
                 // Callback when the document is captured
                 onCaptured: (imgPath) {
