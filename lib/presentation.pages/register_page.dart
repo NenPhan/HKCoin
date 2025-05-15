@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const BaseAppBar(),
+            const BaseAppBar(enableHomeButton: false),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -75,7 +75,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               label: tr("Account.Fields.Phone"),
                               keyboardType: TextInputType.phone,
                               isNumberOnly: true,
-                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\+?[0-9]*$'))],
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\+?[0-9]*$'),
+                                ),
+                              ],
                               validator:
                                   (value) => requiredValidator(
                                     value,

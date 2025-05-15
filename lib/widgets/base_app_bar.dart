@@ -8,6 +8,7 @@ import 'package:hkcoin/presentation.pages/home_page.dart';
 class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool isBackEnabled;
+  final bool enableHomeButton;
   final int? cartCount;
   final Widget? actionWidget;
 
@@ -19,6 +20,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.cartCount,
     this.backgroundColor,
     this.actionWidget,
+    this.enableHomeButton = true,
   });
 
   @override
@@ -46,7 +48,9 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
             tag: "main-logo",
             child: GestureDetector(
               onTap: () {
-                Get.offNamedUntil(HomePage.route, (route) => false);
+                if (enableHomeButton) {
+                  Get.offNamedUntil(HomePage.route, (route) => false);
+                }
               },
               child: Assets.icons.hkcLogoIcon.image(height: 35),
             ),
