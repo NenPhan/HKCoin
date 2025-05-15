@@ -16,6 +16,7 @@ import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
 import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
+import 'package:hkcoin/presentation.pages/withdrawal_investment_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawal_profit_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 
@@ -58,5 +59,6 @@ class AppGetRoutes {
     GetPage(name: UpdateKycPage.route, page: () => const UpdateKycPage()),
     GetPage(name: KycCameraPage.route, page: () => const KycCameraPage()),
     GetPage(name: ProfitWithdrawalContentPage.route, page: () => const ProfitWithdrawalContentPage()),
+    GetPage(name: InvestmentWithdrawalContentPage.route, page: () => const InvestmentWithdrawalContentPage()),
   ];
 }

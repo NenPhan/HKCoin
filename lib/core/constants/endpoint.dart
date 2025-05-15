@@ -30,9 +30,11 @@ class Endpoints {
   static String getLanguage = "Languages/GetLanguage";
   static String getLanguages = "Languages";
   static String setLanguage = "Languages/SetLanguage";
+  static String getWithDrawalsInvest = "WithDrawals/Invest";
   static String getWithDrawalsProfit = "WithDrawals/Profit";
   static String getWithDrawalsHistories = "WithDrawals/Search";
   static String getExchangePrice = "WithDrawals/ExchangePrice";
+  static String getExchangePackage = "WithDrawals/ExchangePackage";
   static String kycInfo = "Customers/KYC";
   static String kycStatus = "Customers/KYCStatus";
   static String kycComplete = "Customers/KycComplate";

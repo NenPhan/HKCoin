@@ -81,7 +81,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                         decoration: BoxDecoration(
                           // color: Colors.deepOrange,
                           gradient: const LinearGradient(
-                            colors: [Colors.black, Colors.deepOrange],
+                            colors: [Color.fromARGB(255, 249, 194, 12), Colors.deepOrange],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),

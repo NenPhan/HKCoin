@@ -123,7 +123,7 @@ class _PaginationScrollWidgetState extends State<PaginationScrollWidget> {
         children: [
           widget.child,
           if (_isLoadingMore) _buildLoadingWidget(),
-          if (!widget.hasMoreData && !_isLoadingMore) _buildNoMoreDataWidget(context),
+          //if (!widget.hasMoreData && !_isLoadingMore) _buildNoMoreDataWidget(context),
           if (_hasError)
             Padding(
               padding: widget.padding ?? const EdgeInsets.all(16.0),

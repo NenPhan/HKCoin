@@ -61,6 +61,7 @@ class WithDrawalHistories {
   String? withDrawalSwap;
   String? status;
   int? requestStatusId;
+  String? withdrawalPrincipal;
 
   WithDrawalHistories({
     this.id,
@@ -72,7 +73,8 @@ class WithDrawalHistories {
     this.withDrawalSwap,  
     this.amountSwap,
     this.status,
-    this.requestStatusId
+    this.requestStatusId,
+    this.withdrawalPrincipal    
   });
 
   factory WithDrawalHistories.fromJson(Map<String, dynamic> json) => WithDrawalHistories(
@@ -85,7 +87,8 @@ class WithDrawalHistories {
     withDrawalSwap:json["WithDrawalSwap"],
     amountSwap:json["AmountSwap"],
     status:json["Status"],
-    requestStatusId:json["RequestStatusId"]
+    requestStatusId:json["RequestStatusId"],
+    withdrawalPrincipal:json["WithdrawalPrincipal"]    
   );
 
   Map<String, dynamic> toJson() => {

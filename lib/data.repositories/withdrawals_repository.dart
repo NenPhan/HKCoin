@@ -4,9 +4,18 @@ import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/withdrawals_datasource.dart';
 import 'package:hkcoin/data.models/withdrawals_exchangeprice.dart';
 import 'package:hkcoin/data.models/withdrawals_histories.dart';
+import 'package:hkcoin/data.models/withdrawals_investment.dart';
 import 'package:hkcoin/data.models/withdrawals_profit.dart';
 
 class WithDrawalsRepository {   
+  Future<Either<Failure, WithDrawalsInvestment>> getWithDrawalsInvestment() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await WithDrawalsDatasource().getWithDrawalsInvestments();       
+        return Right(result);
+      },
+    );
+  }
   Future<Either<Failure, WithDrawalsProfit>> getWithDrawalsProfit() {
     return handleRepositoryCall(
       onRemote: () async {
@@ -36,6 +45,22 @@ class WithDrawalsRepository {
       },
     );
   }
+  Future<Either<Failure, double>> getExchangePackage(int tokenType) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await WithDrawalsDatasource().getExchangePackage(tokenType);       
+        return Right(result);
+      },
+    );
+  }
+  Future<Either<Failure, WithDrawalsInvestment>> submitInvestment(WithDrawalsInvestment form) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await WithDrawalsDatasource().submitInvestment(form);       
+        return Right(result);
+      },
+    );
+  } 
   Future<Either<Failure, WithDrawalsProfit>> submitProfit(WithDrawalsProfit form) {
     return handleRepositoryCall(
       onRemote: () async {

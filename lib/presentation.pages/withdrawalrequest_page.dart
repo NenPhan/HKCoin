@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/WithDrawalRequestController.dart';
+import 'package:hkcoin/presentation.pages/withdrawal_investment_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawal_profit_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_histories_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
@@ -141,8 +142,7 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                       const SizedBox(width: 8.0),
                       ElevatedButton.icon(
                         onPressed: () {
-                          // Action for Button 2
-                          print("Button 2 with icon pressed");
+                          Get.toNamed(InvestmentWithdrawalContentPage.route);                          
                         },
                         icon: const Icon(Icons.download), // Icon for Button 2
                         label: Text(

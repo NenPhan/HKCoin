@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,19 +22,15 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
 
   Future<void> _loadMoreData() async {
     if (!controller.isLoadingMore.value &&
-        (controller.withDrawalHistoriesPagination?.hasNextPage ?? false)) {
-      log("Load more data requested");
+        (controller.withDrawalHistoriesPagination?.hasNextPage ?? false)) {      
       await controller.getWalletHistoriesData(
         page: (controller.withDrawalHistoriesPagination?.pageNumber ?? 0) + 1,
         isLoadMore: true,
       );
-    } else {
-      log("Load more not triggered: isLoadingMore=${controller.isLoadingMore.value}, hasNextPage=${controller.withDrawalHistoriesPagination?.hasNextPage}");
     }
   }
   // Hàm xử lý kéo xuống làm mới
-  Future<void> _refreshData() async {
-    log("Refresh data requested");
+  Future<void> _refreshData() async {    
     await controller.getWalletHistoriesData(
       page: 1,
       isLoadMore: false,
@@ -109,6 +103,9 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
                                 .map(
                                   (histories) => DataRow(
                                     cells: [
+                                      _buildDataCell(
+                                        text: histories.withdrawalPrincipal ?? '-',
+                                      ),
                                       _buildDataCell(
                                         text: histories.amount ?? '-',
                                       ),

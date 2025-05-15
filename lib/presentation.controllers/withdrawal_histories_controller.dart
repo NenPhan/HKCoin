@@ -10,6 +10,7 @@ class WithDrawalHistoryController extends GetxController {
   final RxBool isInitialLoading = true.obs;
   final RxBool isLoadingMore = false.obs;
   List<String> listColumn = [
+    "Account.WithDrawalRequest.Fields.WithdrawalPrincipal",
     "Account.WithDrawalRequest.Fields.Amount",
     "Account.WithDrawalRequest.Fields.AmountSwap",
     "Account.WithDrawalRequest.Fields.WithDrawalSwap",
