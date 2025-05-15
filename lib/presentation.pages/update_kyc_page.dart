@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
@@ -106,6 +107,13 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                   MainTextField(
                     controller: controller.phoneController,
                     label: tr("Account.KYC.Fields.Phone"),
+                    keyboardType: TextInputType.phone,
+                    isNumberOnly: true,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\+?[0-9]*$'),
+                      ),
+                    ],
                     onChanged: (p0) => controller.validate(),
                   ),
                   const SizedBox(height: 10),
@@ -126,7 +134,7 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                   Row(
                     children: [
                       Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: MainTextField(
                           controller: controller.cidController,
                           label: tr(
@@ -135,6 +143,7 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                           onChanged: (p0) => controller.validate(),
                         ),
                       ),
+                       const SizedBox(width: 8.0),
                       Expanded(
                         flex: 2,
                         child: CustomDropDownButton(
