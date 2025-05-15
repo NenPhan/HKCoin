@@ -26,6 +26,7 @@ class WithdrawalInvestmentController extends GetxController {
   List<AviablePackages> aviablePackages = [];
   AviablePackages? selectedPackage;
   bool hiddenExchangePrice = false;  
+  RxBool isLoadingSubmit = false.obs;
   @override
   void onInit() {
     getWithDrawalsInvestment();
@@ -46,11 +47,13 @@ class WithdrawalInvestmentController extends GetxController {
   }
 
   void submitWithdrawal() async {
+    isLoadingSubmit.value=true;
     if (formKey.currentState!.validate()) {
       if (selectedPackage == null || selectedPackage!.id == 0) {
         Toast.showErrorToast(
           "Account.WithDrawalRequest.WithDrawalSwap.Required",
         );
+        isLoadingSubmit.value=false;
         return;
       }
       var amountSwapToHKC = amountSwapToHKCController.text.trim().toDouble();          
@@ -66,6 +69,7 @@ class WithdrawalInvestmentController extends GetxController {
           ),
         ),
         (r) {
+          isLoadingSubmit.value=false;
           Get.back();
         },
       );

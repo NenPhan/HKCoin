@@ -7,6 +7,7 @@ import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_investment_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
+import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 
 class InvestmentWithdrawalContentPage extends StatefulWidget {
@@ -29,7 +30,7 @@ class _InvestmentWithdrawalContentPageState
     final size = MediaQuery.of(context).size;
     return GetBuilder<WithdrawalInvestmentController>(
       id: "withdrawal-investment-page",
-      builder: (controller) {
+      builder: (controller) {        
         return Scaffold(
           body: SafeArea(
             child: Column(
@@ -189,13 +190,13 @@ class _InvestmentWithdrawalContentPageState
       width: double.infinity,
       child: ElevatedButton.icon(
         icon: Icon(icon),
-        label: Text(text),
+        label: Text(text),        
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-        ),
+        ),                     
         onPressed: () {
           controller.submitWithdrawal();
         },
