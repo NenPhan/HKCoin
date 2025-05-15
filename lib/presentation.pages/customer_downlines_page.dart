@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,56 +49,133 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ), 
                       _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ), 
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ), 
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),   
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),  
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),  
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),  
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),  
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),   
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),     
                           _buildAssetItemCircle(
                             title: "Nguyễn Văn Kiên",
                             amount: "1,000,000 VND",
                             icon: Icons.money,
+                            onSubmitted: () {
+                              // setState(() {
+                              //   _isSelected = !_isSelected; // Toggle selection
+                              // });
+                              // Add your submit logic here
+                              log("Submit");
+                            },
                           ),                       
                     ],
                   ),
@@ -127,6 +206,7 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
   required String title,
   required String amount,
   required IconData icon,
+  VoidCallback? onSubmitted,
 }) {
   return Card(
     margin: const EdgeInsets.symmetric(vertical: 8),
@@ -153,7 +233,9 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
       ),
       //subtitle: Text(amount),
       trailing: const Icon(Icons.chevron_right),
+      onTap: onSubmitted,
     ),
+    
   );
 }
 }
