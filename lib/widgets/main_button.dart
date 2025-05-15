@@ -33,13 +33,13 @@ class _MainButtonState extends State<MainButton> {
       disable: !widget.enable,
       child: SizedBox(
         width: widget.width,
-        height: 60,
+        height: 50,
         child: ElevatedButton(
           onPressed: () {
             widget.onTap();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.amber[900],
             padding: EdgeInsets.symmetric(
               // vertical: scrSize(context).height * 0.02,
               horizontal: scrSize(context).width * 0.03,
