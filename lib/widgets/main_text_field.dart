@@ -11,6 +11,7 @@ class MainTextField extends StatefulWidget {
     this.validator,
     this.isRequired = true,
     this.autofocus = false,
+    this.readOnly = false,
     this.keyboardType,
     this.onChanged,
   });
@@ -20,6 +21,7 @@ class MainTextField extends StatefulWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final bool isRequired;
+  final bool readOnly;
   final bool autofocus;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
@@ -45,6 +47,7 @@ class _MainTextFieldState extends State<MainTextField> {
       obscureText: obscureText,
       autofocus: widget.autofocus,
       keyboardType: widget.keyboardType,
+      readOnly: widget.readOnly,
       decoration: InputDecoration(
         hintText: widget.hintText ?? widget.label,
         label:

@@ -6,6 +6,7 @@ import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
+import 'package:hkcoin/data.models/withdrawals_exchangeprice.dart';
 import 'package:hkcoin/data.models/withdrawals_histories.dart';
 import 'package:hkcoin/data.models/withdrawals_profit.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
@@ -60,6 +61,23 @@ class WithDrawalsDatasource {
       );
 
       return WithDrawalHistoriesPagination.fromJson(response);
+    });
+  }
+   Future<ExchangePrice> getExchangePrice(int tokenType) async {
+    return await handleRemoteRequest(() async {
+       Map<String, String> queryParams = {
+        "tokenType": tokenType.toString()        
+      };
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getExchangePrice,
+          params: queryParams,
+          needAccessToken: true,
+        ),
+      );
+
+      return ExchangePrice.fromJson(response["Data"]);
     });
   }
 }
