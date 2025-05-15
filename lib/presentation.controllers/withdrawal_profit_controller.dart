@@ -72,9 +72,9 @@ class WithdrawalProfitController extends GetxController {
               amount: amountController.text.trim().stringToDouble(),    
               amountSwap: amountSwapController.text.trim().stringToDouble(), 
               amountToUSDT: amountToUSD,                    
-              withDrawalSwapId: selectedWithDrawalSwap!.id,
-              tokenExchangePrice: double.tryParse(exchangePriceController.text.trim()),
-              customerComments: commentController.text.trim()
+              withDrawalSwapId: selectedWithDrawalSwap!.id,              
+              customerComments: commentController.text.trim(),
+              tokenExchangePrice:exchangePriceHiddenController.text.trim().toDouble()
             ),
           ),
           (r) {
