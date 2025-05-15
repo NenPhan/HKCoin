@@ -3,10 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hkcoin/core/extensions/numerice_extensions.dart';
+import 'package:hkcoin/core/extensions/extensions.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/withdrawals_profit.dart';
