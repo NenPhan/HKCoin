@@ -6,38 +6,40 @@ WithDrawalsProfit withDrawalsProfitFromJson(String str) =>
 String withDrawalsProfitToJson(WithDrawalsProfit data) => json.encode(data.toJson());
 
 class WithDrawalsProfit {
-  int id;
+  int? id;
   double withdrawFee;
-  String withdrawFeeHint;
+  String? withdrawFeeHint;
   double? hTXExchangePrice;
   double? exchangeHKC;
   double? tokenExchangePrice;
   double amount;
   double amountSwap;
   double? amountToUSDT;
-  int walletId;
+  int? walletId;
   String walletTokenAddres;
-  int customerId;
+  int? customerId;
   int withDrawalSwapId;
   String? walletAmountProfits;
-  List<AviableWithDrawalSwaps> aviableWithDrawalSwaps;
+  List<AviableWithDrawalSwaps>? aviableWithDrawalSwaps;
+  String? customerComments;
 
   WithDrawalsProfit({
-    required this.id,
+    this.id,
     required this.withdrawFee,
-    required this.withdrawFeeHint,
+    this.withdrawFeeHint,
     this.hTXExchangePrice,
     this.exchangeHKC,
     this.tokenExchangePrice,
     required this.amount,
     required this.amountSwap,
     required this.amountToUSDT,
-    required this.walletId,
+    this.walletId,
     required this.walletTokenAddres,
-    required this.customerId,
+    this.customerId,
     required this.withDrawalSwapId,
     this.walletAmountProfits,
-    required this.aviableWithDrawalSwaps    
+    this.aviableWithDrawalSwaps,    
+    this.customerComments
   });
 
   factory WithDrawalsProfit.fromJson(Map<String, dynamic> json) => WithDrawalsProfit(
@@ -55,6 +57,7 @@ class WithDrawalsProfit {
     customerId: json["CustomerId"],
     withDrawalSwapId: json["WithDrawalSwapId"],
     walletAmountProfits:json["WalletAmountProfits"],
+    customerComments:json["CustomerComments"],
     aviableWithDrawalSwaps:
             json["AviableWithDrawalSwaps"] == null
                 ? []
@@ -70,6 +73,7 @@ class WithDrawalsProfit {
     "WithdrawFeeHint": withdrawFeeHint,
     "HTXExchangePrice": hTXExchangePrice,
     "ExchangeHKC": exchangeHKC,
+    "WithdrawFee":withdrawFee,
     "TokenExchangePrice": tokenExchangePrice,
     "Amount": amount,
     "AmountSwap": amountSwap,
@@ -79,6 +83,7 @@ class WithDrawalsProfit {
     "CustomerId": customerId,
     "WithDrawalSwapId": withDrawalSwapId,
     "WalletAmountProfits": walletAmountProfits,
+    "CustomerComments":customerComments,
     "AviableWithDrawalSwaps":
         aviableWithDrawalSwaps == null
             ? []
@@ -86,25 +91,27 @@ class WithDrawalsProfit {
   };  
 }
 class AviableWithDrawalSwaps {
-  int tokenTypeId;
-  String tokenTypeName;
+  int id;
+  String name;
   bool selected;
 
   AviableWithDrawalSwaps({
-    required this.tokenTypeId,
-    required this.tokenTypeName,
+    required this.id,
+    required this.name,
     required this.selected
   });
 
   factory AviableWithDrawalSwaps.fromJson(Map<String, dynamic> json) => AviableWithDrawalSwaps(
-    tokenTypeId: json["TokenTypeId"],
-    tokenTypeName: json["TokenTypeName"],
+    id: json["TokenTypeId"],
+    name: json["TokenTypeName"],
     selected: json["Selected"]   
   );
 
   Map<String, dynamic> toJson() => {
-    "TokenTypeId": tokenTypeId,
-    "TokenTypeName": tokenTypeName,
+    "TokenTypeId": id,
+    "TokenTypeName": name,
     "Selected": selected,  
   };
+  @override
+  String toString() => name;
 }

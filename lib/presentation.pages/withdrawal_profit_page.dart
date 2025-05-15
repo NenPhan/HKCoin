@@ -1,14 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/core/utils.dart';
+import 'package:hkcoin/data.models/withdrawals_profit.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_profit_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/disable_widget.dart';
+import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
+import 'package:hkcoin/widgets/xcustom_drop_down_button.dart';
 
 class ProfitWithdrawalContentPage extends StatefulWidget {
   const ProfitWithdrawalContentPage({super.key});
@@ -41,92 +46,118 @@ class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPag
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [                          
-                          _buildAssetTab(
-                              size: size,
-                              content: [
-                                _buildAssetItem(
-                                  title: "Tiền mặt",
-                                  amount: "1,000,000 VND",
-                                  icon: Icons.money,
-                                ),
-                                _buildAssetItem(
-                                  title: "Tiền điện tử",
-                                  amount: "0.5 BTC",
-                                  icon: Icons.currency_bitcoin,
-                                ),
-                              ],
-                            ),
+                        children: [                                                    
                           Form(
                             key: controller.formKey,
                             child: SpacingColumn(
                               spacing: 15,
                               children: [
                                 const SizedBox(height: 20),
-                                DisableWidget(
-                                  child: MainTextField(
-                                    controller: controller.amountController,
-                                    label: tr("Account.Fields.Username"),
-                                  ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Stack(
+                                        children: [
+                                           CustomDropDownButton(
+                                            items: controller.aviableWithDrawalSwaps,
+                                            isRequired: true,
+                                            selectedValue: controller.selectedWithDrawalSwap,
+                                            title: "Account.WithDrawalRequest.WithDrawalSwap",                                                                                 
+                                            onChanged: (p0) {
+                                              controller.amountController.clear();
+                                              controller.isLoading.value
+                                                ? null // Vô hiệu hóa khi loading
+                                                : controller.onSwapChanged(p0);                                              
+                                            },                                                                                    
+                                          ), 
+                                          if (controller.isLoading.value)                                             
+                                            const Positioned(
+                                              right: 10,
+                                              top: 25,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(strokeWidth: 2),
+                                              ),
+                                            ),  
+                                        ],
+                                      ),                                                                                                                   
+                                    ),                                     
+                                  ]
+                                ),                                                                 
+                                MainTextField(
+                                  controller: controller.amountController,
+                                  label: tr("Account.WithDrawalRequest.Amount"),
+                                  keyboardType: TextInputType.number,
+                                  enableSelectOnMouseDown: true,
+                                  onChanged: (value) {                                    
+                                    controller.updateAmountSwap();
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return tr("Field required");
+                                    }
+                                    if (double.tryParse(value) == null) {
+                                      return tr("Invalid number");
+                                    }
+                                    return null;
+                                  },
+                                ),   
+                                 MainTextField(
+                                  controller: controller.amountSwapController,
+                                  label: tr("Account.WithDrawalRequest.Fields.AmountSwap"),   
+                                  readOnly: true,                               
                                 ),
-                                //  CustomDropDownButton(
-                                //   items: controller.availableProfit,
-                                //   isRequired: true,
-                                //   selectedValue: controller.selectedCountry,
-                                //   title: "Account.KYC.Fields.Country",
-                                //   onChanged: (p0) {
-                                //     controller.validate();
-                                //   },
-                                // ),
-                                // MainTextField(
-                                //   controller: controller.fNameController,
-                                //   label: tr("Account.Fields.FirstName"),
-                                //   validator:
-                                //       (value) => requiredValidator(
-                                //         value,
-                                //         "Account.Register.Errors.FirstNameIsNotProvided",
-                                //       ),
-                                // ),
-                                // MainTextField(
-                                //   controller: controller.lNameController,
-                                //   label: tr("Account.Fields.LastName"),
-                                //   validator:
-                                //       (value) => requiredValidator(
-                                //         value,
-                                //         "Account.Register.Errors.LastNameIsNotProvided",
-                                //       ),
-                                // ),
-                                // MainTextField(
-                                //   controller: controller.emailController,
-                                //   label: tr("Account.Login.Fields.Email"),
-                                //   validator:
-                                //       (value) => requiredValidator(
-                                //         value,
-                                //         "Account.Register.Errors.EmailIsNotProvided",
-                                //       ),
-                                // ),
-                                // MainTextField(
-                                //   controller: controller.phoneController,
-                                //   label: tr("Account.Fields.Phone"),
-                                //   validator:
-                                //       (value) => requiredValidator(
-                                //         value,
-                                //         "Account.Register.Errors.PhoneIsNotProvided",
-                                //       ),
-                                // ),
+                                 Visibility(
+                                      visible: controller.hiddenExchangePrice, // Ẩn nếu true
+                                      maintainState: true,
+                                      child: MainTextField(
+                                        controller: controller.exchangePriceController,
+                                        label: tr("Account.WithDrawalRequest.TokenExchangePrice"),   
+                                        readOnly: true,                                                                             
+                                      ),
+                                    ), 
+                                 MainTextField(
+                                  controller: controller.walletController,
+                                  label: tr("Account.WithDrawalRequest.WalletTokenAddresExt"),   
+                                  readOnly: controller.walletController.text.isNotEmpty ?true:false,    
+                                  validator:
+                                  (value) => requiredValidator(
+                                    value,
+                                    "Account.WithDrawalRequest.WalletTokenAddres.Requird",
+                                  ),                           
+                                ),  
+                                MainTextField(
+                                  controller: controller.commentController,
+                                  isRequired: false,                 
+                                  maxLines: 4,                 
+                                  label: tr("Account.WithDrawalRequest.Comments"),                                                                                                
+                                ),                                                        
+                                Visibility(
+                                  visible: false, // Ẩn hoàn toàn
+                                  maintainState: true, // Giữ trạng thái controller
+                                  child: TextField(
+                                    controller: controller.exchangePriceHiddenController,
+                                  ),
+                                ),  
+                                Visibility(
+                                  visible: false, // Ẩn hoàn toàn
+                                  maintainState: true, // Giữ trạng thái controller
+                                  child: TextField(
+                                    controller: controller.exchangeHKCHiddenController,
+                                  ),
+                                ),    
+                                Text(  
+                                  textAlign: TextAlign.left,                                
+                                  controller.withdrawFeeHintController.text,
+                                  style: textTheme(context).bodySmall,
+                                ),                                                                                           
+                              _buildActionButton(size, tr("WithDrawalRequest.Submit"), Icons.send),                                                         
                               ],
                             ),
                           ),
-                          const SizedBox(height: 24),
-                          Obx(
-                            () => MainButton(
-                              //isLoading: controller.isLoadingSaveButton.value,
-                              text: "Common.Save",
-                              onTap: () async {
-                                //await controller.updateCustomerInfo();
-                              },
-                            ),
-                          ),
+                          const SizedBox(height: 24),                          
                         ],
                       ),
                     ),
@@ -138,42 +169,7 @@ class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPag
         );
       },
     );
-  }
-  Widget _buildAssetTab({
-    required Size size,
-    required List<Widget> content,
-  }) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        horizontal: size.width * 0.03,
-        vertical: size.height * 0.02,
-      ),
-      child: Column(
-        children: [
-          ...content,
-          SizedBox(height: size.height * 0.02),
-          _buildActionButton(size, "Rút tiền", Icons.money_off),
-          SizedBox(height: size.height * 0.01),
-          _buildActionButton(size, "Nạp tiền", Icons.money),
-        ],
-      ),
-    );
-  }
-  Widget _buildAssetItem({
-    required String title,
-    required String amount,
-    required IconData icon,
-  }) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: Icon(icon, size: 30, color: Colors.blue),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(amount),
-        trailing: const Icon(Icons.chevron_right),
-      ),
-    );
-  }
+  }  
   Widget _buildActionButton(Size size, String text, IconData icon) {
     return SizedBox(
       width: double.infinity,
@@ -187,7 +183,7 @@ class _ProfitWithdrawalContentPageState extends State<ProfitWithdrawalContentPag
           ),
         ),
         onPressed: () {
-          // Xử lý khi nhấn nút
+          controller.submitWithdrawal();
         },
       ),
     );
