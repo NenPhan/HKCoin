@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
@@ -101,7 +102,8 @@ class _ProfitWithdrawalContentPageState
                                   controller: controller.amountController,
                                   label: tr("Account.WithDrawalRequest.Amount"),
                                   keyboardType: TextInputType.number,
-                                  enableSelectOnMouseDown: true,
+                                  enableSelectOnMouseDown: true,                                  
+                                  isNumberOnly: true,                                                                 
                                   onChanged: (value) {
                                     controller.updateAmountSwap();
                                   },
