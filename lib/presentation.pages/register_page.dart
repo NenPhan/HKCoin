@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/instance_manager.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
@@ -61,6 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             MainTextField(
                               controller: registerController.emailController,
+                              keyboardType: TextInputType.emailAddress,
                               label: tr("Account.Login.Fields.Email"),
                               validator:
                                   (value) => requiredValidator(
@@ -71,6 +73,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller: registerController.phoneController,
                               label: tr("Account.Fields.Phone"),
+                              keyboardType: TextInputType.phone,
+                              isNumberOnly: true,
+                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\+?[0-9]*$'))],
                               validator:
                                   (value) => requiredValidator(
                                     value,

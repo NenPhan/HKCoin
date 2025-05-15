@@ -37,6 +37,7 @@ class _InputPricePopupState extends State<InputPricePopup> {
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   controller: priceController,
+                  isNumberOnly: true,
                   validator:
                       (value) =>
                           value != "" && value != null
