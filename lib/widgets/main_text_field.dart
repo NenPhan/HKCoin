@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -21,8 +19,8 @@ class MainTextField extends StatefulWidget {
     this.minLines = 1, // Thêm minLines
     this.maxLines = 1, // Thêm
     this.enableSelectOnMouseDown = false,
-    this.isNumberOnly=false,
-    this.inputFormatters
+    this.isNumberOnly = false,
+    this.inputFormatters,
   });
   final TextEditingController? controller;
   final String? label;
@@ -36,8 +34,8 @@ class MainTextField extends StatefulWidget {
   final Function(String)? onChanged;
   final int minLines; // Số dòng tối thiểu
   final int maxLines; // Số dòng tối đa
-  final bool enableSelectOnMouseDown;  
-  final bool isNumberOnly; 
+  final bool enableSelectOnMouseDown;
+  final bool isNumberOnly;
   final List<TextInputFormatter>? inputFormatters;
 
   @override
@@ -58,6 +56,7 @@ class _MainTextFieldState extends State<MainTextField> {
     });
     super.initState();
   }
+
   @override
   void dispose() {
     _focusNode.dispose();
@@ -75,18 +74,29 @@ class _MainTextFieldState extends State<MainTextField> {
       readOnly: widget.readOnly,
       minLines: widget.minLines, // Truyền minLines
       maxLines: widget.maxLines, //
-      onTap: () => {        
-        if (widget.enableSelectOnMouseDown && widget.controller != null) {
-          if (isFirstTap) {
-            widget.controller!.selectAll(), // Chọn toàn bộ văn bản lần đầu
-            isFirstTap = false // Đánh dấu không phải lần đầu
-          }
-        }
-      },
-      inputFormatters: widget.readOnly
-          ? null
-          : widget.isNumberOnly?(widget.inputFormatters ??
-              [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))]):null,
+      onTap:
+          () => {
+            if (widget.enableSelectOnMouseDown && widget.controller != null)
+              {
+                if (isFirstTap)
+                  {
+                    widget.controller!
+                        .selectAll(), // Chọn toàn bộ văn bản lần đầu
+                    isFirstTap = false, // Đánh dấu không phải lần đầu
+                  },
+              },
+          },
+      inputFormatters:
+          widget.readOnly
+              ? null
+              : widget.isNumberOnly
+              ? (widget.inputFormatters ??
+                  [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'^\d*\.?\d{0,2}'),
+                    ),
+                  ])
+              : null,
       decoration: InputDecoration(
         hintText: widget.hintText ?? widget.label,
         label:

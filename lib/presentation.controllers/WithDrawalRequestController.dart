@@ -5,24 +5,25 @@ import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.repositories/customer_repository.dart';
 
-class WithDrawalRequestController extends GetxController {   
-  RxBool isLoadingWallet = false.obs;  
-   WalletInfo? walletInfo;
+class WithDrawalRequestController extends GetxController {
+  RxBool isLoadingWallet = false.obs;
+  WalletInfo? walletInfo;
 
   @override
-  void onInit() {    
+  void onInit() {
     getCustomerData();
     super.onInit();
   }
-   Future<void> getCustomerData() async {    
+
+  Future<void> getCustomerData() async {
     log("getCustomerData");
     isLoadingWallet.value = true;
-    handleEither(await CustomerRepository().getWalletInfo(), (r) { 
-    log(r.walletCoupon);
+    handleEither(await CustomerRepository().getWalletInfo(), (r) {
+      log(r.walletCoupon);
       walletInfo = r;
     });
-    isLoadingWallet.value = false;  
+    isLoadingWallet.value = false;
     log("isLoadingWallet.value");
-    update(["withdrawal-wallet-info"]);
+    update(["withdraw-request-page"]);
   }
 }
