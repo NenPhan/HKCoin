@@ -14,6 +14,8 @@ class MainTextField extends StatefulWidget {
     this.readOnly = false,
     this.keyboardType,
     this.onChanged,
+    this.minLines = 1, // Thêm minLines
+    this.maxLines = 1, // Thêm
   });
   final TextEditingController? controller;
   final String? label;
@@ -25,6 +27,8 @@ class MainTextField extends StatefulWidget {
   final bool autofocus;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
+  final int minLines; // Số dòng tối thiểu
+  final int maxLines; // Số dòng tối đa
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -48,6 +52,8 @@ class _MainTextFieldState extends State<MainTextField> {
       autofocus: widget.autofocus,
       keyboardType: widget.keyboardType,
       readOnly: widget.readOnly,
+      minLines: widget.minLines, // Truyền minLines
+      maxLines: widget.maxLines, //
       decoration: InputDecoration(
         hintText: widget.hintText ?? widget.label,
         label:
@@ -56,7 +62,7 @@ class _MainTextFieldState extends State<MainTextField> {
                 : RichText(
                   text: TextSpan(
                     text: widget.label,
-                    style: textTheme(context).bodySmall,
+                    style: textTheme(context).bodyMedium,
                     children: [
                       if (widget.isRequired)
                         TextSpan(

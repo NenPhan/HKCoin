@@ -36,4 +36,12 @@ class WithDrawalsRepository {
       },
     );
   }
+  Future<Either<Failure, WithDrawalsProfit>> submitProfit(WithDrawalsProfit form) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await WithDrawalsDatasource().submitProfit(form);       
+        return Right(result);
+      },
+    );
+  } 
 }

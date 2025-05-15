@@ -207,7 +207,7 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
                 text: tr(widget.title!),
                 style: textTheme(
                   context,
-                ).bodySmall?.copyWith(fontSize: avgSize(context) * 0.014),
+                ).bodySmall?.copyWith(fontSize: avgSize(context) * 0.018),
                 children: [
                   TextSpan(
                     text: "*",

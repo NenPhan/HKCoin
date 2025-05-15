@@ -2,9 +2,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:hkcoin/core/extensions/numerice_extensions.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/data.models/withdrawals_profit.dart';
 import 'package:hkcoin/data.repositories/withdrawals_repository.dart';
 
@@ -21,6 +25,7 @@ class WithdrawalProfitController extends GetxController {
   final exchangeHKCHiddenController = TextEditingController();
   final amountSwapController =TextEditingController();
   final walletController =TextEditingController();
+  final commentController =TextEditingController();
   String? availableProfit;
   bool isSubmitting = false;
   String? errorMessage;
@@ -38,35 +43,44 @@ class WithdrawalProfitController extends GetxController {
   void getWithDrawalsProfit() async {
     handleEither(await WithDrawalsRepository().getWithDrawalsProfit(), (r) {
       withDrawalsProfit=r;
-      withdrawFeeHintController.text = r.withdrawFeeHint;
+      withdrawFeeHintController.text = r.withdrawFeeHint!;
       exchangeHKCController.text = "${r.exchangeHKC}";
       walletIdController.text = "${r.walletId}";
       customerIdController.text = "${r.customerId}";
       walletTokenAddresController.text = r.walletTokenAddres;
       amountController.text= "${r.amount}";
-      aviableWithDrawalSwaps = r.aviableWithDrawalSwaps;
+      aviableWithDrawalSwaps = r.aviableWithDrawalSwaps!;
       exchangeHKCHiddenController.text="${r.exchangeHKC}";
       walletController.text=r.walletTokenAddres;
     });    
     update(["withdrawals_profit-page"]);
   }
 
-  Future<void> submitWithdrawal({
-    required String amount,
-    required String walletAddress,
-  }) async {
-    isSubmitting = true;
-    errorMessage = null;
-   // update(['profit-withdrawal']);
-    
-    try {
-      // API call to submit withdrawal
-      // Update recentWithdrawals list
-    } catch (e) {
-      errorMessage = e.toString();
-    } finally {
-      isSubmitting = false;
-      //update(['profit-withdrawal']);
+  void submitWithdrawal() async {
+    if (formKey.currentState!.validate()) {
+      if(selectedWithDrawalSwap ==null || selectedWithDrawalSwap!.id==0){
+        Toast.showErrorToast("Account.WithDrawalRequest.WithDrawalSwap.Required");
+        return; 
+      }
+      var amountToUSD = amountController.text.trim().stringToDouble()*exchangeHKCController.text.trim().toDouble();
+      handleEither(
+          await WithDrawalsRepository().submitProfit(
+            WithDrawalsProfit(
+              walletTokenAddres: walletController.text.trim(),
+              exchangeHKC: double.tryParse(exchangeHKCController.text.trim()),
+              withdrawFee:withdrawFeeHintController.text.trim().stringToDouble(),
+              amount: amountController.text.trim().stringToDouble(),    
+              amountSwap: amountSwapController.text.trim().stringToDouble(), 
+              amountToUSDT: amountToUSD,                    
+              withDrawalSwapId: selectedWithDrawalSwap!.id,
+              tokenExchangePrice: double.tryParse(exchangePriceController.text.trim()),
+              customerComments: commentController.text.trim()
+            ),
+          ),
+          (r) {
+            Get.back();
+          },
+        );
     }
   }
   void onSwapChanged(AviableWithDrawalSwaps? newSwap) async {

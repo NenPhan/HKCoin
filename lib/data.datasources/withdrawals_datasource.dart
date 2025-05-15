@@ -5,7 +5,6 @@ import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
-import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/withdrawals_exchangeprice.dart';
 import 'package:hkcoin/data.models/withdrawals_histories.dart';
 import 'package:hkcoin/data.models/withdrawals_profit.dart';
@@ -27,21 +26,20 @@ class WithDrawalsDatasource {
       return WithDrawalsProfit.fromJson(response["Data"]);
     });
   }
-
-  Future<CustomerInfo> updateCustomerInfo(CustomerInfo customerInfo) async {
+ Future<WithDrawalsProfit> submitProfit(WithDrawalsProfit form) async {
     return await handleRemoteRequest(() async {
+      var body = form.toJson();
       var response = await dioClient.call(
         DioParams(
-          HttpMethod.PATCH,
-          endpoint: Endpoints.customerInfo,
+          HttpMethod.POST, endpoint: Endpoints.getWithDrawalsProfit,
           needAccessToken: true,
-          body: customerInfo.toUpdateJson(),
+          body: body
         ),
         contentType: "application/json",
       );
-      return CustomerInfo.fromJson(response["Data"]);
+      return WithDrawalsProfit.fromJson(response["Data"]);
     });
-  }
+  } 
   Future<WithDrawalHistoriesPagination> getWithDrawalHistoriesData({int page = 1, int limit = 10}) async {
     return await handleRemoteRequest(() async {
       Map<String, String> queryParams = {
