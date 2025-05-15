@@ -65,11 +65,11 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
                       child: LoadingWidget(),
                     );                            
                   }
-                  if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
-                    return Center(
-                      child: Text(tr("No transactions found")),
-                    );
-                  }
+                  // if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
+                  //   return Center(
+                  //     child: Text(tr("No transactions found")),
+                  //   );
+                  // }
                   return RefreshIndicator(
                     onRefresh: _refreshData,
                     child: PaginationScrollWidget(

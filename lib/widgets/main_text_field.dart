@@ -21,6 +21,7 @@ class MainTextField extends StatefulWidget {
     this.minLines = 1, // Thêm minLines
     this.maxLines = 1, // Thêm
     this.enableSelectOnMouseDown = false,
+    this.isNumberOnly=false,
     this.inputFormatters
   });
   final TextEditingController? controller;
@@ -36,6 +37,7 @@ class MainTextField extends StatefulWidget {
   final int minLines; // Số dòng tối thiểu
   final int maxLines; // Số dòng tối đa
   final bool enableSelectOnMouseDown;  
+  final bool isNumberOnly; 
   final List<TextInputFormatter>? inputFormatters;
 
   @override
@@ -83,8 +85,8 @@ class _MainTextFieldState extends State<MainTextField> {
       },
       inputFormatters: widget.readOnly
           ? null
-          : (widget.inputFormatters ??
-              [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))]),
+          : widget.isNumberOnly?(widget.inputFormatters ??
+              [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))]):null,
       decoration: InputDecoration(
         hintText: widget.hintText ?? widget.label,
         label:
