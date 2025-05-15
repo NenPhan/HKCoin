@@ -10,6 +10,7 @@ import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
+import 'package:hkcoin/presentation.pages/customer_downlines_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
@@ -38,6 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
     {
       "name": tr("Account.Downlines.Customers"),
       "icon": Icons.people_alt_outlined,
+      "page": CustomerDownlinesPage.route
     },
     {
       "name": tr("Account.Management"),

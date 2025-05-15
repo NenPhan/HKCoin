@@ -1,6 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
+import 'package:hkcoin/presentation.pages/customer_downlines_page.dart';
 import 'package:hkcoin/presentation.pages/kyc_camera_page.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
@@ -60,5 +61,7 @@ class AppGetRoutes {
     GetPage(name: KycCameraPage.route, page: () => const KycCameraPage()),
     GetPage(name: ProfitWithdrawalContentPage.route, page: () => const ProfitWithdrawalContentPage()),
     GetPage(name: InvestmentWithdrawalContentPage.route, page: () => const InvestmentWithdrawalContentPage()),
+    GetPage(name: CustomerDownlinesPage.route, page: () => const CustomerDownlinesPage()),
+    
   ];
 }
