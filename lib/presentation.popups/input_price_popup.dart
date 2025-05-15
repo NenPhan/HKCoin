@@ -65,7 +65,7 @@ class _InputPricePopupState extends State<InputPricePopup> {
                       ),
                     ),
                     child: Text(
-                      tr("Enums.WalletPostingReason.Purchase"),
+                      tr("Products.AddtoCart"),
                       style: textTheme(context).titleSmall,
                     ),
                   ),

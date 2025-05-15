@@ -132,7 +132,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                         );
                       },
-                      text: "Enums.WalletPostingReason.Purchase",
+                      text: "Products.AddtoCart",
                     ),
                   );
                 },
