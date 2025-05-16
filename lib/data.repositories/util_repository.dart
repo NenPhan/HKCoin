@@ -6,14 +6,15 @@ import 'package:hkcoin/data.models/country.dart';
 import 'package:hkcoin/data.models/province.dart';
 
 class UtilRepository {
-  Future<Either<Failure, List<Province>>> getProvinces() {
+  Future<Either<Failure, List<Province>>> getProvinces({int countryId = 230}) {
     return handleRepositoryCall(
       onRemote: () async {
-        var result = await UtilDatasource().getProvinces();
+        var result = await UtilDatasource().getProvinces(countryId: countryId);
         return Right(result);
       },
     );
   }
+
 
   Future<Either<Failure, List<Country>>> getCountries() {
     return handleRepositoryCall(

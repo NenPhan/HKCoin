@@ -19,8 +19,8 @@ class Endpoints {
   static String getSlides = "Sliders";
   static String getAddresses = "Customers/Addresses";
   static String getDownlines = "Customers/Downline";
-  static String getProvinces({int countryCode = 230}) =>
-      "Countries($countryCode)/StateProvinces";
+  static String getProvinces({int countryId = 230}) =>
+      "Countries($countryId)/StateProvinces";
   static String getCountry = "Countries";
   static String addAddress = "Orders/AddAddress";
   static String selectAddress = "Orders/SelectBillingAddress";

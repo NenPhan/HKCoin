@@ -12,12 +12,12 @@ import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 class UtilDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
 
-  Future<List<Province>> getProvinces() async {
+ Future<List<Province>> getProvinces({int countryId = 230}) async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
-          endpoint: Endpoints.getProvinces(),
+          endpoint: Endpoints.getProvinces(countryId: countryId),
           headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
@@ -29,6 +29,7 @@ class UtilDatasource {
           .toList();
     });
   }
+
 
   Future<List<Country>> getCountries() async {
     return await handleRemoteRequest(() async {
