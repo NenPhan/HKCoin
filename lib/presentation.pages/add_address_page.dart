@@ -125,7 +125,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                       icon: Icons.public,
                                       validator: (Country? value) =>
                                         value == null ? tr("Address.Fields.Country.Required") : null,
-                                      ),
+                                    ),
                                                                     
                                     SizedBox(height: scrSize(context).height * 0.015),
                                     CustomDropdownSearch<Province>(

@@ -110,6 +110,13 @@ class CustomDropdownSearch<T> extends StatelessWidget {
           labelStyle: TextStyle(color: Colors.grey[300]),
           filled: true,
           fillColor: Colors.grey[900],
+          prefixIcon: icon != null
+                ? Icon(
+                    icon,
+                    color: Colors.grey[400], // Đồng bộ với labelStyle
+                    size: 20.0,
+                  )
+                : null, //
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Colors.black, width: 1),

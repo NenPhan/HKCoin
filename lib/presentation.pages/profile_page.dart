@@ -299,10 +299,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Positioned(
                       right: 10,
-                      top: 10,
+                      top: 15,
                       child: CustomDropDownButton(
                         buttonWidth: scrSize(context).width * 0.4,
                         dropdownWidth: scrSize(context).width * 0.4,
+                        buttonHeight: 50,
                         selectedValue:
                             Get.find<LocaleController>().listLanguage
                                 .where(
