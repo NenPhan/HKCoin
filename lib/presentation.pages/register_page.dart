@@ -89,6 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller: registerController.passwordController,
                               label: tr("Account.Fields.Password"),
+                              obscureText: true,
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -99,6 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller:
                                   registerController.confirmPasswordController,
                               label: tr("Account.Fields.ConfirmPassword"),
+                              obscureText: true,
                               validator:
                                   (value) => requiredValidator(
                                     value,
