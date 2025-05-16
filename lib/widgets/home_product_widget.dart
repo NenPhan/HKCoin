@@ -39,7 +39,7 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
                   );
                 },
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Hero(
                       tag: "product${product.id.toString()}",
@@ -52,7 +52,7 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
                       ),
                     ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           product.name,
