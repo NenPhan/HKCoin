@@ -77,7 +77,8 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
                         .customerDownLineInfo!
                         .map(
                           (customer) => _buildAssetItemCircle(
-                            title:customer.fullName?? customer.email ?? "N/A",                          
+                            title:customer.fullName?? customer.email ?? "N/A", 
+                            phone: customer.phone??"",                         
                             icon: Icons.account_circle_rounded,
                             onSubmitted: () {                              
                               controller.getCustomerDownlinesData(parentId: customer.id??0);
@@ -99,6 +100,7 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
   
   Widget _buildAssetItemCircle({
     required String title,  
+    String? phone,
     required IconData icon,
     bool isSelected = false,
     VoidCallback? onSubmitted,
@@ -132,7 +134,7 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  //Text(amount, style: TextStyle(color: Colors.grey.shade600)),
+                  Text(phone!, style: TextStyle(color: Colors.grey.shade600)),
                 ],
               ),
             ),
