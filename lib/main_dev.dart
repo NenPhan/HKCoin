@@ -15,7 +15,7 @@ void main() async {
     appName: "HKCoin",
     flavorName: AppFlavor.DEV,
     secondsTimeout: 30,
-    host: "https://sandbox.hakacoin.net",
+    host: "https://aps.hakacoin.net",
     apiPath: "/odata/v1/",
     socketPath: "/hkc-hub/",
     basicAuthorization:

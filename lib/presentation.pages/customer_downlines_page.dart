@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/presentation.controllers/customer_downlines_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
+import 'package:hkcoin/widgets/nodatawidget_refresh_scroll.dart';
 import 'package:hkcoin/widgets/pagination_scroll_widget.dart';
 
 class CustomerDownlinesPage extends StatefulWidget {
@@ -62,7 +63,12 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
                   if (controller.customerDownlines == null || 
                       controller.customerDownlines!.customerDownLineInfo == null ||
                       controller.customerDownlines!.customerDownLineInfo!.isEmpty) {
-                    return _buildNoDataWidget(); // Widget hiển thị khi không có dữ liệu
+                        return NoDataWidget(
+                          message: 'No data to display',
+                          icon: Icons.error_outline,
+                          onRefresh: _refreshData,
+                        );
+                    //return _buildNoDataWidget(); // Widget hiển thị khi không có dữ liệu
                   }
                   return RefreshIndicator(
                     onRefresh: _refreshData,
