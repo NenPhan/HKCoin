@@ -3,6 +3,7 @@ import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/customer_datasource.dart';
+import 'package:hkcoin/data.models/customer_downlines.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
@@ -59,7 +60,19 @@ class CustomerRepository {
       },
     );
   }
-
+  Future<Either<Failure, CustomerDownlines>> getCustomerDownlinesData({
+    int parentId = 0,
+    int page = 1,
+    int limit = 10,
+  }) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        return Right(
+          await CustomerDatasource().getCustomerDownlinesData(parentId:parentId, page: page, limit: limit),
+        );
+      },
+    );
+  }
   Future<Either<Failure, WalletInfo>> getWalletInfo() {
     return handleRepositoryCall(
       onRemote: () async {

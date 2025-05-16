@@ -6,6 +6,7 @@ import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/data.models/customer_downlines.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/register_form.dart';
@@ -135,6 +136,28 @@ class CustomerDatasource {
       );
 
       return WalletHistoriesPagination.fromJson(response);
+    });
+  }
+  Future<CustomerDownlines> getCustomerDownlinesData({int parentId = 0, int page = 1, int limit = 10}) async {
+    return await handleRemoteRequest(() async {
+      Map<String, String> queryParams = {
+        "parentId":parentId.toString(),
+        "s": limit.toString(),
+        "page": page.toString(),
+      };
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getDownlines,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+          params: queryParams,
+          needAccessToken: true,
+        ),
+      );
+
+      return CustomerDownlines.fromJson(response);
     });
   }
   Future logout() async {

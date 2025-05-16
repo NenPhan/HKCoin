@@ -18,6 +18,7 @@ class Endpoints {
   static String changePassword = "Customers/ChangePassword";
   static String getSlides = "Sliders";
   static String getAddresses = "Customers/Addresses";
+  static String getDownlines = "Customers/Downline";
   static String getProvinces({int countryCode = 230}) =>
       "Countries($countryCode)/StateProvinces";
   static String getCountry = "Countries";

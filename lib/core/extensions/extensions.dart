@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+extension StringExtension on String {
+  String? get nullIfEmpty => isEmpty ? null : this;
+}
 extension StringExtensions on String {
   double toDouble({double defaultValue = 0.0}) {
     return double.tryParse(this) ?? defaultValue;

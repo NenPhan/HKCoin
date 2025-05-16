@@ -1,14 +1,9 @@
-import 'dart:developer';
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/presentation.controllers/WithDrawalRequestController.dart';
-import 'package:hkcoin/presentation.pages/withdrawal_investment_page.dart';
-import 'package:hkcoin/presentation.pages/withdrawal_profit_page.dart';
-import 'package:hkcoin/presentation.pages/withdrawalrequest_histories_page.dart';
+import 'package:hkcoin/presentation.controllers/customer_downlines_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/loading_widget.dart';
+import 'package:hkcoin/widgets/pagination_scroll_widget.dart';
 
 class CustomerDownlinesPage extends StatefulWidget {
   const CustomerDownlinesPage({super.key});
@@ -19,170 +14,83 @@ class CustomerDownlinesPage extends StatefulWidget {
 
 class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
     with SingleTickerProviderStateMixin {
-  final WithDrawalRequestController controller = Get.put(
-    WithDrawalRequestController(),
+  final CustomerDownlinesController controller = Get.put(
+    CustomerDownlinesController(),
   );
+  final ScrollController _verticalScrollController = ScrollController();
+  Future<void> _loadMoreData() async {
+    if (!controller.isLoadingMore.value &&
+        (controller.customerDownlines?.hasNextPage ?? false)) {      
+      await controller.getCustomerDownlinesData(
+        page: (controller.customerDownlines?.pageNumber ?? 0) + 1,
+        isLoadMore: true,
+      );
+    }
+  }
+   // Hàm xử lý kéo xuống làm mới
+  Future<void> _refreshData() async {    
+    await controller.getCustomerDownlinesData(
+      page: 1,
+      isLoadMore: false,
+    );
+  }
+  @override
+  void dispose() {    
+    _verticalScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final theme = Theme.of(context);
-
-    return GetBuilder<WithDrawalRequestController>(
-      id: "customer-downlines-page",
-      builder: (controller) {
-        return Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                const BaseAppBar(title: "Account.Downlines.Customers"),
-                // Wallet info section
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.03,
-                    vertical: size.height * 0.02,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            const BaseAppBar(title: "Account.Downlines.Customers"),
+            Expanded(
+              child: GetBuilder<CustomerDownlinesController>(
+                id: "customer-downlines-page",
+                builder: (controller) {
+                  if (controller.isInitialLoading.value) {     
+                    return const Center(
+                      child: LoadingWidget(),
+                    );                            
+                  }
+                  return RefreshIndicator(
+                    onRefresh: _refreshData,
+                    child: PaginationScrollWidget(
+                      scrollController: _verticalScrollController,
+                      hasMoreData: controller.customerDownlines?.hasNextPage ?? false,
+                      onLoadMore: _loadMoreData,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,  
+                        children: controller
+                        .customerDownlines!
+                        .customerDownLineInfo!
+                        .map(
+                          (customer) => _buildAssetItemCircle(
+                            title:customer.fullName?? customer.email ?? "N/A", // Giả sử `name` là trường trong `history`                            
+                            icon: Icons.account_circle_rounded,
                             onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
+                              //log("Submit ${history.id}"); // Giả sử có `id` để phân biệt
                             },
-                          ), 
-                      _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ), 
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ), 
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ),   
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ),  
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ),  
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ),  
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ),  
-                          _buildAssetItemCircle(
-                            title: "Nguyễn Văn Kiên",
-                            amount: "1,000,000 VND",
-                            icon: Icons.money,
-                            onSubmitted: () {
-                              // setState(() {
-                              //   _isSelected = !_isSelected; // Toggle selection
-                              // });
-                              // Add your submit logic here
-                              log("Submit");
-                            },
-                          ),   
-                                                                    
-                    ],
-                  ),
-                ),             
-              ],
+                          )
+                        )
+                        .toList(),                                             
+                      )
+                    )
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
-    );
-  }
-   Widget _buildAssetItem({
-    required String title,
-    required String amount,
-    required IconData icon,
-  }) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: Icon(icon, size: 30, color: Colors.blue),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        //subtitle: Text(amount),
-        trailing: const Icon(Icons.chevron_right),
+          ],
+        ),
       ),
     );
-  }
+  } 
   
 Widget _buildAssetItemCircle({
-  required String title,
-  required String amount,
+  required String title,  
   required IconData icon,
   bool isSelected = false,
   VoidCallback? onSubmitted,
@@ -195,8 +103,8 @@ Widget _buildAssetItemCircle({
         children: [
           // Avatar with gradient (non-clickable)
           Container(
-            width: 44,
-            height: 44,
+            width: 35,
+            height: 35,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(
@@ -206,7 +114,7 @@ Widget _buildAssetItemCircle({
                 ],
               ),
             ),
-            child: Icon(icon, size: 22, color: Colors.white),
+            child: Icon(icon, size: 25, color: Colors.white),
           ),
           const SizedBox(width: 10),
           
