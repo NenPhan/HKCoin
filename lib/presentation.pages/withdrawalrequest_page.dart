@@ -114,7 +114,7 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.10,
+                    horizontal: size.width * 0.01,
                     vertical: size.height * 0.01,
                   ),
                   child: Row(
