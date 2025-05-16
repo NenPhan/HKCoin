@@ -26,10 +26,7 @@ void main() async {
   var localeController = Get.find<LocaleController>();
   runApp(
     EasyLocalization(
-      supportedLocales:
-          localeController.listLanguage
-              .map((e) => e.isoCode!.toLocaleFromIsoCode())
-              .toList(),
+      supportedLocales: localeController.listLocal,
       startLocale:
           localeController.translationFile != null
               ? null

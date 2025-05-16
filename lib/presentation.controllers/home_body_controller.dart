@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/news.dart';
 import 'package:hkcoin/data.models/product.dart';
@@ -51,9 +52,7 @@ class HomeBodyController extends GetxController {
 
   void getKHCoinData() async {
     final connection =
-        HubConnectionBuilder()
-            .withUrl('https://sandbox.hakacoin.net/hkc-hub/')
-            .build();
+        HubConnectionBuilder().withUrl(AppConfig().socketUrl).build();
 
     await connection.start();
 
