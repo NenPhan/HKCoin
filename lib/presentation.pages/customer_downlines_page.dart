@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/presentation.controllers/customer_downlines_controller.dart';
@@ -56,6 +58,12 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
                       child: LoadingWidget(),
                     );                            
                   }
+                   // Kiểm tra nếu không có dữ liệu
+                  if (controller.customerDownlines == null || 
+                      controller.customerDownlines!.customerDownLineInfo == null ||
+                      controller.customerDownlines!.customerDownLineInfo!.isEmpty) {
+                    return _buildNoDataWidget(); // Widget hiển thị khi không có dữ liệu
+                  }
                   return RefreshIndicator(
                     onRefresh: _refreshData,
                     child: PaginationScrollWidget(
@@ -69,10 +77,10 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
                         .customerDownLineInfo!
                         .map(
                           (customer) => _buildAssetItemCircle(
-                            title:customer.fullName?? customer.email ?? "N/A", // Giả sử `name` là trường trong `history`                            
+                            title:customer.fullName?? customer.email ?? "N/A",                          
                             icon: Icons.account_circle_rounded,
-                            onSubmitted: () {
-                              //log("Submit ${history.id}"); // Giả sử có `id` để phân biệt
+                            onSubmitted: () {                              
+                              controller.getCustomerDownlinesData(parentId: customer.id??0);
                             },
                           )
                         )
@@ -89,63 +97,95 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
     );
   } 
   
-Widget _buildAssetItemCircle({
-  required String title,  
-  required IconData icon,
-  bool isSelected = false,
-  VoidCallback? onSubmitted,
-}) {
-  return Card(
-    margin: const EdgeInsets.symmetric(vertical: 5),
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          // Avatar with gradient (non-clickable)
-          Container(
-            width: 35,
-            height: 35,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  isSelected ? Colors.green.shade300 : Colors.blue.shade300,
-                  isSelected ? Colors.green.shade700 : Colors.blue.shade700,
+  Widget _buildAssetItemCircle({
+    required String title,  
+    required IconData icon,
+    bool isSelected = false,
+    VoidCallback? onSubmitted,
+  }) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            // Avatar with gradient (non-clickable)
+            Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    isSelected ? Colors.green.shade300 : Colors.blue.shade300,
+                    isSelected ? Colors.green.shade700 : Colors.blue.shade700,
+                  ],
+                ),
+              ),
+              child: Icon(icon, size: 25, color: Colors.white),
+            ),
+            const SizedBox(width: 10),
+            
+            // Text content (non-clickable)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  //Text(amount, style: TextStyle(color: Colors.grey.shade600)),
                 ],
               ),
             ),
-            child: Icon(icon, size: 25, color: Colors.white),
-          ),
-          const SizedBox(width: 10),
-          
-          // Text content (non-clickable)
-          Expanded(
+            
+            // Clickable trailing icon only
+            IconButton(
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: isSelected
+                    ? const Icon(Icons.check_circle, 
+                        color: Colors.green, size: 28, key: ValueKey('check'))
+                    : const Icon(Icons.chevron_right, 
+                        color: Colors.grey, key: ValueKey('chevron')),
+              ),
+              onPressed: onSubmitted,
+              splashRadius: 20, // Custom splash radius
+              padding: EdgeInsets.zero, // Remove default padding
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildNoDataWidget() {
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                //Text(amount, style: TextStyle(color: Colors.grey.shade600)),
+                const Icon(Icons.people_alt_outlined, 
+                    size: 60, color: Colors.grey),
+                const SizedBox(height: 16),
+                Text(
+                  'No customers found',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.grey,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: _refreshData,
+                  child: const Text('Retry'),
+                ),
               ],
             ),
           ),
-          
-          // Clickable trailing icon only
-          IconButton(
-            icon: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: isSelected
-                  ? const Icon(Icons.check_circle, 
-                      color: Colors.green, size: 28, key: ValueKey('check'))
-                  : const Icon(Icons.chevron_right, 
-                      color: Colors.grey, key: ValueKey('chevron')),
-            ),
-            onPressed: onSubmitted,
-            splashRadius: 20, // Custom splash radius
-            padding: EdgeInsets.zero, // Remove default padding
-          ),
-        ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
