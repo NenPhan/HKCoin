@@ -27,7 +27,7 @@ class CustomerInfoController extends GetxController {
       fNameController.text = r.firstName??"";
       lNameController.text = r.lastName??"";
       emailController.text = r.email;
-      phoneController.text = "0${r.phone}";
+      phoneController.text = r.phone??"";
       usernameController.text = r.username;
     });
     update(["customer-info-page"]);
@@ -45,7 +45,7 @@ class CustomerInfoController extends GetxController {
         await CustomerRepository().updateCustomerInfo(customerInfo),
         (r) {
           Get.back();
-          Toast.showSuccessToast("Lưu thông tin thành công");
+          Toast.showSuccessToast("Common.Submit.Updated");
         },
       );
     }
