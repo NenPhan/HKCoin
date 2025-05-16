@@ -131,7 +131,7 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                         ), // Replace with your localized text
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
+                            horizontal: 15.0,
                             vertical: 12.0,
                           ),
                           shape: RoundedRectangleBorder(

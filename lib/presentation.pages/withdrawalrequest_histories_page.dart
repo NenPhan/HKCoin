@@ -6,6 +6,7 @@ import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_histories_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
+import 'package:hkcoin/widgets/nodatawidget_refresh_scroll.dart';
 import 'package:hkcoin/widgets/pagination_scroll_widget.dart';
 
 class WithdrawalrequestHistoryPage extends StatefulWidget {
@@ -59,11 +60,16 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
                       child: LoadingWidget(),
                     );                            
                   }
-                  // if (controller.withDrawalHistoriesPagination?.withDrawalHistories?.isEmpty ?? true) {
-                  //   return Center(
-                  //     child: Text(tr("No transactions found")),
-                  //   );
-                  // }
+                    // Kiểm tra nếu không có dữ liệu
+                  if (controller.withDrawalHistoriesPagination == null || 
+                      controller.withDrawalHistoriesPagination!.withDrawalHistories == null ||
+                      controller.withDrawalHistoriesPagination!.withDrawalHistories!.isEmpty) {
+                        return NoDataWidget(
+                          message: 'No data to display',
+                          icon: Icons.error_outline,
+                          onRefresh: _refreshData,
+                        );
+                  }                
                   return RefreshIndicator(
                     onRefresh: _refreshData,
                     child: PaginationScrollWidget(
