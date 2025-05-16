@@ -21,7 +21,10 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(tr("Products.RecentlyAddedProducts"), style: textTheme(context).titleSmall),
+        Text(
+          tr("Products.RecentlyAddedProducts"),
+          style: textTheme(context).titleSmall,
+        ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: SpacingRow(
@@ -35,54 +38,37 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
                     arguments: ProductDetailPageParam(product: product),
                   );
                 },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    color: Colors.grey[900],
-                    child: Stack(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Hero(
+                      tag: "product${product.id.toString()}",
+                      child: Image.network(
+                        product.image.thumbUrl.contains("http")
+                            ? product.image.thumbUrl
+                            : "https:${product.image.thumbUrl}",
+                        fit: BoxFit.fitHeight,
+                        height: 220,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Hero(
-                          tag: "product${product.id.toString()}",
-                          child: Image.network(
-                            product.image.thumbUrl.contains("http")
-                                ? product.image.thumbUrl
-                                : "https:${product.image.thumbUrl}",
-                            fit: BoxFit.cover,
-                            width: 220,
-                            height: 180,
-                          ),
+                        Text(
+                          product.name,
+                          style: textTheme(
+                            context,
+                          ).titleSmall?.copyWith(color: Colors.deepOrange),
                         ),
-                        Container(
-                          width: 220,
-                          height: 180,
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.centerRight,
-                              end: Alignment.centerLeft,
-                              colors: [Colors.black87, Colors.transparent],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: 20,
-                          top: 70,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                product.name,
-                                style: textTheme(context).titleSmall,
-                              ),
-                              Text(
-                                "\$${product.price.minimumCustomerEnteredPrice.toInt()} - \$${product.price.maximumCustomerEnteredPrice.toInt()}",
-                                style: textTheme(context).bodyLarge,
-                              ),
-                            ],
-                          ),
+                        Text(
+                          "\$${product.price.minimumCustomerEnteredPrice.toInt()} - \$${product.price.maximumCustomerEnteredPrice.toInt()}",
+                          style: textTheme(
+                            context,
+                          ).bodyLarge?.copyWith(color: Colors.deepOrange),
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               );
             }),
