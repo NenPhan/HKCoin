@@ -29,10 +29,29 @@ class _NewsListWidgetState extends State<NewsListWidget> {
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              tr("Common.Entity.NewsItem"),
-              style: textTheme(context).titleSmall,
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    tr("Common.Entity.NewsItem"),
+                    style: textTheme(context).titleSmall,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(NewsDetailPage.route);
+                  },
+                  child: Text(
+                    tr("Common.Cms.ReadMore"), // Replace with your translation key
+                    style: textTheme(context).bodyMedium?.copyWith(
+                        //  color: Colors.blue, // Customize the style as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                  ),
+                ),
+              ],
+            ),          
             LayoutBuilder(
               builder: (context, constraints) {
                 final itemWidth = (constraints.maxWidth - 10) / 2;
