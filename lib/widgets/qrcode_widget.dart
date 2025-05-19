@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_gallery_saver/flutter_image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -88,16 +89,17 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
     bool isLoading = false,
   }) {
     return ElevatedButton.icon(
-      icon: isLoading
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2,
-              ),
-            )
-          : Icon(icon),
+      icon:
+          isLoading
+              ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+              : Icon(icon),
       label: Text(label),
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -110,14 +112,21 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
   Future<void> _showSaveConfirmationDialog() async {
     final bool? confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(tr('Common.Approve')),
-        content: Text(tr("Common.QRCode.Question")),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tr("Common.Cancel"))),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(tr("Common.Apply"))),
-        ],
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text(tr('Common.Approve')),
+            content: Text(tr("Common.QRCode.Question")),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(tr("Common.Cancel")),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(tr("Common.Apply")),
+              ),
+            ],
+          ),
     );
 
     if (confirm == true) {
@@ -137,7 +146,7 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
   Future<void> _saveQRCodeWithShare() async {
     setState(() => _isSaving = true);
     try {
-      if (!await _requestStoragePermission()) {
+      if (!(await _requestStoragePermission())) {
         _showSnackBar(tr("Common.QRCode.Storage.Denied"), Colors.red);
         return;
       }
@@ -145,7 +154,9 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       final imageBytes = await _captureQrImage();
       final success = await _saveImageToGallery(imageBytes);
       _showSnackBar(
-        success ? tr("Common.QRCode.Storage.Success") : tr("Common.QRCode.Storage.Failed"),
+        success
+            ? tr("Common.QRCode.Storage.Success")
+            : tr("Common.QRCode.Storage.Failed"),
         success ? Colors.green : Colors.red,
       );
     } catch (e) {
@@ -157,8 +168,9 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
 
   Future<bool> _requestStoragePermission() async {
     if (Platform.isAndroid) {
-      final statuses = await [Permission.storage, Permission.photos].request();
-      return statuses[Permission.storage]!.isGranted;
+      // final statuses = await [Permission.storage, Permission.].request();
+      // return statuses[Permission.storage]!.isGranted;
+      return true;
     } else if (Platform.isIOS) {
       return (await Permission.photos.request()).isGranted;
     }
@@ -166,7 +178,8 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
   }
 
   Future<Uint8List> _captureQrImage() async {
-    final boundary = _qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final boundary =
+        _qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 3.0);
     final byteData = await image.toByteData(format: ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
@@ -174,52 +187,34 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
 
   Future<void> _shareImage(Uint8List imageBytes) async {
     final tempDir = await getTemporaryDirectory();
-    final fileName = widget.fileName ?? 'qrcode_${DateTime.now().millisecondsSinceEpoch}.png';
-    final file = File('${tempDir.path}/$fileName')..writeAsBytesSync(imageBytes);
+    final fileName =
+        widget.fileName ??
+        'qrcode_${DateTime.now().millisecondsSinceEpoch}.png';
+    final file = File('${tempDir.path}/$fileName')
+      ..writeAsBytesSync(imageBytes);
 
-    await Share.shareXFiles([
-      XFile(file.path),
-    ], text: 'QR Code: ${widget.data}', subject: tr("Common.QRCode.Storage.Shared"));
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path)],
+        text: 'QR Code: ${widget.data}',
+        subject: tr("Common.QRCode.Storage.Shared"),
+      ),
+    );
   }
 
   Future<bool> _saveImageToGallery(Uint8List imageBytes) async {
     try {
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final name = widget.fileName ?? 'qrcode_$timestamp.png';
-      
-      if (Platform.isAndroid) {
-        // Sử dụng MediaStore cho Android 10+
-        if (await Permission.manageExternalStorage.isGranted || 
-            await Permission.storage.isGranted) {
-          final directory = await getExternalStorageDirectory();
-          final savePath = '${directory?.path}/Pictures';
-          await Directory(savePath).create(recursive: true);
-          
-          final file = File('$savePath/$name');
-          await file.writeAsBytes(imageBytes);
-          
-          // Quét file vào MediaStore
-          await const MethodChannel('flutter.io')
-              .invokeMethod('scanFile', {'path': file.path});
-          return true;
-        }
-        return false;
-      } 
-      else if (Platform.isIOS) {
-        // Cho iOS
+      if (Platform.isIOS) {
         if (await Permission.photos.isGranted) {
-          final directory = await getApplicationDocumentsDirectory();
-          final file = File('${directory.path}/$name');
-          await file.writeAsBytes(imageBytes);
-          
-          // Lưu vào thư viện ảnh iOS
-          //await ImageGallerySaver.saveFile(file.path);
+          await FlutterImageGallerySaver.saveImage(imageBytes);
           return true;
+        } else {
+          return false;
         }
-        return false;
+      } else {
+        await FlutterImageGallerySaver.saveImage(imageBytes);
+        return true;
       }
-      
-      return false;
     } catch (e) {
       debugPrint('Lỗi khi lưu ảnh: $e');
       return false;
