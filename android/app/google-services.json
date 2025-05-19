@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "659452927407",
+    "project_id": "hkcoin-c23c1",
+    "storage_bucket": "hkcoin-c23c1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659452927407:android:d6b952843c334c863ea35a",
+        "android_client_info": {
+          "package_name": "vn.app.hkcoin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmcHLLiJ7SQR7Y4ZY2Ip8RmrWPS4iBf3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

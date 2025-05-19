@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/core/firebase_service.dart';
 import 'package:hkcoin/core/injection.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
@@ -21,6 +22,7 @@ void main() async {
     basicAuthorization:
         'Basic NDY2OTc4YjU5YTQ1MzcxMzg1MWFjYTI5OGM0NmY2NjU6NTliZTZmMzljZTdmYWU1YzEyNTkyNmJiOGJkNWNiODU=',
   );
+  await initializeFirebaseService();
   await Injection.setup();
   TimeConverter.initialize();
   var localeController = Get.find<LocaleController>();
