@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
@@ -28,15 +30,22 @@ class WithDrawalsDatasource {
   }
   Future<WithDrawalsProfit> getWithDrawalsProfit() async {
     return await handleRemoteRequest(() async {
-      var response = await dioClient.call(
-        DioParams(
-          HttpMethod.GET,
-          endpoint: Endpoints.getWithDrawalsProfit,
-          needAccessToken: true,
-        ),
-      );
-
-      return WithDrawalsProfit.fromJson(response["Data"]);
+      try{
+        var response = await dioClient.call(
+          DioParams(
+            HttpMethod.GET,
+            endpoint: Endpoints.getWithDrawalsProfit,
+            needAccessToken: true,
+          ),
+        );        
+        if (response == null || response["Data"] == null || response["Data"].isEmpty) {
+          Get.back();
+          throw Exception('No withdrawal profit data available');
+        }
+        return WithDrawalsProfit.fromJson(response["Data"]);
+      }catch(ex){
+        rethrow; // Ném lỗi để handleRemoteRequest xử lý
+      }      
     });
   }
  Future<WithDrawalsProfit> submitProfit(WithDrawalsProfit form) async {

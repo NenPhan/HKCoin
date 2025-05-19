@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
+import 'package:hkcoin/presentation.pages/login_page.dart';
 
 class DioClient {
   DioClient({
@@ -17,7 +20,7 @@ class DioClient {
     required AppConfig appConfig,
   }) : super() {
     _appConfig = appConfig;
-    _storage = storage;
+    _storage = storage;    
   }
   Storage? _storage;
   late AppConfig _appConfig;
@@ -69,8 +72,15 @@ class DioClient {
       contentType: contentType,
       queryParameters: fields.params,
     ));
-    if (fields.shouldHandleResponse) {
-      return rawResponse.handleError(fields.allowedStatusCodes);
+    if (fields.shouldHandleResponse) {    
+      try {
+        return rawResponse.handleError(fields.allowedStatusCodes);
+      } catch (e) {
+        if (e is ServerException && rawResponse.statusCode == 401) {
+          await _handleUnauthorizedError(); // Gọi logout nếu lỗi 401
+        }
+       // rethrow; // Ném lại lỗi để caller xử lý
+      }
     } else {
       return rawResponse.data;
     }
@@ -111,6 +121,28 @@ class DioClient {
       case HttpMethod.PATCH:
         return (dio.patch(url, data: body, queryParameters: queryParameters));
     }
+  }
+  Future<void> _handleUnauthorizedError() async {
+    // try {
+    //   // Thử refresh token nếu có thể
+    //   final newToken = await _refreshToken();
+      
+    //   if (newToken != null) {
+    //     // Lưu token mới
+    //     _storage?.saveToken(newToken);
+    //     return;
+    //   }
+    // } catch (e) {
+    //   log('Refresh token failed: $e');
+    // }
+    
+    // Nếu không thể refresh token, thực hiện logout
+    await _performLogout();
+  }
+  Future<void> _performLogout() async {
+    await _storage?.deleteToken();
+    // Điều hướng đến màn hình login   
+    Get.offAllNamed(LoginPage.route);
   }
 }
 
