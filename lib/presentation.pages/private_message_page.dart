@@ -6,6 +6,8 @@ import 'package:hkcoin/presentation.controllers/private_message_controller.dart'
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/count_badge.dart';
+import 'package:hkcoin/widgets/count_display_button.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/pagination_scroll_widget.dart';
 
@@ -90,20 +92,11 @@ with SingleTickerProviderStateMixin {
                             ),
                       ),
                       const SizedBox(width: 5),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: Text(
-                          '$unreadCount',
-                          style: textTheme(context).bodySmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ),
+                      CountBadge(
+                        key: UniqueKey(),                        
+                        color: Colors.amber[900]??Colors.amber,
+                        count: unreadCount,
+                      ),                      
                     ],
                   );
                 },
@@ -115,9 +108,9 @@ with SingleTickerProviderStateMixin {
                 Tab(text: tr("Account.PrivateMessage.Tab.Inbox")),
                 Tab(text: tr("Account.PrivateMessage.Tab.Read")),
               ],
-              labelColor: Theme.of(context).primaryColor,
+              labelColor: Colors.amber[900], //Theme.of(context).primaryColor,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: Theme.of(context).primaryColor,
+              indicatorColor: Colors.amber[900],//Theme.of(context).primaryColor,
             ),
             Expanded(
               child: GetBuilder<PrivateMessageController>(
@@ -207,10 +200,23 @@ with SingleTickerProviderStateMixin {
       child:InkWell(
          borderRadius: BorderRadius.circular(12),
         onTap: () {
-          Get.toNamed(
-            PrivateMesageDetailPage.route,
-            arguments: message.id
-          );          
+          final wasUnread = !isRead;
+          if (wasUnread) {
+            controller.markAsReadAndRefresh(message.id);
+          }                        
+          final result = Get.toNamed(
+          PrivateMesageDetailPage.route,
+          arguments: message.id
+        ); 
+          // Hiển thị thông báo khi quay về
+          if (wasUnread && result == true) {
+            Get.snackbar(
+              'Thông báo',
+              'Tin nhắn đã được đánh dấu là đã đọc',
+              backgroundColor: Colors.green[100],
+              colorText: Colors.black,
+            );
+          }   
         },
         child: Padding(
           padding: const EdgeInsets.all(16),

@@ -66,4 +66,17 @@ class MessageDatasource {
       return PrivateMessage.fromJson(response["Data"]);
     });
   } 
+  Future updateStatusPrivateMessage(PrivateMessage param) async {
+    await handleRemoteRequest(() async {
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.updateStatusPrivateMessage,
+          needAccessToken: true,
+          body: param.toJson(),
+        ),
+        contentType: "application/json",
+      );
+    });
+  }
 }

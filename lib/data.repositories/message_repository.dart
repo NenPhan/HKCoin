@@ -34,4 +34,12 @@ class MessageRepository {
       },
     );
   }
+  Future<Either<Failure, void>> updateStatusPrivateMessage(PrivateMessage param) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await MessageDatasource().updateStatusPrivateMessage(param);
+        return const Right(null);
+      },
+    );
+  }
 }

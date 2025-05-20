@@ -43,4 +43,5 @@ class Endpoints {
   static String messageCount ="PrivateMessages/Count";
   static String getPrivateMessages = "PrivateMessages";
   static String getPrivateMessagesDetail(int id) => "PrivateMessages($id)";
+  static String updateStatusPrivateMessage = "PrivateMessages/UpdateStatus";
 }

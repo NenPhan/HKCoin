@@ -24,4 +24,5 @@ class PrivateMessageDetailController extends GetxController {
     });
     isLoading.value = false;
   }
+  
 }

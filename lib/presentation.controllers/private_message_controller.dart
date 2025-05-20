@@ -7,7 +7,7 @@ import 'package:hkcoin/data.models/private_message.dart';
 import 'package:hkcoin/data.repositories/message_repository.dart';
 
 class PrivateMessageController extends GetxController {
-  //PrivateMessagePagination? privateMessagePagination;
+  PrivateMessage? data;
   PrivateMessagePagination? newMessagesPagination;
   PrivateMessagePagination? readMessagesPagination;
   final RxInt privateMessageCount = 0.obs;
@@ -21,9 +21,10 @@ class PrivateMessageController extends GetxController {
      gePrivateMessagesData(isRead: false);
       gePrivateMessagesData(isRead: true);
       getPrivateMessageCount();
+     
     super.onInit();
   }
-
+  
   void getPrivateMessageCount() async {
      isLoading.value = true;
     update(["message", "home-message-icon"]);
@@ -103,4 +104,37 @@ class PrivateMessageController extends GetxController {
       );
     }
   }
+  Future<void> markAsReadAndRefresh(int messageId) async {
+    try{
+      final param = PrivateMessage(id: messageId, isRead: true);
+       await MessageRepository().updateStatusPrivateMessage(param);
+       
+        // Cập nhật local state
+      final message = newMessagesPagination?.privateMessages
+          ?.firstWhere((m) => m.id == messageId);
+      
+      if (message != null) {
+        // Xóa khỏi danh sách chưa đọc
+        newMessagesPagination?.privateMessages?.remove(message);
+        
+        // Thêm vào danh sách đã đọc
+        message.isRead = true;
+        readMessagesPagination?.privateMessages?.insert(0, message);        
+        // Cập nhật unread count
+        updateUnreadCount();
+        getPrivateMessageCount();
+        // Trigger refresh UI
+        update(['new-messages-list', 'read-messages-list', 'private-message-list']);
+      }
+    }catch(ex){
+      log('Error marking message as read: $ex');
+      rethrow;
+    }
+  }
+    void updateUnreadCount() {
+      final count = newMessagesPagination?.privateMessages?.length ?? 0;
+      // Nếu bạn có unreadCount riêng thì cập nhật ở đây
+      update(['home-message-icon']); // ID riêng cho phần header
+    }
+
 }

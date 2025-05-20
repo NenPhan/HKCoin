@@ -69,17 +69,15 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                         key: UniqueKey(),
                         icon: const Icon(Icons.notifications, size: 30),
                         onTap: (){
-                          Get.toNamed(PrivateMessagePage.route);
+                          Get.toNamed(PrivateMessagePage.route)?.then((_) {
+                            // Refresh count khi quay về từ trang tin nhắn
+                            controller.refreshMessageCount();
+                          });                          
                         },
                         count: controller.privateMessageCount.value,
                       );
                     },                     
-                  ),
-                  // CountDisplay(
-                  //   icon: const Icon(Icons.notifications, size: 30),
-                  //   onTap: () {},
-                  //   count:1000
-                  // ),
+                  ),                
                 ],
               ),
               const SizedBox(height: 10),

@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/presentation.controllers/private_message_controller.dart';
 import 'package:hkcoin/presentation.controllers/private_message_detail_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
@@ -33,105 +34,118 @@ class _PrivateMesageDetailPageState extends State<PrivateMesageDetailPage> {
             );
           }
           final newsDetail = controller.data!;
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const BaseAppBar(title: "Account.PrivateMessage.Detail.Title"),              
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(scrSize(context).width * 0.02),
-                  margin: EdgeInsets.all(scrSize(context).width * 0.01),                 
-                  child: SpacingColumn(
-                    spacing: 0,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        newsDetail.subject??"",
-                        style: textTheme(context).titleLarge?.copyWith(
-                          fontSize: scrSize(context).width * 0.05,
-                        ),
-                      ),                      
-                    ],
+          // Gọi mark as read khi trang chi tiết được load
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   if (!newsDetail.isRead!) {
+          //     controller.markAsReadAndRefresh(newsDetail.id!);
+          //   }
+          // });
+          return WillPopScope(
+            onWillPop: () async {
+              // Trả về true nếu tin nhắn đã được đánh dấu đọc
+              Navigator.of(context).pop(newsDetail.isRead == true);
+            return false;
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const BaseAppBar(title: "Account.PrivateMessage.Detail.Title"),              
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(scrSize(context).width * 0.02),
+                    margin: EdgeInsets.all(scrSize(context).width * 0.01),                 
+                    child: SpacingColumn(
+                      spacing: 0,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          newsDetail.subject??"",
+                          style: textTheme(context).titleLarge?.copyWith(
+                            fontSize: scrSize(context).width * 0.05,
+                          ),
+                        ),                      
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(scrSize(context).width * 0.01),
-                  margin: EdgeInsets.all(scrSize(context).width * 0.01),
-                  child: SpacingColumn(
-                    spacing: 0,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (newsDetail.body!.isNotEmpty)
-                        Html(
-                          data: newsDetail.body,
-                          style: {
-                            '*': Style(
-                              fontSize: FontSize(
-                                textTheme(context).bodyMedium!.fontSize!,
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(scrSize(context).width * 0.01),
+                    margin: EdgeInsets.all(scrSize(context).width * 0.01),
+                    child: SpacingColumn(
+                      spacing: 0,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (newsDetail.body!.isNotEmpty)
+                          Html(
+                            data: newsDetail.body,
+                            style: {
+                              '*': Style(
+                                fontSize: FontSize(
+                                  textTheme(context).bodyMedium!.fontSize!,
+                                ),
+                                color: textTheme(context).bodyMedium!.color,
                               ),
-                              color: textTheme(context).bodyMedium!.color,
-                            ),
-                            'img': Style(
-                              margin: Margins.symmetric(vertical: 0),
-                            ),
-                          },
-                          extensions: [
-                            TagExtension(
-                              tagsToExtend: {"img"},
-                              builder: (context) {
-                                final src = context.attributes['src'];
-                                if (src == null || src.isEmpty) {
-                                  return const SizedBox.shrink();
-                                }
+                              'img': Style(
+                                margin: Margins.symmetric(vertical: 0),
+                              ),
+                            },
+                            extensions: [
+                              TagExtension(
+                                tagsToExtend: {"img"},
+                                builder: (context) {
+                                  final src = context.attributes['src'];
+                                  if (src == null || src.isEmpty) {
+                                    return const SizedBox.shrink();
+                                  }
 
-                                return LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 0,
-                                      ),
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxWidth: constraints.maxWidth,
+                                  return LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 0,
                                         ),
-                                        child: Image.network(
-                                          src,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  const Text(
-                                                    'Cant not loading image!',
-                                                  ),
-                                          loadingBuilder: (
-                                            context,
-                                            child,
-                                            loadingProgress,
-                                          ) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }
-                                            return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          },
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: constraints.maxWidth,
+                                          ),
+                                          child: Image.network(
+                                            src,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    const Text(
+                                                      'Cant not loading image!',
+                                                    ),
+                                            loadingBuilder: (
+                                              context,
+                                              child,
+                                              loadingProgress,
+                                            ) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                    ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          );
+          );         
         }),
       ),
     );
