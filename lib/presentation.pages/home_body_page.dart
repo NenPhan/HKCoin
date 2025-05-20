@@ -6,9 +6,12 @@ import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/cart_controller.dart';
 import 'package:hkcoin/presentation.controllers/home_body_controller.dart';
+import 'package:hkcoin/presentation.controllers/private_message_controller.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
+import 'package:hkcoin/presentation.pages/private_message_page.dart';
 import 'package:hkcoin/widgets/coin_exchange_rate_widget.dart';
+import 'package:hkcoin/widgets/count_display_button.dart';
 import 'package:hkcoin/widgets/custom_icon_button.dart';
 import 'package:hkcoin/widgets/home_banner_widget.dart';
 import 'package:hkcoin/widgets/home_product_widget.dart';
@@ -59,10 +62,24 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                       );
                     },
                   ),
-                  CustomIconButton(
-                    icon: const Icon(Icons.notifications, size: 30),
-                    onTap: () {},
+                  GetBuilder<PrivateMessageController>(
+                    id:"home-message-icon",
+                    builder:(controller){                                            
+                      return CountDisplay(
+                        key: UniqueKey(),
+                        icon: const Icon(Icons.notifications, size: 30),
+                        onTap: (){
+                          Get.toNamed(PrivateMessagePage.route);
+                        },
+                        count: controller.privateMessageCount.value,
+                      );
+                    },                     
                   ),
+                  // CountDisplay(
+                  //   icon: const Icon(Icons.notifications, size: 30),
+                  //   onTap: () {},
+                  //   count:1000
+                  // ),
                 ],
               ),
               const SizedBox(height: 10),

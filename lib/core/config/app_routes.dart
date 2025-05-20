@@ -12,6 +12,8 @@ import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
 import 'package:hkcoin/presentation.pages/news_details_page.dart';
+import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
+import 'package:hkcoin/presentation.pages/private_message_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
@@ -62,6 +64,7 @@ class AppGetRoutes {
     GetPage(name: ProfitWithdrawalContentPage.route, page: () => const ProfitWithdrawalContentPage()),
     GetPage(name: InvestmentWithdrawalContentPage.route, page: () => const InvestmentWithdrawalContentPage()),
     GetPage(name: CustomerDownlinesPage.route, page: () => const CustomerDownlinesPage()),
-    
+    GetPage(name: PrivateMessagePage.route, page: () => const PrivateMessagePage()),
+    GetPage(name: PrivateMesageDetailPage.route, page: () => const PrivateMesageDetailPage())    
   ];
 }

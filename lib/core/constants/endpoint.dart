@@ -40,4 +40,7 @@ class Endpoints {
   static String kycStatus = "Customers/KYCStatus";
   static String kycComplete = "Customers/KycComplate";
   static String kycValidate = "Customers/Validate";
+  static String messageCount ="PrivateMessages/Count";
+  static String getPrivateMessages = "PrivateMessages";
+  static String getPrivateMessagesDetail(int id) => "PrivateMessages($id)";
 }
