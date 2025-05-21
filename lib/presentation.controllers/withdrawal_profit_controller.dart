@@ -29,6 +29,7 @@ class WithdrawalProfitController extends GetxController {
   AviableWithDrawalSwaps? selectedWithDrawalSwap;
   bool hiddenExchangePrice = false;
   //List<Country> listCountry = [];
+  RxBool isLoadingSubmit = false.obs;
   @override
   void onInit() {
     getWithDrawalsProfit();
@@ -52,6 +53,7 @@ class WithdrawalProfitController extends GetxController {
   }
 
   void submitWithdrawal() async {
+    isLoadingSubmit.value = true;
     if (formKey.currentState!.validate()) {
       if (selectedWithDrawalSwap == null || selectedWithDrawalSwap!.id == 0) {
         Toast.showErrorToast(
@@ -62,7 +64,7 @@ class WithdrawalProfitController extends GetxController {
       var amountToUSD =
           amountController.text.trim().stringToDouble() *
           exchangeHKCController.text.trim().toDouble();
-      handleEither(
+      await handleEitherReturn(
         await WithDrawalsRepository().submitProfit(
           WithDrawalsProfit(
             walletTokenAddres: walletController.text.trim(),
@@ -77,11 +79,12 @@ class WithdrawalProfitController extends GetxController {
                 exchangePriceHiddenController.text.trim().toDouble(),
           ),
         ),
-        (r) {
+        (r) async {
           Get.back();
         },
       );
     }
+    isLoadingSubmit.value = false;
   }
 
   void onSwapChanged(AviableWithDrawalSwaps? newSwap) async {

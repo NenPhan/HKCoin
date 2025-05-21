@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class NotificationService {
-  final _androidInitSettings =
-      const AndroidInitializationSettings('@mipmap/ic_launcher');
+  final _androidInitSettings = const AndroidInitializationSettings(
+    '@mipmap/ic_launcher',
+  );
 
   bool _initialized = false;
   final _iosInitSettings = const DarwinInitializationSettings();
@@ -20,7 +22,8 @@ class NotificationService {
       );
       await _notificationPlugin.initialize(
         initializationSettings,
-        onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
+        onDidReceiveBackgroundNotificationResponse:
+            onDidReceiveBackgroundNotificationResponse,
         onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
       );
       _initialized = true;
@@ -30,21 +33,26 @@ class NotificationService {
 
   @pragma('vm:entry-point')
   static Future<void> onDidReceiveBackgroundNotificationResponse(
-      NotificationResponse response) async {
-    debugPrint('Firebase fg - onDidReceiveBackground ${response}');
+    NotificationResponse response,
+  ) async {
+    debugPrint('Firebase fg - onDidReceiveBackground $response');
     if (response.payload != null) {
       // saving last local noti on android that was click (background)
-      final SharedPreferences preferences = await SharedPreferences.getInstance();
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
       preferences.setInt('last_local_notification_id', response.id ?? 0);
     }
   }
 
   @pragma('vm:entry-point')
-  static Future<void> onDidReceiveNotificationResponse(NotificationResponse response) async {
-    debugPrint('Firebase fg - onDidReceiveNotification ${response}');
+  static Future<void> onDidReceiveNotificationResponse(
+    NotificationResponse response,
+  ) async {
+    debugPrint('Firebase fg - onDidReceiveNotification $response');
     if (response.payload != null) {
       // saving last local noti on android that was click (foreground)
-      final SharedPreferences preferences = await SharedPreferences.getInstance();
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
       preferences.setInt('last_local_notification_id', response.id ?? 0);
     }
   }
@@ -75,10 +83,7 @@ class NotificationService {
       interruptionLevel: InterruptionLevel.active,
     );
 
-    final platformNot = NotificationDetails(
-      android: androidNot,
-      iOS: iosNot,
-    );
+    final platformNot = NotificationDetails(android: androidNot, iOS: iosNot);
 
     await _notificationPlugin.show(
       id,
@@ -110,8 +115,9 @@ class NotificationService {
       enableLights: true,
     );
 
-    final notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    final notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
 
     await _notificationPlugin.show(
       id ?? 0,
@@ -135,7 +141,6 @@ class NotificationService {
     bool? enableVibration,
     String? payload,
   }) async {
-
     final androidNotificationDetails = AndroidNotificationDetails(
       channelId ?? 'General Notifications',
       channelName ?? 'General Notifications',
@@ -144,8 +149,9 @@ class NotificationService {
       enableVibration: enableVibration ?? true,
     );
 
-    final notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    final notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
 
     await _notificationPlugin.show(
       id ?? 0,
@@ -170,8 +176,7 @@ class NotificationService {
   }) async {
     ByteArrayAndroidBitmap? androidBitmap;
 
-    if (largeIcon != null) {
-    }
+    if (largeIcon != null) {}
 
     var androidNot = AndroidNotificationDetails(
       channelId ?? 'General Notifications',
@@ -183,14 +188,9 @@ class NotificationService {
       styleInformation: const DefaultStyleInformation(true, true),
     );
 
-    var iosNot = const DarwinNotificationDetails(
-      presentSound: false,
-    );
+    var iosNot = const DarwinNotificationDetails(presentSound: false);
 
-    final platformNot = NotificationDetails(
-      android: androidNot,
-      iOS: iosNot,
-    );
+    final platformNot = NotificationDetails(android: androidNot, iOS: iosNot);
 
     await _notificationPlugin.show(
       id ?? 0,

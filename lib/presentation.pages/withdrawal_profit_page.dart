@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
@@ -8,6 +7,7 @@ import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_profit_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
+import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 
 class ProfitWithdrawalContentPage extends StatefulWidget {
@@ -102,8 +102,8 @@ class _ProfitWithdrawalContentPageState
                                   controller: controller.amountController,
                                   label: tr("Account.WithDrawalRequest.Amount"),
                                   keyboardType: TextInputType.number,
-                                  enableSelectOnMouseDown: true,                                  
-                                  isNumberOnly: true,                                                                 
+                                  enableSelectOnMouseDown: true,
+                                  isNumberOnly: true,
                                   onChanged: (value) {
                                     controller.updateAmountSwap();
                                   },
@@ -211,20 +211,27 @@ class _ProfitWithdrawalContentPageState
   }
 
   Widget _buildActionButton(Size size, String text, IconData icon) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        icon: Icon(icon),
-        label: Text(text),
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return Obx(
+      () => SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          icon: controller.isLoadingSubmit.value ? null : Icon(icon),
+          label:
+              controller.isLoadingSubmit.value
+                  ? const LoadingWidget()
+                  : Text(text),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
+          onPressed: () {
+            if (!controller.isLoadingSubmit.value) {
+              controller.submitWithdrawal();
+            }
+          },
         ),
-        onPressed: () {
-          controller.submitWithdrawal();
-        },
       ),
     );
   }

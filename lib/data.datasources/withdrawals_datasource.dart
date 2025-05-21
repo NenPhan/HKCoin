@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
@@ -28,55 +26,68 @@ class WithDrawalsDatasource {
       return WithDrawalsInvestment.fromJson(response["Data"]);
     });
   }
+
   Future<WithDrawalsProfit> getWithDrawalsProfit() async {
     return await handleRemoteRequest(() async {
-      try{
+      try {
         var response = await dioClient.call(
           DioParams(
             HttpMethod.GET,
             endpoint: Endpoints.getWithDrawalsProfit,
             needAccessToken: true,
           ),
-        );        
-        if (response == null || response["Data"] == null || response["Data"].isEmpty) {
+        );
+        if (response == null ||
+            response["Data"] == null ||
+            response["Data"].isEmpty) {
           Get.back();
           throw Exception('No withdrawal profit data available');
         }
         return WithDrawalsProfit.fromJson(response["Data"]);
-      }catch(ex){
+      } catch (ex) {
         rethrow; // Ném lỗi để handleRemoteRequest xử lý
-      }      
+      }
     });
   }
- Future<WithDrawalsProfit> submitProfit(WithDrawalsProfit form) async {
+
+  Future<WithDrawalsProfit> submitProfit(WithDrawalsProfit form) async {
     return await handleRemoteRequest(() async {
       var body = form.toJson();
       var response = await dioClient.call(
         DioParams(
-          HttpMethod.POST, endpoint: Endpoints.getWithDrawalsProfit,
+          HttpMethod.POST,
+          endpoint: Endpoints.getWithDrawalsProfit,
           needAccessToken: true,
-          body: body
+          body: body,
         ),
         contentType: "application/json",
       );
       return WithDrawalsProfit.fromJson(response["Data"]);
     });
-  } 
-  Future<WithDrawalsInvestment> submitInvestment(WithDrawalsInvestment form) async {
+  }
+
+  Future<WithDrawalsInvestment> submitInvestment(
+    WithDrawalsInvestment form,
+  ) async {
     return await handleRemoteRequest(() async {
       var body = form.toJson();
       var response = await dioClient.call(
         DioParams(
-          HttpMethod.POST, endpoint: Endpoints.getWithDrawalsInvest,
+          HttpMethod.POST,
+          endpoint: Endpoints.getWithDrawalsInvest,
           needAccessToken: true,
-          body: body
+          body: body,
         ),
         contentType: "application/json",
       );
       return WithDrawalsInvestment.fromJson(response["Data"]);
     });
-  } 
-  Future<WithDrawalHistoriesPagination> getWithDrawalHistoriesData({int page = 1, int limit = 10}) async {
+  }
+
+  Future<WithDrawalHistoriesPagination> getWithDrawalHistoriesData({
+    int page = 1,
+    int limit = 10,
+  }) async {
     return await handleRemoteRequest(() async {
       Map<String, String> queryParams = {
         "s": limit.toString(),
@@ -88,7 +99,7 @@ class WithDrawalsDatasource {
           endpoint: Endpoints.getWithDrawalsHistories,
           headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },          
+          },
           params: queryParams,
           needAccessToken: true,
         ),
@@ -97,11 +108,10 @@ class WithDrawalsDatasource {
       return WithDrawalHistoriesPagination.fromJson(response);
     });
   }
-   Future<ExchangePrice> getExchangePrice(int tokenType) async {
+
+  Future<ExchangePrice> getExchangePrice(int tokenType) async {
     return await handleRemoteRequest(() async {
-       Map<String, String> queryParams = {
-        "tokenType": tokenType.toString()        
-      };
+      Map<String, String> queryParams = {"tokenType": tokenType.toString()};
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
@@ -114,11 +124,10 @@ class WithDrawalsDatasource {
       return ExchangePrice.fromJson(response["Data"]);
     });
   }
+
   Future<double> getExchangePackage(int packageId) async {
     return await handleRemoteRequest(() async {
-       Map<String, String> queryParams = {
-        "packageId": "$packageId"        
-      };
+      Map<String, String> queryParams = {"packageId": "$packageId"};
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,

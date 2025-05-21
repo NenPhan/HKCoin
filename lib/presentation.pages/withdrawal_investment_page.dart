@@ -30,14 +30,12 @@ class _InvestmentWithdrawalContentPageState
     final size = MediaQuery.of(context).size;
     return GetBuilder<WithdrawalInvestmentController>(
       id: "withdrawal-investment-page",
-      builder: (controller) {        
+      builder: (controller) {
         return Scaffold(
           body: SafeArea(
             child: Column(
               children: [
-                const BaseAppBar(
-                  title: "Account.WithDrawalRequest.Title",
-                ),
+                const BaseAppBar(title: "Account.WithDrawalRequest.Title"),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -61,15 +59,15 @@ class _InvestmentWithdrawalContentPageState
                                       child: Stack(
                                         children: [
                                           CustomDropDownButton(
-                                            items:
-                                                controller.aviablePackages,
+                                            items: controller.aviablePackages,
                                             isRequired: true,
                                             selectedValue:
                                                 controller.selectedPackage,
                                             title:
                                                 "Account.WithDrawalRequest.Package.Selected",
                                             onChanged: (p0) {
-                                              controller.amountSwapToHKCController
+                                              controller
+                                                  .amountSwapToHKCController
                                                   .clear();
                                               controller.isLoading.value
                                                   ? null // Vô hiệu hóa khi loading
@@ -97,11 +95,14 @@ class _InvestmentWithdrawalContentPageState
                                   ],
                                 ),
                                 MainTextField(
-                                  controller: controller.amountSwapToHKCController,
-                                  label: tr("Account.WithDrawalRequest.AmountToHKC"),
+                                  controller:
+                                      controller.amountSwapToHKCController,
+                                  label: tr(
+                                    "Account.WithDrawalRequest.AmountToHKC",
+                                  ),
                                   keyboardType: TextInputType.number,
-                                  enableSelectOnMouseDown: true,                                  
-                                  isNumberOnly: true,                                                                                              
+                                  enableSelectOnMouseDown: true,
+                                  isNumberOnly: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return tr("Field required");
@@ -111,9 +112,10 @@ class _InvestmentWithdrawalContentPageState
                                     }
                                     return null;
                                   },
-                                ),                                                              
+                                ),
                                 MainTextField(
-                                  controller: controller.walletTokenAddresController,
+                                  controller:
+                                      controller.walletTokenAddresController,
                                   label: tr(
                                     "Account.WithDrawalRequest.WalletHKCTokenAddres",
                                   ),
@@ -130,7 +132,9 @@ class _InvestmentWithdrawalContentPageState
                                         "Account.WithDrawalRequest.WalletTokenAddres.Requird",
                                       ),
                                 ),
-                                _buildAlert("Account.WithDrawalRequest.WalletHKCTokenAddres.Hint"),
+                                _buildAlert(
+                                  "Account.WithDrawalRequest.WalletHKCTokenAddres.Hint",
+                                ),
                                 MainTextField(
                                   controller: controller.commentController,
                                   isRequired: false,
@@ -145,8 +149,7 @@ class _InvestmentWithdrawalContentPageState
                                       true, // Giữ trạng thái controller
                                   child: TextField(
                                     controller:
-                                        controller
-                                            .exchangeHKCController,
+                                        controller.exchangeHKCController,
                                   ),
                                 ),
                                 Visibility(
@@ -186,23 +189,31 @@ class _InvestmentWithdrawalContentPageState
   }
 
   Widget _buildActionButton(Size size, String text, IconData icon) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        icon: Icon(icon),
-        label: Text(text),        
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return Obx(
+      () => SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          icon: controller.isLoadingSubmit.value ? null : Icon(icon),
+          label:
+              controller.isLoadingSubmit.value
+                  ? const LoadingWidget()
+                  : Text(text),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-        ),                     
-        onPressed: () {
-          controller.submitWithdrawal();
-        },
+          onPressed: () {
+            if (!controller.isLoadingSubmit.value) {
+              controller.submitWithdrawal();
+            }
+          },
+        ),
       ),
     );
   }
+
   _buildAlert(String alert) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),

@@ -8,10 +8,8 @@ import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/data.models/country.dart';
 import 'package:hkcoin/data.models/province.dart';
-import 'package:hkcoin/gen/fonts.gen.dart';
 import 'package:hkcoin/presentation.controllers/add_address_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
-import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/custom_drop_down_search.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
@@ -76,7 +74,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             MainTextField(
                               controller: controller.phoneController,
                               label: tr("Account.Fields.Phone"),
-                               keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.phone,
                               isNumberOnly: true,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
@@ -114,38 +112,63 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                           controller.selectedProvince = null;
                                           controller.provinceError = null;
                                           controller.countryError = null;
-                                          await controller.getProvinces(countryId: country.id!);
-                                          controller.update(['province-drop-down']);
+                                          await controller.getProvinces(
+                                            countryId: country.id!,
+                                          );
+                                          controller.update([
+                                            'province-drop-down',
+                                          ]);
                                         }
                                       },
-                                      itemAsString: (Country? country) => country?.name ?? "",
+                                      itemAsString:
+                                          (Country? country) =>
+                                              country?.name ?? "",
                                       labelText: "Address.SelectCountry",
                                       errorText: controller.countryError,
                                       isEnabled: !controller.isLoading.value,
                                       icon: Icons.public,
-                                      validator: (Country? value) =>
-                                        value == null ? tr("Address.Fields.Country.Required") : null,
+                                      validator:
+                                          (Country? value) =>
+                                              value == null
+                                                  ? tr(
+                                                    "Address.Fields.Country.Required",
+                                                  )
+                                                  : null,
                                     ),
-                                                                    
-                                    SizedBox(height: scrSize(context).height * 0.015),
+
+                                    SizedBox(
+                                      height: scrSize(context).height * 0.015,
+                                    ),
                                     CustomDropdownSearch<Province>(
                                       items: controller.listProvince,
                                       selectedItem: controller.selectedProvince,
                                       onChanged: (Province? province) {
                                         controller.selectedProvince = province;
-                                        controller.provinceError = null; // Xóa lỗi khi chọn
-                                        controller.update(['province-drop-down']);
+                                        controller.provinceError =
+                                            null; // Xóa lỗi khi chọn
+                                        controller.update([
+                                          'province-drop-down',
+                                        ]);
                                       },
-                                      itemAsString: (Province? province) => province?.name ?? "",
-                                      labelText: tr("Address.Fields.StateProvince"),
+                                      itemAsString:
+                                          (Province? province) =>
+                                              province?.name ?? "",
+                                      labelText: tr(
+                                        "Address.Fields.StateProvince",
+                                      ),
                                       errorText: controller.provinceError,
                                       isEnabled: !controller.isLoading.value,
                                       icon: Icons.location_city,
                                       height: 56.0,
-                                      itemHeight: 44.0,                                      
-                                      validator: (Province? value) =>
-                                          value == null ? tr("Address.Fields.StateProvince.Required") : null,
-                                    ),                                                                       
+                                      itemHeight: 44.0,
+                                      validator:
+                                          (Province? value) =>
+                                              value == null
+                                                  ? tr(
+                                                    "Address.Fields.StateProvince.Required",
+                                                  )
+                                                  : null,
+                                    ),
                                   ],
                                 );
                               },
@@ -177,11 +200,13 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                   if (controller.validateForm()) {
                                     await controller.save();
                                     Get.back();
-                                    Toast.showSuccessToast("Address.Save.Successfull");
+                                    Toast.showSuccessToast(
+                                      "Address.Save.Successfull",
+                                    );
                                   } else {
                                     controller.update(['province-drop-down']);
                                     //Get.snackbar("Lỗi", "Vui lòng điền đầy đủ thông tin");
-                                  }                                
+                                  }
                                 },
                               ),
                             ),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/extensions/extensions.dart';
@@ -25,7 +23,7 @@ class WithdrawalInvestmentController extends GetxController {
   WithDrawalsInvestment? withDrawalsInvestment;
   List<AviablePackages> aviablePackages = [];
   AviablePackages? selectedPackage;
-  bool hiddenExchangePrice = false;  
+  bool hiddenExchangePrice = false;
   RxBool isLoadingSubmit = false.obs;
   @override
   void onInit() {
@@ -40,36 +38,36 @@ class WithdrawalInvestmentController extends GetxController {
       exchangeHKCController.text = "${r.exchangeHKC}";
       withdrawFeeController.text = "${r.withdrawFee}";
       withdrawFeeStrController.text = "${r.withdrawFeeStr}";
-      walletTokenAddresController.text = r.walletTokenAddres;  
-      aviablePackages = r.aviablePackages!;    
+      walletTokenAddresController.text = r.walletTokenAddres;
+      aviablePackages = r.aviablePackages!;
     });
     update(["withdrawal-investment-page"]);
   }
 
   void submitWithdrawal() async {
-    isLoadingSubmit.value=true;
+    isLoadingSubmit.value = true;
     if (formKey.currentState!.validate()) {
       if (selectedPackage == null || selectedPackage!.id == 0) {
         Toast.showErrorToast(
           "Account.WithDrawalRequest.WithDrawalSwap.Required",
         );
-        isLoadingSubmit.value=false;
+        isLoadingSubmit.value = false;
         return;
       }
-      var amountSwapToHKC = amountSwapToHKCController.text.trim().toDouble();          
-      handleEither(
+      var amountSwapToHKC = amountSwapToHKCController.text.trim().toDouble();
+      await handleEitherReturn(
         await WithDrawalsRepository().submitInvestment(
           WithDrawalsInvestment(
             walletTokenAddres: walletTokenAddresController.text.trim(),
             exchangeHKC: exchangeHKCController.text.trim().toDouble(),
             withdrawFee: withdrawFeeController.text.trim().toDouble(),
             packageId: selectedPackage!.id,
-            amountSwapToHKC: amountSwapToHKC,         
-            customerComments: commentController.text.trim()            
+            amountSwapToHKC: amountSwapToHKC,
+            customerComments: commentController.text.trim(),
           ),
         ),
-        (r) {
-          isLoadingSubmit.value=false;
+        (r) async {
+          isLoadingSubmit.value = false;
           Get.back();
         },
       );
@@ -85,21 +83,22 @@ class WithdrawalInvestmentController extends GetxController {
         handleEither(
           await WithDrawalsRepository().getExchangePackage(newPachage.id),
           (r) {
-            if (r > 0) {              
-              amountSwapToHKCController.text = "${r/exchangeHKCController.text.trim().toDouble()}";              
+            if (r > 0) {
+              amountSwapToHKCController.text =
+                  "${r / exchangeHKCController.text.trim().toDouble()}";
               hiddenExchangePrice = true;
             } else {
-              amountSwapToHKCController.clear();              
-            }            
+              amountSwapToHKCController.clear();
+            }
           },
         );
       } catch (e) {
-        amountSwapToHKCController.clear();        
+        amountSwapToHKCController.clear();
       }
       isLoading.value = false;
     } else {
-      amountSwapToHKCController.clear();      
+      amountSwapToHKCController.clear();
     }
     update(['withdrawal-investment-page']);
-  }  
+  }
 }
