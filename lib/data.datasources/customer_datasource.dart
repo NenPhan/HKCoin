@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
@@ -110,11 +112,9 @@ class CustomerDatasource {
           endpoint: Endpoints.getWalletBalances,
           needAccessToken: true,
         ),
-      );
-
-      return (response["Data"]["Tokens"] as List)
-          .map((e) => WalletToken.fromJson(e))
-          .toList();
+      );      
+      final tokens = (response["Data"]?["Tokens"] as List?) ?? [];
+      return tokens.map((e) => WalletToken.fromJson(e)).toList();     
     });
   }
   Future<WalletHistoriesPagination> getWalletHistoresData({int page = 1, int limit = 10}) async {
