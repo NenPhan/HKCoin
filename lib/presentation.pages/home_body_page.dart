@@ -68,6 +68,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                       return CountDisplay(
                         key: UniqueKey(),
                         icon: const Icon(Icons.notifications, size: 30),
+                        countColor:Colors.amber[900]!,
                         onTap: (){
                           Get.toNamed(PrivateMessagePage.route)?.then((_) {
                             // Refresh count khi quay về từ trang tin nhắn
