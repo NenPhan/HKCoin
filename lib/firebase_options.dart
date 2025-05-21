@@ -44,13 +44,16 @@ class DefaultFirebaseOptions {
     appId: '1:659452927407:android:d6b952843c334c863ea35a',
     messagingSenderId: '659452927407',
     projectId: 'hkcoin-c23c1',
+    storageBucket: 'hkcoin-c23c1.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: '',
-    appId: '1:590473296323:ios:5878232731a9ef01536576',
+    apiKey: 'AIzaSyB7qRMD9qO4KsPstlr7KS1aB7YBwpNNwuM',
+    appId: '1:659452927407:ios:c20dd5320de8e5b23ea35a',
     messagingSenderId: '659452927407',
     projectId: 'hkcoin-c23c1',
-    iosBundleId: 'vn.kd.flutterMarketplace',
+    storageBucket: 'hkcoin-c23c1.firebasestorage.app',
+    iosBundleId: 'vn.app.hkcoin',
   );
+
 }

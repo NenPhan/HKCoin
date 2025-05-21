@@ -1,46 +1,40 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:hkcoin/core/notification_service.dart';
 import 'package:hkcoin/firebase_options.dart';
 
-@pragma('vm:entry-point')
 Future<void> initializeFirebaseService() async {
-  debugPrint('Firebase -----initializeFirebaseService-----');
+  log('Firebase -----initializeFirebaseService-----', name: "FIREBASE");
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
   } catch (e) {
-    debugPrint("Failed to initialize Firebase: $e");
+    log("Failed to initialize Firebase: $e", name: "FIREBASE");
   }
 
   var messaging = FirebaseMessaging.instance;
 
-  await messaging.setAutoInitEnabled(true);
-
-  var settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-
+  var settings = await messaging.requestPermission();
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    debugPrint('Firebase -----User Granted Permission-----');
+    log('Firebase -----User Granted Permission-----', name: "FIREBASE");
   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    debugPrint('Firebase -----User Granted Provisional Permission-----');
+    log(
+      'Firebase -----User Granted Provisional Permission-----',
+      name: "FIREBASE",
+    );
   } else {
-    debugPrint('Firebase -----User Declined Permission-----');
+    log('Firebase -----User Declined Permission-----', name: "FIREBASE");
     return;
   }
+
+  var token = await messaging.getToken();
+  log('Firebase FCM token $token', name: "FIREBASE");
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -51,23 +45,11 @@ Future<void> initializeFirebaseService() async {
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
   FirebaseMessaging.onMessage.listen(onMessage);
-
-  var initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    debugPrint('Firebase -----getInitialMessage----- $initialMessage');
-    _handleMessage(initialMessage);
-  }
   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-    debugPrint('Firebase -----FCM new token $token-----');
+    log('Firebase -----FCM new token $token-----', name: "FIREBASE");
   });
-  debugPrint('Firebase -----FirebaseService Initialized-----');
-
-  try {
-    var token = await messaging.getToken();
-    debugPrint('Firebase -----FCM token $token-----');
-    // ignore: empty_catches
-  } catch (e) {}
+  log('Firebase -----FirebaseService Initialized-----', name: "FIREBASE");
 
   // check for tapping background message
   final notificationService = NotificationService();
@@ -76,44 +58,40 @@ Future<void> initializeFirebaseService() async {
   }
 }
 
-@pragma('vm:entry-point')
 void _handleMessage(RemoteMessage message) {
-  debugPrint('Firebase -----_handleMessage----- ${message.toMap()}');
+  log('Firebase -----_handleMessage----- ${message.toMap()}', name: "FIREBASE");
 }
 
-@pragma('vm:entry-point')
 Future<void> onBackgroundMessage(RemoteMessage message) async {
-  debugPrint('Firebase -----onBackgroundMessage-----');
-  debugPrint('Firebase ${message.toMap()}');
-
-  debugPrint("Handling a background message");
+  log('Firebase -----onBackgroundMessage-----', name: "FIREBASE");
+  log('Firebase ${message.toMap()}', name: "FIREBASE");
 
   if (Platform.isAndroid) {
     try {
       NotificationService().showNotification(
-        body: message.data.toString(),
+        title: message.notification?.title ?? "",
+        body: message.notification?.body ?? "",
         id: message.hashCode,
       );
     } catch (e) {
-      debugPrint('Firebase onMessage error: $e');
+      log('Firebase onMessage error: $e', name: "FIREBASE");
     }
   }
 }
 
-@pragma('vm:entry-point')
 Future<void> onMessage(RemoteMessage message) async {
-  debugPrint('Firebase -----onMessage-----');
-  debugPrint('Firebase ${message.toMap()}');
-  debugPrint('Firebase Got a message whilst in the foreground!');
+  log('Firebase -----onMessage-----', name: "FIREBASE");
+  log('Firebase ${message.toMap()}', name: "FIREBASE");
 
   if (Platform.isAndroid) {
     try {
       NotificationService().showNotification(
-        body: message.data.toString(),
+        title: message.notification?.title ?? "",
+        body: message.notification?.body ?? "",
         id: message.hashCode,
       );
     } catch (e) {
-      debugPrint('Firebase onMessage error: $e');
+      log('Firebase onMessage error: $e', name: "FIREBASE");
     }
   }
 }

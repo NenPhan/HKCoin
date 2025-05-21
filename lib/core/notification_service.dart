@@ -31,7 +31,6 @@ class NotificationService {
     debugPrint('Firebase fg - initialized');
   }
 
-  @pragma('vm:entry-point')
   static Future<void> onDidReceiveBackgroundNotificationResponse(
     NotificationResponse response,
   ) async {
@@ -44,7 +43,6 @@ class NotificationService {
     }
   }
 
-  @pragma('vm:entry-point')
   static Future<void> onDidReceiveNotificationResponse(
     NotificationResponse response,
   ) async {

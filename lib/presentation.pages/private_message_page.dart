@@ -7,7 +7,6 @@ import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/count_badge.dart';
-import 'package:hkcoin/widgets/count_display_button.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/pagination_scroll_widget.dart';
 
@@ -18,85 +17,97 @@ class PrivateMessagePage extends StatefulWidget {
   @override
   State<PrivateMessagePage> createState() => _PrivateMessagePageState();
 }
-class _PrivateMessagePageState extends State<PrivateMessagePage> 
-with SingleTickerProviderStateMixin {
-  
+
+class _PrivateMessagePageState extends State<PrivateMessagePage>
+    with SingleTickerProviderStateMixin {
   final controller = Get.put(PrivateMessageController());
   final ScrollController _verticalScrollController = ScrollController();
-   late TabController _tabController;
-   final ScrollController _newMessagesScrollController = ScrollController();
+  late TabController _tabController;
+  final ScrollController _newMessagesScrollController = ScrollController();
   final ScrollController _readMessagesScrollController = ScrollController();
-   @override
+  @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2,vsync: this);  
-    //_loadInitialData(); 
+    _tabController = TabController(length: 2, vsync: this);
+    // _loadInitialData();
   }
- Future<void> _loadInitialData() async {
+
+  Future<void> _loadInitialData() async {
     await Future.wait([
       controller.gePrivateMessagesData(isRead: false),
       controller.gePrivateMessagesData(isRead: true),
     ]);
   }
+
   Future<void> _loadMoreData(int tabIndex) async {
     final isRead = tabIndex == 1;
-    final pagination = isRead 
-        ? controller.readMessagesPagination 
-        : controller.newMessagesPagination;
-        if (!controller.isLoadingMore.value && (pagination?.hasNextPage ?? false)) {
+    final pagination =
+        isRead
+            ? controller.readMessagesPagination
+            : controller.newMessagesPagination;
+    if (!controller.isLoadingMore.value && (pagination?.hasNextPage ?? false)) {
       await controller.gePrivateMessagesData(
         page: (pagination?.pageNumber ?? 0) + 1,
         isRead: isRead,
         isLoadMore: true,
       );
-    }    
+    }
   }
-   // Hàm xử lý kéo xuống làm mới  
-  Future<void> _refreshData(bool isRead) async {    
+
+  // Hàm xử lý kéo xuống làm mới
+  Future<void> _refreshData(bool isRead) async {
     await controller.gePrivateMessagesData(
       page: 1,
       isRead: isRead,
       isLoadMore: false,
     );
   }
+
   @override
   void dispose() {
     _verticalScrollController.dispose();
     _tabController.dispose();
-     _newMessagesScrollController.dispose();
+    _newMessagesScrollController.dispose();
     _readMessagesScrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            const BaseAppBar(              
-              isBackEnabled: true,
-            ),
+            const BaseAppBar(isBackEnabled: true),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
               child: GetBuilder<PrivateMessageController>(
                 id: "private-message-list",
                 builder: (controller) {
-                  final unreadCount = controller.newMessagesPagination?.privateMessages?.length ?? 0;
+                  final unreadCount =
+                      controller
+                          .newMessagesPagination
+                          ?.privateMessages
+                          ?.length ??
+                      0;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         tr("Account.PrivateMessage"),
-                        style: textTheme(context).titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: textTheme(
+                          context,
+                        ).titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 5),
                       CountBadge(
-                        key: UniqueKey(),                        
-                        color: Colors.amber[900]??Colors.amber,
+                        key: UniqueKey(),
+                        color: Colors.amber[900] ?? Colors.amber,
                         count: unreadCount,
-                      ),                      
+                      ),
                     ],
                   );
                 },
@@ -110,18 +121,19 @@ with SingleTickerProviderStateMixin {
               ],
               labelColor: Colors.amber[900], //Theme.of(context).primaryColor,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.amber[900],//Theme.of(context).primaryColor,
+              indicatorColor:
+                  Colors.amber[900], //Theme.of(context).primaryColor,
             ),
             Expanded(
               child: GetBuilder<PrivateMessageController>(
                 id: "private-message-list",
-                builder: (controller) {                  
+                builder: (controller) {
                   if (controller.isInitialLoading.value) {
                     return const LoadingWidget();
-                  }                
+                  }
                   return TabBarView(
                     controller: _tabController,
-                    children: [                                         
+                    children: [
                       _buildMessageList(
                         context: context,
                         isRead: false,
@@ -137,13 +149,14 @@ with SingleTickerProviderStateMixin {
                   );
                 },
               ),
-            ),            
-             const SizedBox(height: homeBottomPadding),
+            ),
+            const SizedBox(height: homeBottomPadding),
           ],
         ),
       ),
     );
   }
+
   Widget _buildMessageList({
     required BuildContext context,
     required bool isRead,
@@ -152,18 +165,25 @@ with SingleTickerProviderStateMixin {
     return GetBuilder<PrivateMessageController>(
       id: isRead ? "read-messages-list" : "new-messages-list",
       builder: (controller) {
-        final messages = isRead ? controller.readMessagesPagination?.privateMessages : controller.newMessagesPagination?.privateMessages;
-        final pagination = isRead ? controller.readMessagesPagination : controller.newMessagesPagination;
-        final isLoading = isRead ? controller.isLoadingReadMessages : controller.isLoadingNewMessages;
+        final messages =
+            isRead
+                ? controller.readMessagesPagination?.privateMessages
+                : controller.newMessagesPagination?.privateMessages;
+        final pagination =
+            isRead
+                ? controller.readMessagesPagination
+                : controller.newMessagesPagination;
+        final isLoading =
+            isRead
+                ? controller.isLoadingReadMessages
+                : controller.isLoadingNewMessages;
 
         if (isLoading.value && messages!.isEmpty) {
           return const LoadingWidget();
         }
 
         if (messages!.isEmpty) {
-          return Center(
-            child: Text(tr("No messages found")),
-          );
+          return Center(child: Text(tr("No messages found")));
         }
 
         return RefreshIndicator(
@@ -190,24 +210,23 @@ with SingleTickerProviderStateMixin {
       },
     );
   }
+
   Widget _buildMessageCard(BuildContext context, dynamic message, bool isRead) {
     return Card(
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
         borderRadius: BorderRadius.circular(12),
-      ),
-      child:InkWell(
-         borderRadius: BorderRadius.circular(12),
         onTap: () {
           final wasUnread = !isRead;
           if (wasUnread) {
             controller.markAsReadAndRefresh(message.id);
-          }                        
+          }
           final result = Get.toNamed(
-          PrivateMesageDetailPage.route,
-          arguments: message.id
-        ); 
+            PrivateMesageDetailPage.route,
+            arguments: message.id,
+          );
           // Hiển thị thông báo khi quay về
           if (wasUnread && result == true) {
             Get.snackbar(
@@ -216,7 +235,7 @@ with SingleTickerProviderStateMixin {
               backgroundColor: Colors.green[100],
               colorText: Colors.black,
             );
-          }   
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -225,29 +244,27 @@ with SingleTickerProviderStateMixin {
             children: [
               Text(
                 message.subject?.toString() ?? '-',
-                style: textTheme(context).titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: textTheme(
+                  context,
+                ).titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              Text(
-                message.body ?? '-',
-                style: textTheme(context).bodyMedium,
-              ),
+              Text(message.body ?? '-', style: textTheme(context).bodyMedium),
               const SizedBox(height: 8),
               Text(
                 _formatDate(message.createdOnUtc),
-                style: textTheme(context).bodySmall?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: textTheme(
+                  context,
+                ).bodySmall?.copyWith(color: Colors.grey),
               ),
             ],
           ),
         ),
-      ),      
+      ),
     );
   }
-   String _formatDate(dynamic date) {
+
+  String _formatDate(dynamic date) {
     if (date == null) return '-';
     try {
       // Giả sử createdOnUtc là chuỗi ISO 8601 hoặc DateTime
@@ -256,5 +273,5 @@ with SingleTickerProviderStateMixin {
     } catch (e) {
       return '-';
     }
-  }  
+  }
 }

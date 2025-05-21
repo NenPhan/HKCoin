@@ -63,22 +63,22 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                     },
                   ),
                   GetBuilder<PrivateMessageController>(
-                    id:"home-message-icon",
-                    builder:(controller){                                            
+                    id: "home-message-icon",
+                    builder: (controller) {
                       return CountDisplay(
                         key: UniqueKey(),
                         icon: const Icon(Icons.notifications, size: 30),
-                        countColor:Colors.amber[900]!,
-                        onTap: (){
+                        countColor: Colors.amber[900]!,
+                        onTap: () {
                           Get.toNamed(PrivateMessagePage.route)?.then((_) {
                             // Refresh count khi quay về từ trang tin nhắn
                             controller.refreshMessageCount();
-                          });                          
+                          });
                         },
                         count: controller.privateMessageCount.value,
                       );
-                    },                     
-                  ),                
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -97,7 +97,10 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                         decoration: BoxDecoration(
                           // color: Colors.deepOrange,
                           gradient: const LinearGradient(
-                            colors: [Color.fromARGB(255, 249, 194, 12), Colors.deepOrange],
+                            colors: [
+                              Color.fromARGB(255, 249, 194, 12),
+                              Colors.deepOrange,
+                            ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
