@@ -7,10 +7,12 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_controller.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_add_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/expandale_container.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
+import 'package:hkcoin/widgets/qrcode_widget.dart';
 
 class WalletTokenPage extends StatefulWidget {
   const WalletTokenPage({super.key});
@@ -38,7 +40,9 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MainButton(text: tr("Account.WalletToken.Btn"), onTap: () {}),
+                  MainButton(text: tr("Account.WalletToken.Btn"), onTap: () {
+                    Get.toNamed(AddWalletTokenPage.route);
+                  }),
                 ],
               ),
             ),
@@ -81,14 +85,24 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
                                   spacing: 10,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SvgPicture.string(
-                                      item.walletQrCode ?? "",
-                                      width: scrSize(context).width * 0.6,
-                                    ),
+                                    QRCodeWidget(
+                                          data: item.walletToken??"", // Dữ liệu QR code
+                                          size: 250, // Kích thước
+                                          backgroundColor:
+                                              Colors.white, // Màu nền
+                                          foregroundColor:
+                                              Colors.amber[900], // Màu QR code
+                                          fileName:
+                                              'walletToken${item.walletToken}.png', // Tùy chọn tên file khi lưu
+                                        ),
+                                    // SvgPicture.string(
+                                    //   item.walletQrCode ?? "",
+                                    //   width: scrSize(context).width * 0.6,
+                                    // ),
                                     Text(tr("Account.WalletToken.Address")),
                                     Text(item.walletToken ?? ""),
                                     MainButton(
-                                      width: scrSize(context).width * 0.25,
+                                      width: scrSize(context).width * 0.25,                                      
                                       icon: const Icon(
                                         Icons.copy,
                                         color: Colors.white,
