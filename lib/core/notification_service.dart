@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
   final _androidInitSettings = const AndroidInitializationSettings(
-    '@mipmap/ic_launcher',
+    '@mipmap/launcher_icon',
   );
 
   bool _initialized = false;
