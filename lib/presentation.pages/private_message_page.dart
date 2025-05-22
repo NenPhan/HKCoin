@@ -178,11 +178,11 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
                 ? controller.isLoadingReadMessages
                 : controller.isLoadingNewMessages;
 
-        if (isLoading.value && messages!.isEmpty) {
+        if (isLoading.value && (messages?.isEmpty ?? true)) {
           return const LoadingWidget();
         }
 
-        if (messages!.isEmpty) {
+        if (messages?.isEmpty ?? true) {
           return Center(child: Text(tr("No messages found")));
         }
 
@@ -198,9 +198,9 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: messages.length,
+                  itemCount: messages?.length ?? 0,
                   itemBuilder: (context, index) {
-                    return _buildMessageCard(context, messages[index], isRead);
+                    return _buildMessageCard(context, messages?[index], isRead);
                   },
                 ),
               ],
