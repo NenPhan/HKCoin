@@ -5,6 +5,7 @@ class CheckUpdateResult {
   final String? releaseNotes;
   final String? downloadUrl;
   final String? currentVersion;
+  final bool? isForceUpdate;
 
   CheckUpdateResult({
     required this.updateAvailable,
@@ -13,6 +14,7 @@ class CheckUpdateResult {
     this.releaseNotes,
     this.downloadUrl,
     this.currentVersion,
+    this.isForceUpdate
   });
 
   factory CheckUpdateResult.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class CheckUpdateResult {
       releaseNotes: json['ReleaseNotes'],
       downloadUrl: json['DownloadUrl'],
       currentVersion: json['CurrentVersion'],
+      isForceUpdate: json['IsForceUpdate'],
     );
   }
 }

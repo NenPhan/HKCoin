@@ -8,14 +8,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 void showUpdateDialog(
   BuildContext context, {
-  required CheckUpdateResult updateResult,
-  bool isForceUpdate = false, // Thêm tham số cho cập nhật bắt buộc
+  required CheckUpdateResult updateResult,  
 }) {
   showDialog(
     context: context,
-    barrierDismissible: !isForceUpdate, // Chặn đóng khi là cập nhật bắt buộc
+    barrierDismissible: !updateResult.isForceUpdate!, // Chặn đóng khi là cập nhật bắt buộc
     builder: (context) => WillPopScope(
-      onWillPop: () async => !isForceUpdate, // Chặn nút back khi là cập nhật bắt buộc
+      onWillPop: () async => !updateResult.isForceUpdate!, // Chặn nút back khi là cập nhật bắt buộc
       child: AlertDialog(
         title: Text(tr('Admin.Common.Update')),
         content: SingleChildScrollView( // Thêm scroll cho nội dung dài
@@ -108,7 +107,7 @@ void showUpdateDialog(
         ),
         actions: [
           // Luôn hiển thị nút Close trừ khi là cập nhật bắt buộc
-          if (!isForceUpdate)
+          if (!updateResult.isForceUpdate!)
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(tr('Common.Close')),
@@ -128,7 +127,7 @@ void showUpdateDialog(
                     SnackBar(content: Text(tr('Common.CannotOpenLink'))),
                   );
                 }
-                if (!isForceUpdate) Navigator.pop(context);
+                if (!updateResult.isForceUpdate!) Navigator.pop(context);
               },
               child: Text(
                 tr('Common.Download'),
