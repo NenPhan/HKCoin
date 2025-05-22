@@ -45,4 +45,5 @@ class Endpoints {
   static String getPrivateMessages = "PrivateMessages";
   static String getPrivateMessagesDetail(int id) => "PrivateMessages($id)";
   static String updateStatusPrivateMessage = "PrivateMessages/UpdateStatus";
+  static String checkVersion = "Versions/Check";
 }

@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/data.models/check_update.dart';
 import 'package:hkcoin/data.models/news.dart';
 import 'package:hkcoin/data.models/product.dart';
 import 'package:hkcoin/data.models/slide.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
+import 'package:hkcoin/data.repositories/check_update_repository.dart';
 import 'package:hkcoin/data.repositories/customer_repository.dart';
 import 'package:hkcoin/data.repositories/news_repository.dart';
 import 'package:hkcoin/data.repositories/product_repository.dart';
@@ -22,6 +26,7 @@ class HomeBodyController extends GetxController {
   String? rxchangeRateData;
   List<News> news = [];
   List<Slide> slides = [];
+  Rx<CheckUpdateResult?> updateResult = Rx<CheckUpdateResult?>(null);
 
   @override
   void onInit() {
@@ -31,6 +36,10 @@ class HomeBodyController extends GetxController {
     getNewsData();
     getSlideData();
     updateDeviceToken();
+    if(Platform.isAndroid)
+    {
+      checkUpdate();
+    }
     super.onInit();
   }
 
@@ -50,6 +59,14 @@ class HomeBodyController extends GetxController {
         (r) async {},
       );
     });
+  }
+  void checkUpdate() async{
+     handleEitherReturn(
+      await CheckUpdateRepository().checkVersion(),
+      (r) async {
+        updateResult.value=r;
+      },
+    );
   }
 
   void getCustomerData() async {
