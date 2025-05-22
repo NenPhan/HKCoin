@@ -26,7 +26,12 @@ class CheckUpdateDatasource {
           params: queryParams,
         ),
       );
-      return CheckUpdateResult.fromJson(response["Data"]);
+       if(response == null || response["Data"] != null){
+          return CheckUpdateResult.fromJson(response["Data"]);
+       }        
+        else{
+          return CheckUpdateResult(updateAvailable: false);
+        } 
     });
   }
 

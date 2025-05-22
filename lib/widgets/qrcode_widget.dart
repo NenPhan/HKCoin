@@ -16,6 +16,7 @@ class QRCodeWidget extends StatefulWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final String? fileName;
+  final String? logoPath;
 
   const QRCodeWidget({
     Key? key,
@@ -24,6 +25,7 @@ class QRCodeWidget extends StatefulWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.fileName,
+    this.logoPath,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class QRCodeWidget extends StatefulWidget {
 class _QRCodeWidgetState extends State<QRCodeWidget> {
   final GlobalKey _qrKey = GlobalKey();
   bool _isSaving = false;
-
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,6 +56,13 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
               gapless: true,
               backgroundColor: widget.backgroundColor ?? Colors.white,
               foregroundColor: widget.foregroundColor ?? Colors.black,
+              embeddedImage: widget.logoPath != null
+                  ? NetworkImage(widget.logoPath!) // Sử dụng logo từ assets
+                  : null,
+              embeddedImageStyle: QrEmbeddedImageStyle(
+                size: Size(widget.size * 0.25, widget.size * 0.25), // Kích thước logo (25% kích thước QR)
+                
+              ),
             ),
           ),
         ),

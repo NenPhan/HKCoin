@@ -176,9 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           data: qrData, // Dữ liệu QR code
                                           size: 250, // Kích thước
                                           backgroundColor:
-                                              Colors.white, // Màu nền
-                                          foregroundColor:
-                                              Colors.amber[900], // Màu QR code
+                                              Colors.white, // Màu nền                                                                                        
                                           fileName:
                                               'affiliateLink_${controller.customerInfo!.customerNumber}.png', // Tùy chọn tên file khi lưu
                                         ),
