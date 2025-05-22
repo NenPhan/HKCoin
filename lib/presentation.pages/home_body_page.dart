@@ -17,6 +17,7 @@ import 'package:hkcoin/widgets/home_banner_widget.dart';
 import 'package:hkcoin/widgets/home_product_widget.dart';
 import 'package:hkcoin/widgets/news_widget.dart';
 import 'package:hkcoin/widgets/shimmer_container.dart';
+import 'package:hkcoin/widgets/show_update_dialog_widget.dart';
 
 class HomeBodyPage extends StatefulWidget {
   const HomeBodyPage({super.key});
@@ -27,7 +28,15 @@ class HomeBodyPage extends StatefulWidget {
 
 class _HomeBodyPageState extends State<HomeBodyPage> {
   final HomeBodyController homeBodyController = Get.put(HomeBodyController());
-
+ @override
+  void initState() {
+    ever(homeBodyController.updateResult, (result) {
+      if (result != null) {
+        showUpdateDialog(Get.context!, updateResult: result);
+      }
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
