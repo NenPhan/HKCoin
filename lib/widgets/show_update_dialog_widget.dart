@@ -16,7 +16,7 @@ void showUpdateDialog(
     builder: (context) => WillPopScope(
       onWillPop: () async => !updateResult.isForceUpdate!, // Chặn nút back khi là cập nhật bắt buộc
       child: AlertDialog(
-        title: Text(tr('App.Common.Update')),
+        title: Text(tr('Common.Update.Available')),
         content: SingleChildScrollView( // Thêm scroll cho nội dung dài
           child: Column(
             mainAxisSize: MainAxisSize.min,
