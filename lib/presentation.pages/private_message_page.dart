@@ -29,7 +29,7 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    // _loadInitialData();
+    _loadInitialData();
   }
 
   Future<void> _loadInitialData() async {

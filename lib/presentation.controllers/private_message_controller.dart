@@ -18,10 +18,7 @@ class PrivateMessageController extends GetxController {
   final RxBool isLoadingNewMessages = false.obs;
   @override
   void onInit() {
-    gePrivateMessagesData(isRead: false);
-    gePrivateMessagesData(isRead: true);
     getPrivateMessageCount();
-
     super.onInit();
   }
 
@@ -49,6 +46,7 @@ class PrivateMessageController extends GetxController {
     bool isRead = false,
     int limit = 15,
   }) async {
+    if (Storage().getToken == null) return;
     if (isRead) {
       isLoadingReadMessages.value = !isLoadMore;
     } else {
@@ -97,6 +95,7 @@ class PrivateMessageController extends GetxController {
       );
       //update(["private-message-list"]);
       update([
+        "private-message-list",
         isRead ? "read-messages-list" : "new-messages-list",
         "private-message-pagination",
       ]);
@@ -158,7 +157,7 @@ class PrivateMessageController extends GetxController {
   }
 
   void updateUnreadCount() {
-    final count = newMessagesPagination?.privateMessages?.length ?? 0;
+    // final count = newMessagesPagination?.privateMessages?.length ?? 0;
     // Nếu bạn có unreadCount riêng thì cập nhật ở đây
     update(['home-message-icon']); // ID riêng cho phần header
   }

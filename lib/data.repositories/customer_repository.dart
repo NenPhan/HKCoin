@@ -21,6 +21,15 @@ class CustomerRepository {
     );
   }
 
+  Future<Either<Failure, void>> updateDeviceToken(String? token) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        await CustomerDatasource().updateDeviceToken(token);
+        return const Right(null);
+      },
+    );
+  }
+
   Future<Either<Failure, void>> register(RegisterForm form) {
     return handleRepositoryCall(
       onRemote: () async {
@@ -60,6 +69,7 @@ class CustomerRepository {
       },
     );
   }
+
   Future<Either<Failure, CustomerDownlines>> getCustomerDownlinesData({
     int parentId = 0,
     int page = 1,
@@ -68,11 +78,16 @@ class CustomerRepository {
     return handleRepositoryCall(
       onRemote: () async {
         return Right(
-          await CustomerDatasource().getCustomerDownlinesData(parentId:parentId, page: page, limit: limit),
+          await CustomerDatasource().getCustomerDownlinesData(
+            parentId: parentId,
+            page: page,
+            limit: limit,
+          ),
         );
       },
     );
   }
+
   Future<Either<Failure, WalletInfo>> getWalletInfo() {
     return handleRepositoryCall(
       onRemote: () async {
@@ -90,6 +105,7 @@ class CustomerRepository {
       },
     );
   }
+
   Future<Either<Failure, WalletHistoriesPagination>> getWalletHistories({
     int page = 1,
     int limit = 10,
@@ -97,11 +113,15 @@ class CustomerRepository {
     return handleRepositoryCall(
       onRemote: () async {
         return Right(
-          await CustomerDatasource().getWalletHistoresData(page: page, limit: limit),
+          await CustomerDatasource().getWalletHistoresData(
+            page: page,
+            limit: limit,
+          ),
         );
       },
     );
   }
+
   Future<Either<Failure, void>> logout() {
     return handleRepositoryCall(
       onRemote: () async {

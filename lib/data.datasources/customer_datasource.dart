@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
@@ -28,6 +30,21 @@ class CustomerDatasource {
       );
 
       Storage().saveToken(response["Data"]["accessToken"]);
+    });
+  }
+
+  Future<void> updateDeviceToken(String? token) async {
+    await handleRemoteRequest(() async {
+      var body = {"deviceToken": token, "deviceType": Platform.isIOS ? 1 : 0};
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.deviceToken,
+          body: body,
+          needAccessToken: true,
+        ),
+        contentType: "application/json",
+      );
     });
   }
 
@@ -110,12 +127,16 @@ class CustomerDatasource {
           endpoint: Endpoints.getWalletBalances,
           needAccessToken: true,
         ),
-      );      
+      );
       final tokens = (response["Data"]?["Tokens"] as List?) ?? [];
-      return tokens.map((e) => WalletToken.fromJson(e)).toList();     
+      return tokens.map((e) => WalletToken.fromJson(e)).toList();
     });
   }
-  Future<WalletHistoriesPagination> getWalletHistoresData({int page = 1, int limit = 10}) async {
+
+  Future<WalletHistoriesPagination> getWalletHistoresData({
+    int page = 1,
+    int limit = 10,
+  }) async {
     return await handleRemoteRequest(() async {
       Map<String, String> queryParams = {
         "s": limit.toString(),
@@ -136,10 +157,15 @@ class CustomerDatasource {
       return WalletHistoriesPagination.fromJson(response);
     });
   }
-  Future<CustomerDownlines> getCustomerDownlinesData({int parentId = 0, int page = 1, int limit = 10}) async {
+
+  Future<CustomerDownlines> getCustomerDownlinesData({
+    int parentId = 0,
+    int page = 1,
+    int limit = 10,
+  }) async {
     return await handleRemoteRequest(() async {
       Map<String, String> queryParams = {
-        "parentId":parentId.toString(),
+        "parentId": parentId.toString(),
         "s": limit.toString(),
         "page": page.toString(),
       };
@@ -158,6 +184,7 @@ class CustomerDatasource {
       return CustomerDownlines.fromJson(response);
     });
   }
+
   Future logout() async {
     await handleRemoteRequest(() async {
       await dioClient.call(

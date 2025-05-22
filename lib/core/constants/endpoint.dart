@@ -1,5 +1,6 @@
 class Endpoints {
   static String login = "Customers/Login";
+  static String deviceToken = "Devices/AddToken";
   static String register = "Customers/Register";
   static String logout = "Customers/Logout";
   static String getProduct = "Products";

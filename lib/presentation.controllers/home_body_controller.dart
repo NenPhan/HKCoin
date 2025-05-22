@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
@@ -29,7 +30,26 @@ class HomeBodyController extends GetxController {
     getKHCoinData();
     getNewsData();
     getSlideData();
+    updateDeviceToken();
     super.onInit();
+  }
+
+  void updateDeviceToken() async {
+    var messaging = FirebaseMessaging.instance;
+
+    var token = await messaging.getToken();
+
+    handleEitherReturn(
+      await CustomerRepository().updateDeviceToken(token),
+      (r) async {},
+    );
+
+    messaging.onTokenRefresh.listen((token) async {
+      handleEitherReturn(
+        await CustomerRepository().updateDeviceToken(token),
+        (r) async {},
+      );
+    });
   }
 
   void getCustomerData() async {
