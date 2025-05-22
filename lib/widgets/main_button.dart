@@ -36,6 +36,7 @@ class _MainButtonState extends State<MainButton> {
         height: 50,
         child: ElevatedButton(
           onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
             widget.onTap();
           },
           style: ElevatedButton.styleFrom(

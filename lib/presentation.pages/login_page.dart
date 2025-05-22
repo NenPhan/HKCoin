@@ -95,9 +95,10 @@ class _LoginPageState extends State<LoginPage> {
                   return MainButton(
                     isLoading: controller.isLoading.value,
                     text: 'Account.Login',
-                    onTap: () {
+                    onTap: () async {
                       if (controller.isLoading.value) return;
-                      controller.login(() {
+                      controller.login(() async {
+                        await Future.delayed(Duration(seconds: 1));
                         // Get.offAllNamed(HomePage.route);
                         Restart.restartApp();
                       });
@@ -107,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    Get.toNamed(RegisterPage.route);
+                    if (!controller.isLoading.value) {
+                      Get.toNamed(RegisterPage.route);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[900],
@@ -116,13 +119,10 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child:
-                      controller.isLoading.value
-                          ? const ButtonLoadingWidget()
-                          : Text(
-                            tr('Account.Register'),
-                            style: textTheme(context).titleSmall,
-                          ),
+                  child: Text(
+                    tr('Account.Register'),
+                    style: textTheme(context).titleSmall,
+                  ),
                 ),
               ],
             ),
