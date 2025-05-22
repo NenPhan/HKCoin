@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_config.dart';
+import 'package:hkcoin/core/notification_service.dart';
+import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/check_update.dart';
 import 'package:hkcoin/data.models/news.dart';
@@ -40,7 +42,15 @@ class HomeBodyController extends GetxController {
     {
       checkUpdate();
     }
+    handleNotiOpenApp();
     super.onInit();
+  }
+
+  handleNotiOpenApp() async {
+    String? payload = await Storage().getNotiPayload();
+    if (payload != null) {
+      NotificationService.handleClickNotification(payload);
+    }
   }
 
   void updateDeviceToken() async {

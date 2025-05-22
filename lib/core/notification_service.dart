@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:hkcoin/core/presentation/storage.dart';
+import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
+import 'package:hkcoin/presentation.pages/private_message_page.dart';
 
 class NotificationService {
   final _androidInitSettings = const AndroidInitializationSettings(
@@ -31,27 +36,51 @@ class NotificationService {
     debugPrint('Firebase fg - initialized');
   }
 
+  @pragma('vm:entry-point')
   static Future<void> onDidReceiveBackgroundNotificationResponse(
     NotificationResponse response,
   ) async {
     debugPrint('Firebase fg - onDidReceiveBackground $response');
     if (response.payload != null) {
       // saving last local noti on android that was click (background)
-      final SharedPreferences preferences =
-          await SharedPreferences.getInstance();
-      preferences.setInt('last_local_notification_id', response.id ?? 0);
+      // final SharedPreferences preferences =
+      //     await SharedPreferences.getInstance();
+      // preferences.setInt('last_local_notification_id', response.id ?? 0);
+      handleClickNotification(response.payload!);
     }
   }
 
+  @pragma('vm:entry-point')
   static Future<void> onDidReceiveNotificationResponse(
     NotificationResponse response,
   ) async {
     debugPrint('Firebase fg - onDidReceiveNotification $response');
     if (response.payload != null) {
       // saving last local noti on android that was click (foreground)
-      final SharedPreferences preferences =
-          await SharedPreferences.getInstance();
-      preferences.setInt('last_local_notification_id', response.id ?? 0);
+      // final SharedPreferences preferences =
+      //     await SharedPreferences.getInstance();
+      // preferences.setInt('last_local_notification_id', response.id ?? 0);
+      handleClickNotification(response.payload!);
+    }
+  }
+
+  static handleClickNotification(String payload, [bool isInit = false]) {
+    //{"dataEntity": {"type":"WithDrawalRequest","entityId":"683"}, "privateMessage": 103}
+    if (Storage().getToken != null) {
+      if (isInit) {
+        Storage().saveNotiPayload(payload);
+      } else {
+        Storage().deleteNotiPayload();
+        Map data = jsonDecode(payload);
+        if (data["privateMessage"] != null &&
+            int.tryParse(data["privateMessage"]) != null) {
+          Get.toNamed(PrivateMessagePage.route);
+          Get.toNamed(
+            PrivateMesageDetailPage.route,
+            arguments: int.tryParse(data["privateMessage"]),
+          );
+        }
+      }
     }
   }
 

@@ -22,8 +22,8 @@ void main() async {
     basicAuthorization:
         'Basic NDY2OTc4YjU5YTQ1MzcxMzg1MWFjYTI5OGM0NmY2NjU6NTliZTZmMzljZTdmYWU1YzEyNTkyNmJiOGJkNWNiODU=',
   );
-  await initializeFirebaseService();
   await Injection.setup();
+  await initializeFirebaseService();
   TimeConverter.initialize();
   var localeController = Get.find<LocaleController>();
   runApp(

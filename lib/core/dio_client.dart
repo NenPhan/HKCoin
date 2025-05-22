@@ -20,7 +20,7 @@ class DioClient {
     required AppConfig appConfig,
   }) : super() {
     _appConfig = appConfig;
-    _storage = storage;    
+    _storage = storage;
   }
   Storage? _storage;
   late AppConfig _appConfig;
@@ -72,15 +72,8 @@ class DioClient {
       contentType: contentType,
       queryParameters: fields.params,
     ));
-    if (fields.shouldHandleResponse) {    
-      try {
-        return rawResponse.handleError(fields.allowedStatusCodes);
-      } catch (e) {
-        if (e is ServerException && rawResponse.statusCode == 401) {
-          await _handleUnauthorizedError(); // Gọi logout nếu lỗi 401
-        }
-       // rethrow; // Ném lại lỗi để caller xử lý
-      }
+    if (fields.shouldHandleResponse) {
+      return rawResponse.handleError(fields.allowedStatusCodes);
     } else {
       return rawResponse.data;
     }
@@ -122,37 +115,24 @@ class DioClient {
         return (dio.patch(url, data: body, queryParameters: queryParameters));
     }
   }
-  Future<void> _handleUnauthorizedError() async {
-    // try {
-    //   // Thử refresh token nếu có thể
-    //   final newToken = await _refreshToken();
-      
-    //   if (newToken != null) {
-    //     // Lưu token mới
-    //     _storage?.saveToken(newToken);
-    //     return;
-    //   }
-    // } catch (e) {
-    //   log('Refresh token failed: $e');
-    // }
-    
-    // Nếu không thể refresh token, thực hiện logout
-    await _performLogout();
-  }
-  Future<void> _performLogout() async {
-    await _storage?.deleteToken();
-    // Điều hướng đến màn hình login   
-    Get.offAllNamed(LoginPage.route);
-  }
 }
 
 extension ResponseExtension on Response {
+  Future<void> _performLogout() async {
+    await Storage().deleteToken();
+    // Điều hướng đến màn hình login
+    Get.offAllNamed(LoginPage.route);
+  }
+
   // handle return data from server side to client
-  Map<String, dynamic>? handleError(List<int> allowedStatusCodes) {
+  Map<String, dynamic> handleError(List<int> allowedStatusCodes) {
     String defaultErr = 'Identity.Error.DefaultError'.tr();
     if (data == null) return {};
     try {
       Map<String, dynamic> json;
+      if (statusCode == 401) {
+        _performLogout();
+      }
       if (allowedStatusCodes.contains(statusCode)) {
         if (data == "") return {};
         if (data is! Map<String, dynamic>) {

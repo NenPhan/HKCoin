@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class KeyStorage {
   final tokenKey = "/token_key";
   final customerKey = "/customer_key";
+  final notiKey = "/noti_key";
 }
 
 class Storage {
@@ -68,5 +69,20 @@ extension CustomerStorage on Storage {
 
   Future deleteCustomer() async {
     await preferences!.remove(_key.customerKey);
+  }
+}
+
+extension NotiStorage on Storage {
+  Future<void> saveNotiPayload(String payload) async {
+    await preferences!.setString(_key.notiKey, payload);
+  }
+
+  Future<String?> getNotiPayload() async {
+    var savedString = preferences!.getString(_key.notiKey);
+    return savedString;
+  }
+
+  Future deleteNotiPayload() async {
+    await preferences!.remove(_key.notiKey);
   }
 }

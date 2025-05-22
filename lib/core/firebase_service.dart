@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -44,6 +45,10 @@ Future<void> initializeFirebaseService() async {
     sound: true,
   );
 
+  var initMessage = await FirebaseMessaging.instance.getInitialMessage();
+  if (initMessage != null) {
+    _handleMessage(initMessage, true);
+  }
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
   FirebaseMessaging.onMessage.listen(onMessage);
@@ -60,8 +65,10 @@ Future<void> initializeFirebaseService() async {
   }
 }
 
-void _handleMessage(RemoteMessage message) {
+void _handleMessage(RemoteMessage message, [bool isInit = false]) async {
   log('Firebase -----_handleMessage----- ${message.toMap()}', name: "FIREBASE");
+
+  NotificationService.handleClickNotification(jsonEncode(message.data), isInit);
 }
 
 Future<void> onBackgroundMessage(RemoteMessage message) async {
@@ -75,6 +82,7 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
         title: message.notification?.title ?? "",
         body: message.notification?.body ?? "",
         id: message.hashCode,
+        payload: jsonEncode(message.data),
       );
     } catch (e) {
       log('Firebase onMessage error: $e', name: "FIREBASE");
@@ -93,6 +101,7 @@ Future<void> onMessage(RemoteMessage message) async {
         title: message.notification?.title ?? "",
         body: message.notification?.body ?? "",
         id: message.hashCode,
+        payload: jsonEncode(message.data),
       );
     } catch (e) {
       log('Firebase onMessage error: $e', name: "FIREBASE");
