@@ -53,10 +53,10 @@ class _PaginationScrollWidgetState extends State<PaginationScrollWidget> {
     final double maxScrollExtent = widget.scrollController.position.maxScrollExtent;
     final double scrollThreshold = maxScrollExtent * 0.8; // Load more when 80% scrolled
 
-    log('Scroll position: $scrollPosition, maxScrollExtent: $maxScrollExtent, threshold: $scrollThreshold');
+    //log('Scroll position: $scrollPosition, maxScrollExtent: $maxScrollExtent, threshold: $scrollThreshold');
 
     if (scrollPosition >= scrollThreshold && !_isLoadingMore && !_hasError && widget.hasMoreData) {
-      log('Triggering load more');
+      //log('Triggering load more');
       _loadMoreData();
     }
   }

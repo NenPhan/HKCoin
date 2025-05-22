@@ -149,8 +149,7 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
                   );
                 },
               ),
-            ),
-            const SizedBox(height: homeBottomPadding),
+            ),            
           ],
         ),
       ),
