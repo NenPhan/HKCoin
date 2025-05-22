@@ -35,7 +35,10 @@ class CustomerDatasource {
 
   Future<void> updateDeviceToken(String? token) async {
     await handleRemoteRequest(() async {
-      var body = {"deviceToken": token, "deviceType": Platform.isIOS ? 1 : 0};
+      var body = {
+        "deviceToken": token,
+        "deviceType": Platform.isIOS ? "1" : "0",
+      };
       await dioClient.call(
         DioParams(
           HttpMethod.POST,
