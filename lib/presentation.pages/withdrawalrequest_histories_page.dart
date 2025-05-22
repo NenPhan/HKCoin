@@ -159,8 +159,7 @@ class _WithdrawalrequestHistoryPageState extends State<WithdrawalrequestHistoryP
                   );                  
                 },
               ),
-            ),
-            const SizedBox(height: homeBottomPadding),
+            ),            
           ],
         ),
       ),
