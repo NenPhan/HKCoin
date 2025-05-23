@@ -48,6 +48,9 @@ class AddWalletTokenController extends GetxController {
           ),
         ),
         (r) async {
+           Toast.showSuccessToast(
+            "Account.WalletToken.NetworkChains.Added",
+          );
           Get.back();
         },
       );
