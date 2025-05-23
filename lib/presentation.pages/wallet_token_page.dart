@@ -7,6 +7,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_controller.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_add_page.dart';
 // import 'package:hkcoin/presentation.pages/wallet_token_add_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/expandale_container.dart';
@@ -41,7 +42,7 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   MainButton(text: tr("Account.WalletToken.Btn"), onTap: () {
-                    // Get.toNamed(AddWalletTokenPage.route);
+                     Get.toNamed(AddWalletTokenPage.route);
                   }),
                 ],
               ),

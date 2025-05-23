@@ -8,6 +8,7 @@ import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/data.models/add_wallet_token.dart';
 import 'package:hkcoin/data.models/customer_downlines.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
@@ -135,6 +136,34 @@ class CustomerDatasource {
       return tokens.map((e) => WalletToken.fromJson(e)).toList();
     });
   }
+   Future<AddWalletToken> addWalletToken() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.addWalletsToken,
+          needAccessToken: true,
+        ),
+      );
+        return AddWalletToken.fromJson(response["Data"]);   
+    });
+  }
+  Future<AddWalletToken> submitWalletToken(AddWalletToken form) async {
+    return await handleRemoteRequest(() async {
+      var body = form.toJson();
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.addWalletsToken,
+          needAccessToken: true,
+          body: body,
+        ),
+        contentType: "application/json",
+      );
+      return AddWalletToken.fromJson(response["Data"]);
+    });
+  }
+
 
   Future<WalletHistoriesPagination> getWalletHistoresData({
     int page = 1,

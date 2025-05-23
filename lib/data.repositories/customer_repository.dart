@@ -3,6 +3,7 @@ import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/customer_datasource.dart';
+import 'package:hkcoin/data.models/add_wallet_token.dart';
 import 'package:hkcoin/data.models/customer_downlines.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
@@ -105,6 +106,22 @@ class CustomerRepository {
       },
     );
   }
+  Future<Either<Failure, AddWalletToken>> addWalletToken() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await CustomerDatasource().addWalletToken();       
+        return Right(result);
+      },
+    );
+  }
+   Future<Either<Failure, AddWalletToken>> submitWalletToken(AddWalletToken form) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await CustomerDatasource().submitWalletToken(form);       
+        return Right(result);
+      },
+    );
+  } 
 
   Future<Either<Failure, WalletHistoriesPagination>> getWalletHistories({
     int page = 1,

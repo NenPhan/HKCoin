@@ -9,6 +9,7 @@ class Endpoints {
   static String customerInfo = "Customers/Me/";
   static String getWalletInfo = "Wallets/Dashboard";
   static String getWalletBalances = "Wallets/Balances";
+  static String addWalletsToken="Wallets/AddToken";
   static String getWalletHistories = "WalletHistories/Search";
   static String getCart = "ShoppingCartItems/GetCart";
   static String addToCart = "ShoppingCartItems/AddToCart";
