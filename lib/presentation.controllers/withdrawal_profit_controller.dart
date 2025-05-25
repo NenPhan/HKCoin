@@ -20,6 +20,7 @@ class WithdrawalProfitController extends GetxController {
   final amountSwapController = TextEditingController();
   final walletController = TextEditingController();
   final commentController = TextEditingController();
+  RxBool showPriceWrap = true.obs;
   String? availableProfit;
   bool isSubmitting = false;
   String? errorMessage;
@@ -103,6 +104,7 @@ class WithdrawalProfitController extends GetxController {
             } else {
               exchangePriceController.clear();
               exchangePriceHiddenController.clear();
+              hiddenExchangePrice = false;
             }
             if (r.walletTokenAddres?.isNotEmpty ?? false) {
               walletController.text = "${r.walletTokenAddres}";
@@ -125,11 +127,16 @@ class WithdrawalProfitController extends GetxController {
     }
     update(['withdrawal-profit-page']);
   }
-
+/*
+USDT BEP20: 10
+HKC BEP20: 20
+HTX TRC20: 30
+BNB BEP20: 40
+*/
   void updateAmountSwap() {
     final amountStr = amountController.text;
     final exchangePriceStr = exchangeHKCHiddenController.text;
-
+    showPriceWrap.value=true;
     // Chuyển đổi sang double
     final amount = double.tryParse(amountStr);
     final exchangeHKCPrice = double.tryParse(exchangePriceStr);
@@ -160,7 +167,8 @@ class WithdrawalProfitController extends GetxController {
         amountSwapController.clear(); // Xóa nếu không hợp lệ
       }
     } else {
-      amountSwapController.clear();
+      amountSwapController.clear();    
+      showPriceWrap.value=false;  
     }
   }
 }

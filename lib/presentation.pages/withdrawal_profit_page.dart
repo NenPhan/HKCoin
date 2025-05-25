@@ -117,18 +117,24 @@ class _ProfitWithdrawalContentPageState
                                     return null;
                                   },
                                 ),
-                                MainTextField(
-                                  controller: controller.amountSwapController,
-                                  label: tr(
-                                    "Account.WithDrawalRequest.Fields.AmountSwap",
+                                Visibility(
+                                  visible: controller.showPriceWrap.value,   
+                                  maintainState: true,
+                                  maintainSize:false,                               
+                                  child: MainTextField(
+                                    controller: controller.amountSwapController,
+                                    label: tr(
+                                      "Account.WithDrawalRequest.Fields.AmountSwap",
+                                    ),
+                                    readOnly: true,
                                   ),
-                                  readOnly: true,
-                                ),
+                                ),                                
                                 Visibility(
                                   visible:
                                       controller
                                           .hiddenExchangePrice, // Ẩn nếu true
                                   maintainState: true,
+                                  maintainSize:false,
                                   child: MainTextField(
                                     controller:
                                         controller.exchangePriceController,
@@ -166,8 +172,7 @@ class _ProfitWithdrawalContentPageState
                                 ),
                                 Visibility(
                                   visible: false, // Ẩn hoàn toàn
-                                  maintainState:
-                                      true, // Giữ trạng thái controller
+                                  maintainState: true, // Giữ trạng thái controller
                                   child: TextField(
                                     controller:
                                         controller
