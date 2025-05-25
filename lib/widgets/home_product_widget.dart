@@ -51,23 +51,23 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
                         height: 220,
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          product.name,
-                          style: textTheme(
-                            context,
-                          ).titleSmall?.copyWith(color: Colors.deepOrange),
-                        ),
-                        Text(
-                          "\$${product.price.minimumCustomerEnteredPrice.toInt()} - \$${product.price.maximumCustomerEnteredPrice.toInt()}",
-                          style: textTheme(
-                            context,
-                          ).bodyLarge?.copyWith(color: Colors.deepOrange),
-                        ),
-                      ],
-                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Text(
+                    //       product.name,
+                    //       style: textTheme(
+                    //         context,
+                    //       ).titleSmall?.copyWith(color: Colors.deepOrange),
+                    //     ),
+                    //     Text(
+                    //       "\$${product.price.minimumCustomerEnteredPrice.toInt()} - \$${product.price.maximumCustomerEnteredPrice.toInt()}",
+                    //       style: textTheme(
+                    //         context,
+                    //       ).bodyLarge?.copyWith(color: Colors.deepOrange),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               );
