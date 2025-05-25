@@ -11,7 +11,9 @@ import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
+import 'package:hkcoin/presentation.pages/news_category_detail_page.dart';
 import 'package:hkcoin/presentation.pages/news_details_page.dart';
+import 'package:hkcoin/presentation.pages/news_page.dart';
 import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
 import 'package:hkcoin/presentation.pages/private_message_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
@@ -40,7 +42,9 @@ class AppGetRoutes {
       name: ProductDetailPage.route,
       page: () => const ProductDetailPage(),
     ),
+    GetPage(name: NewsPage.route, page: () => const NewsPage()),
     GetPage(name: NewsDetailPage.route, page: () => const NewsDetailPage()),
+    GetPage(name: NewsCategoryDetailPage.route, page: () => const NewsCategoryDetailPage()),
     GetPage(name: CartPage.route, page: () => const CartPage()),
     GetPage(name: CustomerInfoPage.route, page: () => const CustomerInfoPage()),
     GetPage(

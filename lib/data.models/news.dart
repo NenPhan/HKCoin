@@ -1,5 +1,39 @@
 import 'dart:convert';
 
+NewsPagination newsPaginationFromJson(String str) =>
+    NewsPagination.fromJson(json.decode(str));
+class NewsPagination {
+  int? pageNumber;
+  int? pageSize;
+  int? totalPages;
+  int? totalRecords;
+  bool? hasNextPage;
+  List<News>? news;
+
+  NewsPagination({
+    this.pageNumber,
+    this.pageSize,
+    this.totalPages,
+    this.totalRecords,    
+    this.hasNextPage,
+    this.news,
+  });
+
+  factory NewsPagination.fromJson(Map<String, dynamic> json) =>
+      NewsPagination(
+        pageNumber: json["PageNumber"],
+        pageSize: json["PageSize"],
+        totalPages: json["TotalPages"],
+        totalRecords: json["TotalRecords"],
+        hasNextPage: (json["PageNumber"] ?? 1) < (json["TotalPages"] ?? 1),
+        news:
+            json["Data"] == null
+                ? null
+                : (json["Data"] as List)
+                    .map((e) => News.fromJson(e))
+                    .toList(),
+      ); 
+}
 News newsFromJson(String str) => News.fromJson(json.decode(str));
 
 String newsToJson(News data) => json.encode(data.toJson());

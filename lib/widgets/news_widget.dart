@@ -5,6 +5,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/data.models/news.dart';
 import 'package:hkcoin/presentation.pages/news_details_page.dart';
+import 'package:hkcoin/presentation.pages/news_page.dart';
 import 'package:hkcoin/widgets/shimmer_container.dart';
 
 class NewsListWidget extends StatefulWidget {
@@ -40,7 +41,7 @@ class _NewsListWidgetState extends State<NewsListWidget> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(NewsDetailPage.route);
+                    Get.toNamed(NewsPage.route);
                   },
                   child: Text(
                     tr("Common.Cms.ReadMore"), // Replace with your translation key
