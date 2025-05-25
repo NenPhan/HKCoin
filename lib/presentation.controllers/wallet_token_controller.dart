@@ -15,7 +15,9 @@ class WalletTokenController extends GetxController {
 
   getWalletTokens() async {
     isLoading.value = true;
-    handleEither(await CustomerRepository().getWalletTokens(), (r) {
+    await handleEitherReturn(await CustomerRepository().getWalletTokens(), (
+      r,
+    ) async {
       walletTokens = r;
     });
     isLoading.value = false;
