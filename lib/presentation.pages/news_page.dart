@@ -83,57 +83,65 @@ class _NewsPageState extends State<NewsPage> {
   }
   Widget _buildNewsCategoriesSection(List<NewsCategory> categories) {      
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [        
-          ...categories.map((category) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      category.name,
-                      style: textTheme(context).titleLarge,
+        crossAxisAlignment: CrossAxisAlignment.start,        
+        children: [       
+          ...categories.map((category) => Container(
+             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.grey.withOpacity(0.3),
+            ),
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        category.name,
+                        style: textTheme(context).titleLarge,
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(NewsCategoryDetailPage.route, arguments: category.id);
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(NewsCategoryDetailPage.route, arguments: category.id);
+                      },
+                      child: Text(                       
+                        tr("Common.Cms.ReadMore"), // Replace with your translation key
+                        style: textTheme(context).bodyMedium?.copyWith(
+                            //  color: Colors.blue, // Customize the style as needed
+                              fontWeight: FontWeight.w400,
+                            ),                        
+                      ),
+                    ),
+                  ],
+                ),              
+                const SizedBox(height: 8),              
+                // Danh sách danh mục con (cuộn ngang)
+                SizedBox(
+                  height: 40, // Chiều cao của danh mục con
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: category.subCategories.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final subCategory = category.subCategories[index];
+                      return _newsCategoryChip(category: subCategory);
                     },
-                    child: Text(                       
-                      tr("Common.Cms.ReadMore"), // Replace with your translation key
-                      style: textTheme(context).bodyMedium?.copyWith(
-                          //  color: Colors.blue, // Customize the style as needed
-                            fontWeight: FontWeight.w400,
-                          ),                        
-                    ),
                   ),
-                ],
-              ),              
-              const SizedBox(height: 8),              
-              // Danh sách danh mục con (cuộn ngang)
-              SizedBox(
-                height: 40, // Chiều cao của danh mục con
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: category.subCategories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) {
-                    final subCategory = category.subCategories[index];
-                    return _newsCategoryChip(category: subCategory);
+                ),  
+                GetBuilder<NewsController>(
+                  id: 'news-list-${category.id}',                
+                  builder: (_) {                  
+                      return _buildNewsListSection(category.id);                  
                   },
-                ),
-              ),  
-              GetBuilder<NewsController>(
-                id: 'news-list-${category.id}',                
-                builder: (_) {                  
-                    return _buildNewsListSection(category.id);                  
-                },
-              ),               
-              const SizedBox(height: 20),
-            ],
-          )).toList(),
+                ),               
+                const SizedBox(height: 20),
+              ],
+            ),
+          )),           
         ],
       );
     }
