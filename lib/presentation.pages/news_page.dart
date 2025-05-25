@@ -120,18 +120,22 @@ class _NewsPageState extends State<NewsPage> {
                 ),              
                 const SizedBox(height: 8),              
                 // Danh sách danh mục con (cuộn ngang)
-                SizedBox(
-                  height: 40, // Chiều cao của danh mục con
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: category.subCategories.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) {
-                      final subCategory = category.subCategories[index];
-                      return _newsCategoryChip(category: subCategory);
-                    },
-                  ),
-                ),  
+                Visibility(
+                  visible:  category.subCategories.isNotEmpty,
+                  child: SizedBox(
+                    height: 40, // Chiều cao của danh mục con
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: category.subCategories.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final subCategory = category.subCategories[index];
+                        return _newsCategoryChip(category: subCategory);
+                      },
+                    ),
+                  ),  
+                ),
+                
                 GetBuilder<NewsController>(
                   id: 'news-list-${category.id}',                
                   builder: (_) {                  

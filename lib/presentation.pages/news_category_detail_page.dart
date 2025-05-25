@@ -76,18 +76,21 @@ class _NewsCategoryDetailPageState extends State<NewsCategoryDetailPage> {
                     spacing: 10,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                       SizedBox(
-                        height: 40, // Chiều cao của danh mục con
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: newsDetail.subCategories.length,
-                          separatorBuilder: (_, __) => const SizedBox(width: 12),
-                          itemBuilder: (context, index) {
-                            final subCategory = newsDetail.subCategories[index];
-                            return _newsCategoryChip(category: subCategory);
-                          },
-                        ),
-                      ),                       
+                      Visibility(
+                        visible: newsDetail.subCategories.isNotEmpty,
+                        child: SizedBox(
+                          height: 40, // Chiều cao của danh mục con                        
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: newsDetail.subCategories.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 12),
+                            itemBuilder: (context, index) {
+                              final subCategory = newsDetail.subCategories[index];
+                              return _newsCategoryChip(category: subCategory);
+                            },
+                          ),
+                        ),   
+                      ),                                          
                       GetBuilder<NewsController>(
                         id: 'news-list-${newsDetail.id}',                
                         builder: (newsControllers) {                                  
