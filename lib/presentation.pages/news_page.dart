@@ -54,16 +54,10 @@ class _NewsPageState extends State<NewsPage> {
                             },
                           ),         
                           const SizedBox(height: 30),            
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              // ignore: deprecated_member_use
-                              color: Colors.grey.withOpacity(0.3),                                                            
-                            ),
-                            padding: const EdgeInsets.all(16),
+                          Visibility(        
+                            visible: controller.categories.isNotEmpty,                                               
                             child: Column(
-                                children: [
-                                  if(controller.categories.isNotEmpty)
+                                children: [                                 
                                     _buildNewsCategoriesSection(controller.categories),
                                 ],
                               )
