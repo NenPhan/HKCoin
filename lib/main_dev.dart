@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/core/deep_link_manager.dart';
 import 'package:hkcoin/core/firebase_service.dart';
 import 'package:hkcoin/core/injection.dart';
 import 'package:hkcoin/core/config/app_config.dart';
@@ -24,6 +25,7 @@ void main() async {
   );
   await Injection.setup();
   await initializeFirebaseService();
+  DeeplinkManager.initDeepLinks();
   TimeConverter.initialize();
   var localeController = Get.find<LocaleController>();
   runApp(

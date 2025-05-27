@@ -15,6 +15,13 @@ class RegisterController extends GetxController {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final TextEditingController referralCodeController = TextEditingController();
+  @override
+  void onInit() {
+    if (Get.arguments != null) {
+      referralCodeController.text = Get.arguments["refcode"] ?? "";
+    }
+    super.onInit();
+  }
 
   void register() async {
     if (formKey.currentState!.validate()) {

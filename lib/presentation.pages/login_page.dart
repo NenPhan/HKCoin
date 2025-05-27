@@ -5,7 +5,6 @@ import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/login_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
-import 'package:hkcoin/widgets/button_loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 import 'package:restart_app/restart_app.dart';
@@ -19,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final LoginController controller = LoginController();
+  final LoginController controller = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

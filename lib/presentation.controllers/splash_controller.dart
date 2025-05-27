@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hkcoin/core/deep_link_manager.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
@@ -11,5 +12,6 @@ class SplashController extends GetxController {
     } else {
       Get.offAllNamed(LoginPage.route);
     }
+    await DeeplinkManager.checkInitLink();
   }
 }
