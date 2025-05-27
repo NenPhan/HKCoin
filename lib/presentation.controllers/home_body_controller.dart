@@ -29,13 +29,13 @@ class HomeBodyController extends GetxController {
   List<News> news = [];
   List<Slide> slides = [];
   Rx<CheckUpdateResult?> updateResult = Rx<CheckUpdateResult?>(null);
-
   @override
   void onInit() {
     getProductsData();
     getCustomerData();
     getKHCoinData();
     getNewsData();
+    
     getSlideData();
     updateDeviceToken();
     if(Platform.isAndroid)
@@ -112,14 +112,14 @@ class HomeBodyController extends GetxController {
     });
   }
 
-  void getNewsData() async {
-    isLoadingNews.value = true;
-    await handleEither(await NewsRepository().getNews(), (r) {
-      news = r;
-    });
-    isLoadingNews.value = false;
-    update(["news-list"]);
-  }
+   void getNewsData() async {  
+     isLoadingNews.value = true;
+     await handleEither(await NewsRepository().getNews(), (r) {
+       news = r;
+     });
+     isLoadingNews.value = false;
+     update(["news-list"]);
+   }
 
   void getSlideData() async {
     isLoadingSlide = true;

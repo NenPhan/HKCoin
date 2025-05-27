@@ -9,6 +9,7 @@ import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
+import 'package:hkcoin/presentation.pages/about_us_page.dart';
 import 'package:hkcoin/presentation.pages/change_password_page.dart';
 import 'package:hkcoin/presentation.pages/customer_downlines_page.dart';
 import 'package:hkcoin/presentation.pages/customer_info_page.dart';
@@ -71,6 +72,11 @@ class _ProfilePageState extends State<ProfilePage> {
       "icon": Icons.shield_outlined,
       "page": ChangePasswordPage.route,
     },
+    {
+      "name":tr("AboutUs"),
+      "icon":Icons.info,
+      "page":AboutUsPage.route
+    }
   ];
   @override
   void initState() {

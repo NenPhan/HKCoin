@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:hkcoin/presentation.pages/about_us_page.dart';
 import 'package:hkcoin/presentation.pages/add_address_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/presentation.pages/customer_downlines_page.dart';
@@ -38,6 +39,7 @@ class AppGetRoutes {
     GetPage(name: LoginPage.route, page: () => const LoginPage()),
     GetPage(name: RegisterPage.route, page: () => const RegisterPage()),
     GetPage(name: HomePage.route, page: () => const HomePage()),
+    GetPage(name: AboutUsPage.route, page: () => const AboutUsPage()),
     GetPage(
       name: ProductDetailPage.route,
       page: () => const ProductDetailPage(),
@@ -71,6 +73,6 @@ class AppGetRoutes {
     GetPage(name: CustomerDownlinesPage.route, page: () => const CustomerDownlinesPage()),
     GetPage(name: PrivateMessagePage.route, page: () => const PrivateMessagePage()),
     GetPage(name: PrivateMesageDetailPage.route, page: () => const PrivateMesageDetailPage()),    
-    GetPage(name: AddWalletTokenPage.route, page: () => const AddWalletTokenPage())    
+    GetPage(name: AddWalletTokenPage.route, page: () => const AddWalletTokenPage())
   ];
 }
