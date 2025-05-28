@@ -52,6 +52,12 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="sandbox.hakacoin.net" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="hakacoin.net" />
+            </intent-filter>
             <!-- Deep Link sample -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

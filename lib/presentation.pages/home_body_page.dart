@@ -31,7 +31,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
  @override
   void initState() {
     ever(homeBodyController.updateResult, (result) {
-      if (result != null) {
+      if (result != null && result.updateAvailable) {
         showUpdateDialog(Get.context!, updateResult: result);
       }
     });
