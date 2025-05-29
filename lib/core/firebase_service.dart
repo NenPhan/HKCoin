@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -36,8 +38,12 @@ Future<void> initializeFirebaseService() async {
     return;
   }
 
-  var token = await messaging.getToken();
-  log('Firebase FCM token $token', name: "FIREBASE");
+  try {
+    var token = await messaging.getToken();
+    log('Firebase FCM token $token', name: "FIREBASE");
+  } catch (e) {
+    print(e);
+  }
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
