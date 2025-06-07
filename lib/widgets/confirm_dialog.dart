@@ -1,0 +1,119 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+// Controller to manage loading state
+class ConfirmDialogController extends GetxController {
+  var isLoading = false.obs;
+}
+
+class ConfirmDialog extends StatelessWidget {
+  final String title;
+  final String content;
+  final String okText;
+  final String cancelText;
+  final Color okButtonColor;
+  final VoidCallback? onOkPressed;
+  final VoidCallback? onCancelPressed;
+
+  const ConfirmDialog({
+    Key? key,
+    required this.title,
+    required this.content,
+    this.okText = 'OK',
+    this.cancelText = 'Cancel',
+    this.okButtonColor = Colors.blue,
+    this.onOkPressed,
+    this.onCancelPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Initialize controller for this dialog instance
+    final dialogController = Get.put(ConfirmDialogController(), tag: UniqueKey().toString());
+
+    return AlertDialog(
+      title: Text(
+        tr(title),
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: Text(
+        tr(content),
+        style: const TextStyle(fontSize: 16),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      actions: [
+        TextButton(
+          onPressed: onCancelPressed ?? () => Navigator.of(context).pop(),
+          child: Text(
+            tr(cancelText),
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        Obx(() => ElevatedButton(
+              onPressed: dialogController.isLoading.value
+                  ? null // Disable button when loading
+                  : () async {
+                      dialogController.isLoading.value = true;
+                      onOkPressed?.call();
+                      dialogController.isLoading.value = false;
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: okButtonColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: dialogController.isLoading.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      tr(okText),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+            )),
+      ],
+    );
+  }
+
+  static Future<void> show({
+    required BuildContext context,
+    required String title,
+    required String content,
+    String okText = 'OK',
+    String cancelText = 'Cancel',
+    Color okButtonColor = Colors.blue,
+    VoidCallback? onOkPressed,
+    VoidCallback? onCancelPressed,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (context) => ConfirmDialog(
+        title: title,
+        content: content,
+        okText: okText,
+        cancelText: cancelText,
+        okButtonColor: okButtonColor,
+        onOkPressed: onOkPressed,
+        onCancelPressed: onCancelPressed,
+      ),
+    );
+  }
+}

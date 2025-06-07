@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
@@ -151,7 +149,7 @@ class PrivateMessageController extends GetxController {
         ]);
       }
     } catch (ex) {
-      log('Error marking message as read: $ex');
+      //log('Error marking message as read: $ex');
       rethrow;
     }
   }

@@ -7,7 +7,6 @@ import 'package:hkcoin/core/firebase_service.dart';
 import 'package:hkcoin/core/injection.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
-import 'package:hkcoin/core/time_converter.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 void main() async {
@@ -26,11 +25,10 @@ void main() async {
   await Injection.setup();
   await initializeFirebaseService();
   DeeplinkManager.initDeepLinks();
-  TimeConverter.initialize();
   var localeController = Get.find<LocaleController>();
   runApp(
     EasyLocalization(
-      supportedLocales: localeController.listLocale,
+      supportedLocales: localeController.listLocal.isNotEmpty ? localeController.listLocal : [const Locale('en', 'US')],
       startLocale:
           localeController.translationFile != null
               ? null

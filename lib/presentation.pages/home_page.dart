@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:hkcoin/presentation.pages/coming_soon_page.dart';
 import 'package:hkcoin/presentation.pages/home_body_page.dart';
 import 'package:hkcoin/presentation.pages/profile_page.dart';
+import 'package:hkcoin/presentation.pages/qr_scan_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_histories_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_page.dart';
 import 'package:hkcoin/widgets/animated_notch_bottom_bar-main/lib/src/models/bottom_bar_item_model.dart';
@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<BottomBarItem> items = [
     const BottomBarItem(inActiveItem: Icon(Icons.qr_code, color: Colors.white)),
   ];
+  
   void getItems(int index) {
     items = [
       BottomBarItem(
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               children: const [
                 HomeBodyPage(),
                 WalletPage(),
-                ComingSoonPage(),
+                QRScanPage(),
                 WalletHistoryPage(),
                 ProfilePage(),
               ],

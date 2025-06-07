@@ -10,6 +10,11 @@ class Endpoints {
   static String getWalletInfo = "Wallets/Dashboard";
   static String getWalletBalances = "Wallets/Balances";
   static String addWalletsToken="Wallets/AddToken";
+  static String addWallet="BlockChanges/AddWallet";
+  static String selectedWallet="BlockChanges/SelectedWallet";
+  static String getNetWork = "BlockChanges/NetWork";
+  static String getBlockchainWalletInfo="BlockChanges/GetWalletInfo";
+  static String getBlockchainWallet="BlockChanges/Wallets";
   static String getWalletHistories = "WalletHistories/Search";
   static String getCart = "ShoppingCartItems/GetCart";
   static String addToCart = "ShoppingCartItems/AddToCart";

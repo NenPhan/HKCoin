@@ -1,11 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
 class TimeConverter {
+  static bool _initialized = false;
   /// Khởi tạo timezone database (chỉ cần gọi 1 lần khi app khởi động)
-  static void initialize() {
-    tz.initializeTimeZones();
+  static Future<void> initialize() async {    
+    if (!_initialized) {       
+      await Future(() => tz.initializeTimeZones());
+      _initialized = true;
+    }    
   }
 
   /// Chuyển đổi DateTime UTC sang Local Time
@@ -19,8 +24,9 @@ class TimeConverter {
   }
 
   /// Chuyển đổi UTC sang Local Time với timezone cụ thể (sử dụng package timezone)
-  static DateTime utcToLocalTimezone(DateTime utcTime, String timeZoneName) {
+  static Future<DateTime> utcToLocalTimezone(DateTime utcTime, String timeZoneName) async {
     try {
+      await initialize();
       final location = tz.getLocation(timeZoneName);
       return tz.TZDateTime.from(utcTime, location);
     } catch (e) {      
@@ -105,7 +111,7 @@ extension DateTimeStringExtension on String {
   }
 
   /// Chuyển đổi chuỗi UTC sang DateTime với timezone cụ thể
-  DateTime utcToTimezone(String timezone) {
+  Future<DateTime> utcToTimezone(String timezone) {
     return TimeConverter.utcToLocalTimezone(DateTime.parse(this), timezone);
   }
 
@@ -141,7 +147,7 @@ extension DateTimeExtension on DateTime {
   }
 
   /// Chuyển đổi sang timezone cụ thể
-  DateTime convertToUserTimezone(String timezone) {
+  Future<DateTime> convertToUserTimezone(String timezone) {
     return TimeConverter.utcToLocalTimezone(this, timezone);
   }
 

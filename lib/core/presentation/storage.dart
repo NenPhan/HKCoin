@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:hkcoin/data.models/customer_info.dart';
+import 'package:hkcoin/data.models/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyStorage {
   final tokenKey = "/token_key";
   final customerKey = "/customer_key";
   final notiKey = "/noti_key";
+  final networkKey = "/network_key";
 }
 
 class Storage {
@@ -84,5 +86,20 @@ extension NotiStorage on Storage {
 
   Future deleteNotiPayload() async {
     await preferences!.remove(_key.notiKey);
+  }
+}
+extension NetworkStorage on Storage {
+  Future<void> saveNetWork(Network network) async {    
+    await preferences!.setString(_key.networkKey, jsonEncode(network.toJson()));
+  }
+
+  Future<Network?> getNetWork() async {
+    var savedString = preferences!.getString(_key.networkKey);     
+    if (savedString == null) return null;
+    return Network.fromJson(jsonDecode(savedString));    
+  }
+
+  Future deleteNetWork() async {
+    await preferences!.remove(_key.networkKey);
   }
 }

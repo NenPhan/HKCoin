@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/presentation.controllers/private_message_controller.dart';
-import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/count_badge.dart';
@@ -39,20 +38,6 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
     ]);
   }
 
-  Future<void> _loadMoreData(int tabIndex) async {
-    final isRead = tabIndex == 1;
-    final pagination =
-        isRead
-            ? controller.readMessagesPagination
-            : controller.newMessagesPagination;
-    if (!controller.isLoadingMore.value && (pagination?.hasNextPage ?? false)) {
-      await controller.gePrivateMessagesData(
-        page: (pagination?.pageNumber ?? 0) + 1,
-        isRead: isRead,
-        isLoadMore: true,
-      );
-    }
-  }
 
   // Hàm xử lý kéo xuống làm mới
   Future<void> _refreshData(bool isRead) async {

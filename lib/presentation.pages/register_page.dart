@@ -18,7 +18,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final RegisterController registerController = Get.put(RegisterController());
+  final RegisterController registerController = Get.put(RegisterController()); 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller:
                                   registerController.referralCodeController,
                               label: tr("Account.Register.ReferralCode"),
+                              readOnly: registerController.referralCodeController.text.isNotEmpty,
                               validator:
                                   (value) => requiredValidator(
                                     value,

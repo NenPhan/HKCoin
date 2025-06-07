@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import 'package:hkcoin/data.models/product.dart';
 import 'package:hkcoin/data.models/slide.dart';
 import 'package:hkcoin/presentation.controllers/home_body_controller.dart';

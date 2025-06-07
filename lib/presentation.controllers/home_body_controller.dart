@@ -31,17 +31,22 @@ class HomeBodyController extends GetxController {
   Rx<CheckUpdateResult?> updateResult = Rx<CheckUpdateResult?>(null);
   @override
   void onInit() {
-    getProductsData();
-    getCustomerData();
-    getKHCoinData();
-    getNewsData();
-    
-    getSlideData();
-    updateDeviceToken();
-    if(Platform.isAndroid)
-    {
-      checkUpdate();
-    }
+    Future.wait([
+      Future(() => getProductsData()),
+      Future(() => getCustomerData()),    
+      Future(() => getKHCoinData()),   
+      Future(() => getNewsData()),   
+      Future(() => getSlideData()),   
+      Future(() => updateDeviceToken()),     
+    ]).then((_) {
+      if (Platform.isAndroid) {
+        checkUpdate();
+      }
+    });    
+    // if(Platform.isAndroid)
+    // {
+    //   checkUpdate();
+    // }
     handleNotiOpenApp();
     super.onInit();
   }

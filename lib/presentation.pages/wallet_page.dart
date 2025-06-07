@@ -2,147 +2,430 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/presentation.controllers/wallet_controller.dart';
-import 'package:hkcoin/presentation.pages/home_page.dart';
-import 'package:hkcoin/widgets/loading_widget.dart';
+import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
+import 'package:hkcoin/presentation.pages/add_wallet_bycontract_page.dart';
+import 'package:hkcoin/presentation.pages/add_wallet_page.dart';
+import 'package:hkcoin/widgets/formated_number_widget.dart';
+import 'package:hkcoin/widgets/screen_popup_widget.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
+  static String route = "/wallet-info-page";
 
   @override
   State<WalletPage> createState() => _WalletPageState();
 }
 
 class _WalletPageState extends State<WalletPage> {
-  final WalletController controller = Get.put(WalletController());
-
+  final controller = Get.put(BlockchangeWalletController());
+  Future<void> _onRefresh() async {    
+    // Call getWallet on refresh
+   await controller.getWalletInfo();
+    // Update GetBuilder
+    controller.update(['wallet-info-page']);    
+  }   
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(scrSize(context).width * 0.03),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  tr("Account.Dashboard"),
-                  style: textTheme(context).titleLarge,
+    return GetBuilder<BlockchangeWalletController>(
+      id: "wallet-info-page",
+      builder: (controller) {
+        return Scaffold(
+          body: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                  child: Column(
+                    children: [
+                      // Header Row
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.settings),
+                                onPressed: () {
+                                  ScreenPopup(title: "Chọn mạng",
+                                    isDismissible: false,
+                                    backgroundColor: const Color(0xFF1B1B1B),
+                                    heightFactor: .75,         
+                                    //onShow: () =>controller.getNetworks(),     
+                                    child: Obx(() => Column(
+                                      children: [    
+                                        const SizedBox(height: 10),                                                                        
+                                        TextField(
+                                          controller: controller.searchController,
+                                          decoration: const InputDecoration(
+                                            hintText: 'Tìm kiếm network...',
+                                            prefixIcon: Icon(Icons.search),
+                                            border: OutlineInputBorder(),
+                                            filled: true,
+                                            fillColor: Colors.white10,
+                                          ),
+                                          onChanged: (value) {
+                                            //controller.filterNetworks(value);
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                          SizedBox(
+                                            height: MediaQuery.of(context).size.height * 0.55,
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              itemCount: controller.listNetwork.length, // Fix null list
+                                              itemBuilder: (ctx, index) {                                                
+                                                final network = controller.listNetwork[index];
+                                                final isSelected = controller.selectedNetwork.value?.id == network.id; // Fix null selected                                                
+                                                return Card(
+                                                  margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                                                  color: isSelected ? const Color(0xFF353434) : null,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(4),
+                                                  ),
+                                                  child: Stack(
+                                                    children: [
+                                                      if (isSelected)
+                                                        Positioned(
+                                                          left: 0,
+                                                          top: 0,
+                                                          bottom: 0,
+                                                          child: Container(
+                                                            width: 4,
+                                                            height: 15,
+                                                            decoration: const BoxDecoration(
+                                                              color: Colors.blue,
+                                                              borderRadius: BorderRadius.only(
+                                                                topLeft: Radius.circular(4),
+                                                                bottomLeft: Radius.circular(4),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ListTile(
+                                                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                        leading: const Icon(Icons.wifi, color: Colors.white70, size: 24),
+                                                        title: Text(
+                                                          network.name ?? "Unnamed Wallet",
+                                                          style: const TextStyle(color: Colors.white),
+                                                        ),
+                                                        trailing: const Icon(Icons.more_vert, color: Colors.white70),
+                                                        onTap: (){
+                                                          controller.selectNetwork(network);
+                                                          Navigator.pop(context);
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),                                            
+                                          ),
+                                      ],
+                                    )),
+                                    ).show(context);  
+                                },
+                              ),                           
+                            ],
+                          ),
+                          Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                   GestureDetector(
+                                    onTap: (){
+                                      print(controller.wallets.length);  
+                                      ScreenPopup(title: "Quản lý ví",
+                                        isDismissible: false,
+                                        backgroundColor: const Color(0xFF1B1B1B),
+                                        heightFactor: .65,
+                                        onShow: () => controller.getWallets(),                                 
+                                        child: Column(
+                                          children: [
+                                          SizedBox(
+                                            height: MediaQuery.of(context).size.height * 0.4,
+                                              child: GetBuilder<BlockchangeWalletController>(                                                
+                                                id: "blockchange-wallets",
+                                                builder: (controller) {
+                                                  if (controller.isLoadingWallets.value || controller.wallets.isEmpty) {
+                                                    return const Center(child: CircularProgressIndicator());
+                                                  }                       
+                                                                                                          
+                                                  return ListView.builder(
+                                                    itemCount: controller.wallets.length,
+                                                    itemBuilder: (ctx, index) {
+                                                      final wallet = controller.wallets[index];
+                                                      return ListTile(
+                                                        onTap: () {
+                                                          if(wallet !=null && !wallet.selected!){
+                                                            controller.selectWallet(wallet);
+                                                            Get.back(result: true);
+                                                          }                                                          
+                                                        },
+                                                        title: Text(wallet.name ?? "Unnamed Wallet"),
+                                                        subtitle:FormattedNumber(value: wallet.balance??0,decimalDigits: 2,
+                                                          style: const TextStyle(fontSize: 18),
+                                                          prefix: r"$",),                                                        
+                                                        trailing: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            if (wallet.selected??false)
+                                                              const CircleAvatar(
+                                                                radius: 10,
+                                                                backgroundColor: Colors.blue,
+                                                                child: Icon(Icons.check, size: 12, color: Colors.white),
+                                                              ),
+                                                            const SizedBox(width: 5),
+                                                            const Icon(Icons.chevron_right),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),                            
+                                              SafeArea(
+                                                top: false,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                                  child: SizedBox(
+                                                    width: double.infinity,
+                                                    child: ElevatedButton.icon(
+                                                      style: ElevatedButton.styleFrom(
+                                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                                        minimumSize: const Size.fromHeight(50),
+                                                      ),
+                                                      onPressed: () {
+                                                        Get.toNamed(AddWalletPage.route)?.then((result) {
+                                                          if (result != null) {
+                                                           controller.getWalletInfo();
+                                                            Get.back(result: true);
+                                                          }
+                                                        });
+                                                      },
+                                                      icon: const Icon(Icons.save, size: 18),
+                                                      label: Text(tr("Account.wallet.Addnew"), style: const TextStyle(fontSize: 14)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        )
+                                        )
+                                      .show(context);  
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          controller.walletsInfo?.name??"Thêm ví",
+                                          style: textTheme(context).titleMedium?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16
+                                              ),
+                                        ),            
+                                        const Icon(
+                                          Icons.arrow_drop_down,
+                                          size: 20,
+                                        ),                                      
+                                      ],
+                                    ),
+                                  ),       
+                                ],
+                              ),
+                              Text(
+                                controller.walletsInfo?.walletAddressFormat??"",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),                                               
+                          IconButton(
+                            icon: const Icon(Icons.qr_code_scanner),
+                            onPressed: () {
+                              // Handle QR scan
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      // Balance
+                      FormattedNumber(
+                        value: controller.walletsInfo?.totalBalance??0,
+                        decimalDigits: 2,
+                        style: const TextStyle(fontSize: 22),
+                        prefix: r"$",
+                      ),                                                                                                                      
+                      const SizedBox(height: 40),                      
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 35,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2), // Nền trắng nhạt
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.add, size: 28),
+                                constraints: const BoxConstraints(),
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  if(controller.walletsInfo == null){
+                                    Get.toNamed(AddWalletPage.route)?.then((result) {
+                                      if (result != null) {
+                                        controller.getWalletInfo();
+                                         Get.back(result: true);
+                                      }
+                                    });
+                                  }else{
+                                    Get.toNamed(AddWalletWithContractPage.route)?.then((result) {
+                                      if (result != null) {
+                                        controller.getWalletInfo();
+                                         Get.back(result: true);
+                                      }
+                                    });
+                                  }                            
+                                },
+                              ),
+                            ),
+                          ), // Hide widget when walletInfo is null                                        
+                      SizedBox(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: controller.walletInfos.length,
+                          itemBuilder: (context, index) {
+                            final wallet = controller.walletInfos[index];
+                            return Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              color: const Color(0xFF1E1E1E),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  children: [
+                                    // Chain Logo/Icon
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue.withOpacity(0.2),
+                                      ),
+                                      child: const Icon(Icons.account_balance_wallet, color: Colors.blue),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    // Chain Info
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            wallet.chain.name,                                            
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            wallet.walletAddress,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Balance Info
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        FormattedNumber(value: wallet.totalBalance ,decimalDigits:wallet.chain==Chain.BNB? 5:2,
+                                          style: const TextStyle(fontSize: 18),
+                                          suffix: wallet.chain.name,),
+                                        const SizedBox(height: 4),
+                                        FormattedNumber(value: wallet.totalBalanceUSD ,decimalDigits: 2,
+                                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                          prefix: r"$",
+                                          ),                                                                                
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Không thấy token của bạn? ',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                               if(controller.walletsInfo == null){
+                                  Get.toNamed(AddWalletPage.route)?.then((result) {
+                                    if (result != null) {
+                                      controller.getWalletInfo();
+                                       Get.back(result: true);
+                                    }
+                                  });
+                                }else{
+                                    Get.toNamed(AddWalletWithContractPage.route)?.then((result) {
+                                      if (result != null) {
+                                        controller.getWalletInfo();
+                                         Get.back(result: true);
+                                      }
+                                    });
+                                  }      
+                              },
+                              child: const Text(
+                                'Nhập token',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                controller.isLoading.value
-                    ? const Expanded(child: Center(child: LoadingWidget()))
-                    : controller.walletInfo == null
-                    ? Container()
-                    : SpacingColumn(
-                      spacing: 10,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(
-                            scrSize(context).width * 0.04,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: SpacingColumn(
-                            spacing: 10,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                tr("Account.Report.Walletmain"),
-                                style: textTheme(context).bodyLarge,
-                              ),
-                              Text(
-                                controller.walletInfo!.walletMain,
-                                style: textTheme(context).titleLarge,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                            scrSize(context).width * 0.04,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: SpacingColumn(
-                            spacing: 10,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                tr("Account.Report.Shopping"),
-                                style: textTheme(context).bodyLarge,
-                              ),
-                              Text(
-                                controller.walletInfo!.walletShopping,
-                                style: textTheme(context).titleLarge,
-                              ),
-                              Text(
-                                controller.walletInfo!.profitsShopping,
-                                style: textTheme(context).bodyLarge,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                            scrSize(context).width * 0.04,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: SpacingColumn(
-                            spacing: 10,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                tr("Account.Report.Coupon"),
-                                style: textTheme(context).bodyLarge,
-                              ),
-                              Text(
-                                controller.walletInfo!.walletCoupon,
-                                style: textTheme(context).titleLarge,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(
-                            scrSize(context).width * 0.04,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: SpacingColumn(
-                            spacing: 10,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                tr("Account.Report.OrderTotal"),
-                                style: textTheme(context).bodyLarge,
-                              ),
-                              Text(
-                                controller.walletInfo!.orderCount,
-                                style: textTheme(context).titleLarge,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: homeBottomPadding),
-                      ],
-                    ),
-              ],
+              )
+              
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
-  }
+  }  
 }

@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () async {
                       if (controller.isLoading.value) return;
                       controller.login(() async {
-                        await Future.delayed(Duration(seconds: 1));
+                        await Future.delayed(const Duration(seconds: 1));
                         // Get.offAllNamed(HomePage.route);
                         Restart.restartApp();
                       });

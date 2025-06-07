@@ -11,7 +11,17 @@ import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_histories.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
 import 'package:hkcoin/data.models/wallet_token.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
 
+// DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+// AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+// print('Running on ${androidInfo.model}');  // e.g. "Moto G (4)"
+
+// IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+// print('Running on ${iosInfo.utsname.machine}');  // e.g. "iPod7,1"
+
+// WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
+// print('Running on ${webBrowserInfo.userAgent}');  // e.g. "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
 class CustomerRepository {
   Future<Either<Failure, void>> login(String username, String password) {
     return handleRepositoryCall(

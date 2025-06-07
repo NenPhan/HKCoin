@@ -1,6 +1,9 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:hkcoin/presentation.pages/about_us_page.dart';
 import 'package:hkcoin/presentation.pages/add_address_page.dart';
+import 'package:hkcoin/presentation.pages/add_phase_mnemonic_page.dart';
+import 'package:hkcoin/presentation.pages/add_wallet_bycontract_page.dart';
+import 'package:hkcoin/presentation.pages/add_wallet_page.dart';
 import 'package:hkcoin/presentation.pages/address_list_page.dart';
 import 'package:hkcoin/presentation.pages/customer_downlines_page.dart';
 import 'package:hkcoin/presentation.pages/kyc_camera_page.dart';
@@ -21,6 +24,7 @@ import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
 import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_add_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawal_investment_page.dart';
@@ -73,6 +77,11 @@ class AppGetRoutes {
     GetPage(name: CustomerDownlinesPage.route, page: () => const CustomerDownlinesPage()),
     GetPage(name: PrivateMessagePage.route, page: () => const PrivateMessagePage()),
     GetPage(name: PrivateMesageDetailPage.route, page: () => const PrivateMesageDetailPage()),    
-    GetPage(name: AddWalletTokenPage.route, page: () => const AddWalletTokenPage())
+    GetPage(name: AddWalletTokenPage.route, page: () => const AddWalletTokenPage()),    
+    GetPage(name: AddWalletPage.route, page: () => const AddWalletPage()),  
+    GetPage(name: AddMnemonicPage.route, page: () => const AddMnemonicPage()),
+    GetPage(name: WalletPage.route, page: () => const WalletPage()),
+    GetPage(name: AddWalletWithContractPage.route, page: () => const AddWalletWithContractPage())
+    
   ];
 }

@@ -180,36 +180,4 @@ class _CustomerDownlinesPageState extends State<CustomerDownlinesPage>
     );
   }
 
-  Widget _buildNoDataWidget() {
-    return RefreshIndicator(
-      onRefresh: _refreshData,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.people_alt_outlined,
-                  size: 60,
-                  color: Colors.grey,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No customers found',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(color: Colors.grey),
-                ),
-                const SizedBox(height: 8),
-                TextButton(onPressed: _refreshData, child: const Text('Retry')),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_histories_controller.dart';
-import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/nodatawidget_refresh_scroll.dart';
 import 'package:hkcoin/widgets/pagination_scroll_widget.dart';

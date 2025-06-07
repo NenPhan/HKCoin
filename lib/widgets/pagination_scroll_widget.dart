@@ -102,18 +102,6 @@ class _PaginationScrollWidgetState extends State<PaginationScrollWidget> {
         );
   }
 
-  Widget _buildNoMoreDataWidget(BuildContext context) {
-    return widget.noMoreDataWidget ??
-        Padding(
-          padding: widget.padding ?? const EdgeInsets.all(16.0),
-          child: Text(
-            'No more data available',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
-          ),
-        );
-  }
 
   @override
   Widget build(BuildContext context) {
