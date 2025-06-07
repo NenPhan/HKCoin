@@ -3,6 +3,7 @@ import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.datasources/WalletDatasource.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
+import 'package:hkcoin/data.models/customer_wallet_token.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 
@@ -18,6 +19,14 @@ class WalletRepository {
     return handleRepositoryCall(
       onRemote: () async {
         var result = await WalletDatasource().createWallet(wallet);       
+        return Right(result);
+      },
+    );
+  }  
+  Future<Either<Failure, CustomerWalletToken>> createCustomerToken(CustomerWalletToken wallet) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await WalletDatasource().createCustomerToken(wallet);       
         return Right(result);
       },
     );

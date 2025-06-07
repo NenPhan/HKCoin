@@ -15,6 +15,8 @@ class BlockchangeWalletInfo {
   double? totalBalance;
   double? balanceUSD;
   final String? encryptedMnemonic;  
+  final String? privateKey;
+  final String? publicKey;
   final String? encryptionSalt;  
   final int? createWalletTypeId; 
   List<WalletsModel>? walletAddressModel;
@@ -27,6 +29,8 @@ class BlockchangeWalletInfo {
     this.totalBalance,
     this.balanceUSD,
     this.encryptedMnemonic,
+    this.privateKey,
+    this.publicKey,
     this.encryptionSalt,
     this.createWalletTypeId,   
     this.walletAddressModel 
@@ -38,6 +42,8 @@ class BlockchangeWalletInfo {
     networkId: json["NetworkId"],
     totalBalance: json["TotalBalance"],
     encryptedMnemonic: json["EncryptedMnemonic"],
+    privateKey: json["PrivateKey"],
+    publicKey: json["PublicKey"],
     encryptionSalt: json["EncryptionSalt"],
     createWalletTypeId: json["CreateWalletTypeId"],
      walletAddressModel:
@@ -55,6 +61,8 @@ class BlockchangeWalletInfo {
     "NetworkId": networkId,
     "TotalBalance": totalBalance,
     "EncryptedMnemonic": encryptedMnemonic,
+    "PrivateKey": privateKey,
+    "PublicKey": publicKey,    
     "EncryptionSalt": encryptionSalt,
     "CreateWalletTypeId": createWalletTypeId,
     "WalletsModel": walletAddressModel?.map((e) => e.toJson()).toList() ?? [],
@@ -66,8 +74,6 @@ class WalletsModel {
   final String contractAddress; 
   final EthereumNetwork? ethereumNetwork;
   final Chain chain;
-  final String? privateKey;
-  final String? publicKey;
   double? totalBalance;
   double? totalBalanceUSD;
   final String? symbol;
@@ -78,8 +84,6 @@ class WalletsModel {
     required this.contractAddress,
     required this.ethereumNetwork,
     required this.chain,
-    this.privateKey,
-    this.publicKey,
     this.totalBalance,
     this.totalBalanceUSD,
     this.symbol,
@@ -96,8 +100,6 @@ class WalletsModel {
       (e) => e.index == json["Chain"] as int,
       orElse: () => Chain.HKC,
     ),
-    privateKey: json["PrivateKey"],
-    publicKey: json["PublicKey"],
     symbol: json["Symbol"]??"",
     decimals: json["Decimals"],
   );
@@ -106,8 +108,6 @@ class WalletsModel {
     "ContractAddress": contractAddress,
     "EthereumNetwork": ethereumNetwork?.index,//
     "Chain": chain.index,//Token
-    "PrivateKey": privateKey,
-    "PublicKey": publicKey,    
     "Symbol": symbol??"",
     "Decimals": decimals    
   };

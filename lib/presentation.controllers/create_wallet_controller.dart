@@ -95,14 +95,25 @@ class CreateWalletController extends GetxController {
         Get.snackbar("Error", errorMessage.value);
         return;
       }
+      final seed = bip39.mnemonicToSeed(mnemonic);
+      final root = bip32.BIP32.fromSeed(seed);
+      const ethPath = "m/44'/60'/0'/0/0";
       
+      final key = root.derivePath(ethPath);
+      final privateKeyHex = HEX.encode(key.privateKey!);
+      final publicKeyHex = HEX.encode(key.publicKey);
+
+      final credentials = EthPrivateKey.fromHex(privateKeyHex);
+      final address = await credentials.extractAddress();
       // Generate wallets in background
-      final wallets = await _generateWalletsSafe(mnemonic);
+      final wallets = await _generateWalletsSafe(address.hexEip55);
       
       await handleEitherReturn(
         await WalletRepository().createWallet(
           BlockchangeWallet(
             mnemonicOrPrivateKey: encryptText(mnemonic),
+            privateKey: encryptText(privateKeyHex),
+            publicKey: encryptText(publicKeyHex),
             createWalletType: type.index,
             walletAddress: wallets
           ),
@@ -131,9 +142,9 @@ class CreateWalletController extends GetxController {
     return isValid;
   }
 
-  Future<List<WalletAddress>> _generateWalletsSafe(String mnemonic) async {
+  Future<List<WalletAddress>> _generateWalletsSafe(String walletAddress) async {
     try {
-      return await compute(_createBep20WalletsIsolate, mnemonic);
+      return await compute(_createBep20WalletsIsolate, walletAddress);
     } catch (e) {
       errorMessage.value = 'Lỗi tạo ví: ${e.toString()}';
       throw e;
@@ -148,16 +159,16 @@ class CreateWalletController extends GetxController {
     return bip39.validateMnemonic(mnemonic);
   }
 
-  static Future<List<WalletAddress>> _createBep20WalletsIsolate(String mnemonic) async {
+  static Future<List<WalletAddress>> _createBep20WalletsIsolate(String walletAddress) async {
     return [
-      await _generateWalletIsolate(mnemonic, Chain.HKC,"HKC",18, EthereumNetwork.BEP20, "0x377482392014118EBe37662f022939E0b5E5479a"),
-      await _generateWalletIsolate(mnemonic, Chain.BNB, "BNB", 18, EthereumNetwork.BEP20, "0x55d398326f99059fF775485246999027B3197955"),
-      await _generateWalletIsolate(mnemonic, Chain.USDT, "USDT", 18, EthereumNetwork.BEP20, "0x55d398326f99059fF775485246999027B3197955"),
+      await _generateWalletIsolate(walletAddress, Chain.HKC,"HKC",18, EthereumNetwork.BEP20, "0x377482392014118EBe37662f022939E0b5E5479a"),
+      await _generateWalletIsolate(walletAddress, Chain.BNB, "BNB", 18, EthereumNetwork.BEP20, "0x55d398326f99059fF775485246999027B3197955"),
+      await _generateWalletIsolate(walletAddress, Chain.USDT, "USDT", 18, EthereumNetwork.BEP20, "0x55d398326f99059fF775485246999027B3197955"),
     ];
   }
 
   static Future<WalletAddress> _generateWalletIsolate(
-    String mnemonic, 
+    String walletAddress, 
     Chain chain, 
     String symbol,
     int decimals,
@@ -165,24 +176,13 @@ class CreateWalletController extends GetxController {
     String contractAddress
   ) async {
     try {
-      final seed = bip39.mnemonicToSeed(mnemonic);
-      final root = bip32.BIP32.fromSeed(seed);
-      const ethPath = "m/44'/60'/0'/0/0";
       
-      final key = root.derivePath(ethPath);
-      final privateKeyHex = HEX.encode(key.privateKey!);
-      final publicKeyHex = HEX.encode(key.publicKey);
-
-      final credentials = EthPrivateKey.fromHex(privateKeyHex);
-      final address = await credentials.extractAddress();
 
       return WalletAddress(
-        address: address.hexEip55,
+        address: walletAddress,
         contractAddress: contractAddress,
         symbol: symbol,
         decimals: decimals,
-        privateKey: encryptText(privateKeyHex),
-        publicKey: encryptText(publicKeyHex),
         chain: chain,
         networkChain: networkChain.index
       );

@@ -2,7 +2,7 @@
 enum HttpMethod { GET, POST, PUT, DELETE, PATCH }
 enum CreateWalletType {None, Mnemonic, PrivateKey }
 enum EthereumNetwork { Default, BEP20, TRON, ERC20}
-enum Chain { None, USDT, HKC, HTX, BNB}
+enum Chain { None, HKC, USDT, HTX, BNB}
 extension ChainExtension on Chain {
   String get name {
     switch (this) {

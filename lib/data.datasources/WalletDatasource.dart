@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/constants/endpoint.dart';
@@ -7,6 +6,7 @@ import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
+import 'package:hkcoin/data.models/customer_wallet_token.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
@@ -44,6 +44,23 @@ class WalletDatasource {
         contentType: "application/json",
       );
       return BlockchangeWallet.fromJson(response["Data"]);
+    });    
+  }
+  Future<CustomerWalletToken> createCustomerToken(CustomerWalletToken wallet) async {
+    return await handleRemoteRequest(() async {      
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.addCustomerWalletToken,
+           headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+          needAccessToken: true,
+          body: wallet.toJson(),
+        ),
+        contentType: "application/json",
+      );
+      return CustomerWalletToken.fromJson(response["Data"]);
     });    
   }
   Future<bool> selectedWallet(BlockchangeWallet wallet) async {

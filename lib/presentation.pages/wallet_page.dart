@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -140,8 +141,7 @@ class _WalletPageState extends State<WalletPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                    GestureDetector(
-                                    onTap: (){
-                                      print(controller.wallets.length);  
+                                    onTap: (){                                        
                                       ScreenPopup(title: "Quản lý ví",
                                         isDismissible: false,
                                         backgroundColor: const Color(0xFF1B1B1B),
@@ -235,7 +235,22 @@ class _WalletPageState extends State<WalletPage> {
                                         const Icon(
                                           Icons.arrow_drop_down,
                                           size: 20,
-                                        ),                                      
+                                        ), 
+                                        IconButton(
+                                          icon: const Icon(Icons.copy, size: 16),
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          onPressed: () {
+                                            if (controller.walletsInfo?.walletAddress != null) {                                            
+                                              Clipboard.setData(ClipboardData(
+                                                text: controller.walletsInfo!.walletAddress!
+                                              ));
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Đã sao chép địa chỉ ví')),
+                                              );
+                                            }
+                                          },
+                                        ),                                       
                                       ],
                                     ),
                                   ),       
@@ -291,7 +306,11 @@ class _WalletPageState extends State<WalletPage> {
                                       }
                                     });
                                   }else{
-                                    Get.toNamed(AddWalletWithContractPage.route)?.then((result) {
+                                    Get.toNamed(AddWalletWithContractPage.route,
+                                    arguments: {
+                                      'walletAddress': controller.walletsInfo!.walletAddress!,
+                                      'id': controller.walletsInfo!.id!, // Thêm id vào arguments
+                                    },)?.then((result) {
                                       if (result != null) {
                                         controller.getWalletInfo();
                                          Get.back(result: true);
@@ -340,16 +359,16 @@ class _WalletPageState extends State<WalletPage> {
                                               color: Colors.white,
                                             ),
                                           ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            wallet.walletAddress,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                          // const SizedBox(height: 4),
+                                          // Text(
+                                          //   wallet.walletAddress,
+                                          //   style: const TextStyle(
+                                          //     fontSize: 12,
+                                          //     color: Colors.grey,
+                                          //   ),
+                                          //   maxLines: 1,
+                                          //   overflow: TextOverflow.ellipsis,
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -396,7 +415,11 @@ class _WalletPageState extends State<WalletPage> {
                                     }
                                   });
                                 }else{
-                                    Get.toNamed(AddWalletWithContractPage.route)?.then((result) {
+                                    Get.toNamed(AddWalletWithContractPage.route,
+                                    arguments: {
+                                      'walletAddress': controller.walletsInfo!.walletAddress!,
+                                      'id': controller.walletsInfo!.id!, // Thêm id vào arguments
+                                    },)?.then((result) {
                                       if (result != null) {
                                         controller.getWalletInfo();
                                          Get.back(result: true);

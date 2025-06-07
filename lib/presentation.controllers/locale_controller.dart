@@ -10,10 +10,8 @@ import 'package:hkcoin/data.repositories/locale_repository.dart';
 class LocaleController extends GetxController {
   File? translationFile;
   List<Language> listLanguage = [];
-  List<Locale> get listLocale =>
-      listLanguage.isEmpty
-          ? [const Locale("en", "US")]
-          : listLanguage.map((e) => e.isoCode!.toLocaleFromIsoCode()).toList();
+  List<Locale> get listLocal =>
+      listLanguage.map((e) => e.isoCode!.toLocaleFromIsoCode()).toList();
   Locale locale = const Locale("en", "US");
   String get localeIsoCode =>
       "${locale.languageCode}-${locale.countryCode ?? ""}";

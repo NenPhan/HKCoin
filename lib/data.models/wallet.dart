@@ -11,6 +11,8 @@ class BlockchangeWallet {
   final String? name;
   double? balance;
   final String? mnemonicOrPrivateKey;  
+  final String? privateKey;
+  final String? publicKey;
   final int? createWalletType; 
   final bool? selected;
   List<WalletAddress>? walletAddress;
@@ -19,6 +21,8 @@ class BlockchangeWallet {
     this.name,
     this.balance,
     this.mnemonicOrPrivateKey,
+    this.privateKey,
+    this.publicKey,
     this.createWalletType,   
     this.selected,
     this.walletAddress     
@@ -28,6 +32,8 @@ class BlockchangeWallet {
     name: json["Name"],
     balance: json["Balance"],
     mnemonicOrPrivateKey: json["MnemonicOrPrivateKey"],
+    privateKey: json["PrivateKey"],
+    publicKey: json["PublicKey"],
     createWalletType: json["CreateWalletType"],
     selected: json["Selected"],
      walletAddress:
@@ -40,6 +46,8 @@ class BlockchangeWallet {
   Map<String, dynamic> toJson() => {
     "Id": id,    
     "MnemonicOrPrivateKey": mnemonicOrPrivateKey,
+    "PrivateKey": privateKey,
+    "PublicKey": publicKey,
     "CreateWalletType": createWalletType,
     "Selected": selected,
     "Wallets": walletAddress?.map((e) => e.toJson()).toList() ?? [],
@@ -49,8 +57,6 @@ class BlockchangeWallet {
 class WalletAddress {
   final String address;
   final String contractAddress; 
-  final String? privateKey;
-  final String? publicKey;
   final Chain chain;
   final String? mnemonic;
   final int networkChain;
@@ -61,8 +67,6 @@ class WalletAddress {
   WalletAddress({
     required this.address,
     required this.contractAddress,
-    this.privateKey,
-    this.publicKey,
     required this.chain,
     required this.networkChain,
     this.mnemonic,    
@@ -83,9 +87,7 @@ class WalletAddress {
   );
   Map<String, dynamic> toJson() => {
     "WalletAddress": address,
-    "ContractAddress": contractAddress,
-    "PrivateKey": privateKey,
-    "PublicKey": publicKey,
+    "ContractAddress": contractAddress,    
     "Chain": chain.index,//TokenTypeId
     "EthereumNetwork": networkChain,//EthereumNetworkId  
     "Decimals": decimals,

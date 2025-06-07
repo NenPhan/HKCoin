@@ -22,6 +22,17 @@ class AddWalletWithContractPage extends StatefulWidget {
 
 class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
   final CreateWalletWithContractController controller = Get.put(CreateWalletWithContractController());
+  @override
+  void initState() {
+    final args = Get.arguments as Map<String, dynamic>;
+    if(args.isNotEmpty){
+      final walletAddress = args['walletAddress'];
+      final id = args['id'];
+      controller.walletId = id;
+      controller.selectedWalletAddress = walletAddress;
+    }    
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,12 +183,12 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                 Visibility(
                                   visible: controller.contractController.text.isNotEmpty,   
                                   maintainState: true,
-                                  maintainSize:false,                               
+                                  maintainSize:false,                                                                 
                                   child: Column(
                                     children: [
                                       const SizedBox(height: 20),
                                       MainTextField(
-                                        controller: controller.contractSymbolController,
+                                        controller: controller.contractSymbolController,                                        
                                         label: tr(
                                           "Account.wallet.withContract.Symbol",
                                         ),

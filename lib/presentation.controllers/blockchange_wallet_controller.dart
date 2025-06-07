@@ -9,7 +9,6 @@ import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/data.repositories/wallet_repository.dart';
 import 'package:intl/intl.dart';
-import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 class BlockchangeWalletController extends GetxController {
@@ -63,8 +62,7 @@ class BlockchangeWalletController extends GetxController {
     });
       update(["wallet-info-page"]); 
   }
-  Future filterNetworks(String query) async {
-      debugPrint("$listNetwork.length");
+  Future filterNetworks(String query) async {      
     if (query.isEmpty) {
       listNetwork.assignAll(listNetwork); // Nếu không có query, hiển thị tất cả
     } else {
@@ -136,7 +134,7 @@ class BlockchangeWalletController extends GetxController {
     double totalBalance = 0.0;
     double totalBalanceUSD = 0.0;       
      for (var wallet in walletsInfo!.walletAddressModel!) {      
-        final credentials = EthPrivateKey.fromHex(decryptText(wallet.privateKey!,""));
+        //final credentials = EthPrivateKey.fromHex(decryptText(wallet.privateKey!,""));
         //final address = await credentials.extractAddress();        
         // Lấy số dư từ BNB (Binance Smart Chain)
         try {                            
