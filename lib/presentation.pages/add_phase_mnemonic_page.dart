@@ -47,6 +47,16 @@ class AddMnemonicPage extends StatelessWidget {
           _buildMnemonicTextField(controller),
           _buildActionButtons(controller, context),
           const SizedBox(height: 20),
+          Obx(() {
+            if (controller.detectedInputType.value == CreateWalletType.Mnemonic) {
+              return Text('Đã phát hiện mnemonic', style: TextStyle(color: Colors.green));
+            } else if (controller.detectedInputType.value == CreateWalletType.PrivateKey) {
+              return Text('Đã phát hiện private key', style: TextStyle(color: Colors.green));
+            } else if (controller.mnemonicController.text.isNotEmpty) {
+              return Text('Không xác định được loại dữ liệu', style: TextStyle(color: Colors.orange));
+            }
+            return SizedBox.shrink();
+          }),
           _buildSubmitButton(controller),
         ],
       ),

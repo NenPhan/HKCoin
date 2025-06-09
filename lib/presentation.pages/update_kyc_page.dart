@@ -8,6 +8,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/presentation.controllers/update_kyc_controller.dart';
 import 'package:hkcoin/presentation.pages/kyc_camera_page.dart';
+import 'package:hkcoin/widgets/alert_widget.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/disable_widget.dart';
@@ -78,11 +79,12 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 20),
-            _buildAlert(
-              controller.verifyKyc
+            AlertWidget(type: controller.verifyKyc
+                  ? AlertType.success
+                  : AlertType.warning,
+            message: controller.verifyKyc
                   ? "Account.KYC.Veryfied"
-                  : controller.kycStatus?.message ?? "",
-            ),
+                  : controller.kycStatus?.message ?? ""),           
             Form(
               key: controller.formKey,
               child: SpacingColumn(
@@ -196,7 +198,8 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
           spacing: 20,
           children: [
             const SizedBox(),
-            _buildAlert(controller.kycStatus?.message ?? ""),
+            AlertWidget(type: AlertType.warning,
+            message: controller.kycStatus!.message!),            
             UploadPhotoButton(
               name: "ACCOUNT.KYC.CARD.BEFORE.TITLE",
               enable: index == 0,
@@ -219,37 +222,6 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
               onChanged: (file) async {
                 await controller.kycValidatePhoto(name: "Portrait", file: file);
               },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _buildAlert(String alert) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            Container(
-              width: scrSize(context).width * 0.15,
-              color: Colors.indigo[700],
-              child: const Center(
-                child: Icon(Icons.priority_high_rounded, color: Colors.white),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(scrSize(context).width * 0.03),
-                color: Colors.white,
-                child: Text(
-                  tr(alert),
-                  style: textTheme(
-                    context,
-                  ).bodyMedium?.copyWith(color: Colors.indigo[900]),
-                ),
-              ),
             ),
           ],
         ),

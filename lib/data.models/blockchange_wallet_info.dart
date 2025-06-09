@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/core/time_converter.dart';
 
 BlockchangeWalletInfo myWalletFromJson(String str) =>
     BlockchangeWalletInfo.fromJson(json.decode(str));
@@ -19,6 +20,8 @@ class BlockchangeWalletInfo {
   final String? publicKey;
   final String? encryptionSalt;  
   final int? createWalletTypeId; 
+  final String? createWalletType;
+  final DateTime? createdOnUtc;
   List<WalletsModel>? walletAddressModel;
   BlockchangeWalletInfo({
     this.id,
@@ -33,6 +36,8 @@ class BlockchangeWalletInfo {
     this.publicKey,
     this.encryptionSalt,
     this.createWalletTypeId,   
+    this.createWalletType,
+    this.createdOnUtc,
     this.walletAddressModel 
   });
   factory BlockchangeWalletInfo.fromJson(Map<String, dynamic> json) => BlockchangeWalletInfo(
@@ -46,6 +51,8 @@ class BlockchangeWalletInfo {
     publicKey: json["PublicKey"],
     encryptionSalt: json["EncryptionSalt"],
     createWalletTypeId: json["CreateWalletTypeId"],
+    createWalletType: json["CreateWalletType"],
+    createdOnUtc: DateTime.parse(json["CreatedOnUtc"]).convertToUserTime(),
      walletAddressModel:
             json["WalletsModel"] == null
                 ? null
@@ -65,8 +72,21 @@ class BlockchangeWalletInfo {
     "PublicKey": publicKey,    
     "EncryptionSalt": encryptionSalt,
     "CreateWalletTypeId": createWalletTypeId,
+    "CreateWalletType": createWalletType,
+    "CreatedOnUtc":createdOnUtc,
     "WalletsModel": walletAddressModel?.map((e) => e.toJson()).toList() ?? [],
   };  
+  BlockchangeWalletInfo copyWith({
+    String? mnemonicOrPrivateKey,
+    String? privateKey,
+    String? publicKey,    
+  }) {
+    return BlockchangeWalletInfo(
+      encryptedMnemonic: mnemonicOrPrivateKey ?? this.encryptedMnemonic,
+      privateKey: privateKey ?? this.privateKey,
+      publicKey: publicKey ?? this.publicKey,            
+    );  
+  }
 }
 
 class WalletsModel {

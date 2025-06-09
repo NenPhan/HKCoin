@@ -15,6 +15,10 @@ class ConfirmDialog extends StatelessWidget {
   final Color okButtonColor;
   final VoidCallback? onOkPressed;
   final VoidCallback? onCancelPressed;
+  final IconData? icon; // New parameter for icon
+  final Color iconBorderColor; // New parameter for icon border color
+  final bool showBorder;
+  final double iconSize;
 
   const ConfirmDialog({
     Key? key,
@@ -25,6 +29,10 @@ class ConfirmDialog extends StatelessWidget {
     this.okButtonColor = Colors.blue,
     this.onOkPressed,
     this.onCancelPressed,
+    this.icon, // Optional icon
+    this.iconBorderColor = Colors.blue, // Default border color
+    this.showBorder = false,
+     this.iconSize = 32.0,
   }) : super(key: key);
 
   @override
@@ -33,12 +41,34 @@ class ConfirmDialog extends StatelessWidget {
     final dialogController = Get.put(ConfirmDialogController(), tag: UniqueKey().toString());
 
     return AlertDialog(
-      title: Text(
-        tr(title),
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+      title: Column(
+        children: [
+          if (icon != null) ...[
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border:showBorder? Border.all(
+                  color: iconBorderColor,
+                  width: 3,
+                ):null,
+              ),
+              child: Icon(
+                icon,
+                size: iconSize,
+                color: iconBorderColor, // Match icon color with border for consistency
+              ),
+            ),
+            const SizedBox(height: 12), // Space between icon and title
+          ],
+          Text(
+            tr(title),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
       content: Text(
         tr(content),
@@ -102,6 +132,10 @@ class ConfirmDialog extends StatelessWidget {
     Color okButtonColor = Colors.blue,
     VoidCallback? onOkPressed,
     VoidCallback? onCancelPressed,
+    IconData? icon, // New parameter for icon
+    Color iconBorderColor = Colors.blue,
+    final bool showBorder = false,
+    final double iconSize = 32, // New parameter for icon border color
   }) {
     return showDialog(
       context: context,
@@ -113,6 +147,10 @@ class ConfirmDialog extends StatelessWidget {
         okButtonColor: okButtonColor,
         onOkPressed: onOkPressed,
         onCancelPressed: onCancelPressed,
+        icon: icon,
+        iconBorderColor: iconBorderColor,
+        showBorder: showBorder,
+        iconSize: iconSize,
       ),
     );
   }

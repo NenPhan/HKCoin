@@ -100,6 +100,26 @@ class WalletDatasource {
       }        
     });    
   }
+  Future<BlockchangeWalletInfo?> getWalletById(int walletId) async {
+    return await handleRemoteRequest(() async {        
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getBlockchainWalletById(walletId),
+           headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },          
+          needAccessToken: true,          
+        ),
+        contentType: "application/json",
+      );            
+      if(response !=null && response["Data"] !=null) {
+        return BlockchangeWalletInfo.fromJson(response["Data"]);
+      } else{
+        return null;
+      }        
+    });    
+  }
   Future<List<BlockchangeWallet>> getWallets() async {
     return await handleRemoteRequest(() async {      
       var response = await dioClient.call(

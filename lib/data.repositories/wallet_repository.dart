@@ -46,6 +46,14 @@ class WalletRepository {
       },
     );
   }  
+   Future<Either<Failure, BlockchangeWalletInfo?>> getWalletById(int walletId) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await WalletDatasource().getWalletById(walletId);       
+        return Right(result);
+      },
+    );
+  }  
   Future<Either<Failure, List<BlockchangeWallet>>> getWallets() {
     return handleRepositoryCall(
       onRemote: () async {

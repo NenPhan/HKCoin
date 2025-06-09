@@ -11,19 +11,22 @@ import 'package:hkcoin/data.repositories/wallet_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
-class BlockchangeWalletController extends GetxController {
+class WalletDetailController extends GetxController {
+  final formKey = GlobalKey<FormState>();
+  int walletId=0;
    final listNetwork = <Network>[].obs;
    final wallets = <BlockchangeWallet>[].obs;
    final walletInfos = <WalletsModel>[].obs;
    var selectedNetwork = Rxn<Network>();
+   var mnemonicWords = <String>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isLoadingWallets = false.obs;
    BlockchangeWalletInfo? walletsInfo;
    final TextEditingController searchController = TextEditingController();   
+   final RxBool isLoadingSubmit = false.obs;
   @override
-  void onInit() {    
-    getNetworks();
-    getWalletInfo();
+  void onInit() {        
+    getWalletInfo(Get.arguments);
     super.onInit();
   }
   Future getNetworks() async {        
@@ -72,32 +75,7 @@ class BlockchangeWalletController extends GetxController {
       ); // Lọc mạng theo tên
     }    
   }
-  Future<void> selectNetwork(Network network) async {
-    selectedNetwork.value = network; // Cập nhật mạng được chọn
-    await Storage().saveNetWork(network); // Lưu mạng đã chọn
-    update(["blockchange-networks"]);
-    await getWalletInfo();
-    update(["blockchange-networks"]);
-  }
-  Future<void> selectWallet(BlockchangeWallet wallet) async {
-    try{
-      await handleEitherReturn(
-        await WalletRepository().selectedWallet(
-          BlockchangeWallet(
-            id: wallet.id
-          ),
-        ),
-        (r) async {         
-          //Get.toNamed(WalletPage.route);
-          //Get.back();
-        },
-      );
-    }catch(e){}
-    update(["blockchange-networks"]);
-    getWalletInfo();
-    update(["wallet-info-page"]);  
-
-  }
+ 
   Future getWallets() async {
     isLoadingWallets.value = true;    
     update(["blockchange-wallets"]);   
@@ -109,18 +87,30 @@ class BlockchangeWalletController extends GetxController {
     isLoadingWallets.value = false;
     update(["blockchange-wallets"]);
   }
-  Future getWalletInfo() async {
+  Future getWalletInfo(int walletId) async {
     isLoading.value = true;    
-    update(["wallet-info-page"]);   
-      await handleEither(await WalletRepository().getWalletInfo(), (r) {
+    update(["wallet-detail-page"]);   
+      await handleEither(await WalletRepository().getWalletById(walletId), (r) {
         if(r !=null){
-          walletsInfo = r;
+          walletsInfo = r;   
+          print("private key: ${r.privateKey}");
+          if (r.encryptedMnemonic?.isNotEmpty ?? false) {
+            final mnemonicString = decryptText(r.encryptedMnemonic!, '');
+            mnemonicWords.value = mnemonicString.split(' '); // Split into list
+          } else {
+            mnemonicWords.clear(); // Clear list if no mnemonic
+          }      
+          if(r.publicKey?.isNotEmpty??false){
+            searchController.text = decryptText(r.publicKey!,"");
+          }            
           fetchWalletBalance(walletsInfo!);     
-        }        
+        }else{
+          mnemonicWords.clear();
+        }  
       });
    
     isLoading.value = false;
-    update(["wallet-info-page"]);
+    update(["wallet-detail-page"]);
   }
   Future fetchWalletBalance(BlockchangeWalletInfo wallets) async {
     final networkStore = await Storage().getNetWork() ?? selectedNetwork.value;
@@ -292,5 +282,32 @@ class BlockchangeWalletController extends GetxController {
   String formatNumber(double number) {
     final formatter = NumberFormat("#,##0.00", "en_US"); // Locale Đức (dùng dấu . cho nghìn)
     return formatter.format(number);
+  }
+  // Build a list of buttons from mnemonic words
+  List<Widget> buildMnemonicButtons() {
+    return mnemonicWords.asMap().entries.map((entry) {
+      final index = entry.key + 1; // Start index from 1
+      final word = entry.value;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: TextButton(
+          onPressed: () {
+            // Optional: Add action for button press
+            print('Tapped word: $index. $word');
+          },
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.blue[50],
+            foregroundColor: Colors.black54,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: Text(
+            '$index. $word', // Display index before word
+            style: const TextStyle(fontSize: 14),
+          ),
+        ),
+      );
+    }).toList();
   }
 }

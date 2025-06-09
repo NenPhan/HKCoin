@@ -24,6 +24,9 @@ import 'package:hkcoin/presentation.pages/product_detail_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
 import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_detail_backup_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_detail_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_detail_privatekey_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_add_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
@@ -81,7 +84,10 @@ class AppGetRoutes {
     GetPage(name: AddWalletPage.route, page: () => const AddWalletPage()),  
     GetPage(name: AddMnemonicPage.route, page: () => const AddMnemonicPage()),
     GetPage(name: WalletPage.route, page: () => const WalletPage()),
-    GetPage(name: AddWalletWithContractPage.route, page: () => const AddWalletWithContractPage())
+    GetPage(name: AddWalletWithContractPage.route, page: () => const AddWalletWithContractPage()),
+    GetPage(name: WalletDetailPage.route, page: () => const WalletDetailPage()),
+    GetPage(name: WalletDetailBackupPage.route, page: () => const WalletDetailBackupPage()),
+    GetPage(name: WalletExportPrivateKeyPage.route, page: () => const WalletExportPrivateKeyPage())
     
   ];
 }
