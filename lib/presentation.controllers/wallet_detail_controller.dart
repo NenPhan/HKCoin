@@ -112,8 +112,7 @@ class WalletDetailController extends GetxController {
     update(["wallet-detail-page"]);   
       await handleEither(await WalletRepository().getWalletById(walletId), (r) {
         if(r !=null){
-          walletsInfo = r;   
-          print("private key: ${r.privateKey}");
+          walletsInfo = r;             
           if (r.encryptedMnemonic?.isNotEmpty ?? false) {
             final mnemonicString = decryptText(r.encryptedMnemonic!, '');
             mnemonicWords.value = mnemonicString.split(' '); // Split into list
@@ -312,8 +311,7 @@ class WalletDetailController extends GetxController {
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         child: TextButton(
           onPressed: () {
-            // Optional: Add action for button press
-            print('Tapped word: $index. $word');
+            // Optional: Add action for button press            
           },
           style: TextButton.styleFrom(
             backgroundColor: Colors.blue[50],
