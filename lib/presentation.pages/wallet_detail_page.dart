@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
+import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
@@ -136,10 +137,42 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
                                       // Backup row
                                       GestureDetector(
                                         onTap: () {
-                                           Get.toNamed(
-                                            WalletDetailBackupPage.route,
-                                            arguments: WalletDetailPageParam(wallet: controller.walletsInfo!),
-                                          );
+                                          if(controller.walletsInfo?.createWalletTypeId==CreateWalletType.Mnemonic.index){
+                                            Get.toNamed(
+                                              WalletDetailBackupPage.route,
+                                              arguments: WalletDetailPageParam(wallet: controller.walletsInfo!),
+                                            );
+                                          }else if(controller.walletsInfo?.createWalletTypeId==CreateWalletType.PrivateKey.index){
+                                            ConfirmDialog.show(
+                                              context: context,
+                                              title: 'Common.Warning',
+                                              content: 'Account.Wallet.Detail.Confirm.Content',
+                                              okText: 'Common.OK',
+                                              cancelText: 'Common.Cancel',
+                                              icon: Icons.info_outline, // Add icon
+                                              iconBorderColor: Colors.red,
+                                              iconSize:64,                                            
+                                              onOkPressed: () async {
+                                                try{                                                                                             
+                                                await Get.toNamed(
+                                                    WalletExportPrivateKeyPage.route,
+                                                    arguments: ExportPrivateKeyPageParam(wallet: controller.walletsInfo!),
+                                                  );
+                                                }catch (e) {
+                                                  // ignore: use_build_context_synchronously
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text('Failed to create wallet: $e')),
+                                                  );
+                                                } finally {
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.of(context).pop();
+                                                }                                        
+                                              },
+                                              onCancelPressed: () {                                        
+                                                Navigator.of(context).pop();
+                                              },
+                                            );
+                                          }                                            
                                         },
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
