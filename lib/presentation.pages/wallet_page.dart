@@ -417,9 +417,9 @@ class _WalletPageState extends State<WalletPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              'Không thấy token của bạn? ',
-                              style: TextStyle(
+                            Text(
+                              tr("Account.wallet.Token.DontSee"),
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
                               ),
@@ -446,9 +446,9 @@ class _WalletPageState extends State<WalletPage> {
                                     });
                                   }      
                               },
-                              child: const Text(
-                                'Nhập token',
-                                style: TextStyle(
+                              child: Text(
+                                tr("Account.wallet.Token.Add"),                                
+                                style: const TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
                                   fontSize: 14,
