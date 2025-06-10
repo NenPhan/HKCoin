@@ -49,11 +49,11 @@ class AddMnemonicPage extends StatelessWidget {
           const SizedBox(height: 20),
           Obx(() {
             if (controller.detectedInputType.value == CreateWalletType.Mnemonic) {
-              return Text('Đã phát hiện mnemonic', style: TextStyle(color: Colors.green));
+              return Text(tr("Account.wallet.Detected.Mnemonic"), style: TextStyle(color: Colors.green));
             } else if (controller.detectedInputType.value == CreateWalletType.PrivateKey) {
-              return Text('Đã phát hiện private key', style: TextStyle(color: Colors.green));
+              return Text(tr("Account.wallet.Detected.PrivateKey"), style: TextStyle(color: Colors.green));
             } else if (controller.mnemonicController.text.isNotEmpty) {
-              return Text('Không xác định được loại dữ liệu', style: TextStyle(color: Colors.orange));
+              return Text(tr("Account.wallet.Detected.NotDetermined"), style: TextStyle(color: Colors.orange));
             }
             return SizedBox.shrink();
           }),
@@ -67,11 +67,11 @@ class AddMnemonicPage extends StatelessWidget {
     return MainTextField(
       controller: controller.mnemonicController,
       label: 'Mnemonic',
-      hintText: "Vui lòng nhập 12 từ ghi nhớ!",
+      hintText: tr("Account.wallet.Enter.PlaceHoled"),
       maxLines: 8,
       minLines: 6,
       validator: (value) => value?.trim().isEmpty ?? true 
-          ? 'Vui lòng nhập mnemonic' 
+          ? tr("Account.wallet.Enter.Mnemonic.Required") 
           : null,
     );
   }
