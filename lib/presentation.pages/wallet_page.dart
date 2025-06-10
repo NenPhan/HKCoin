@@ -52,7 +52,7 @@ class _WalletPageState extends State<WalletPage> {
                               IconButton(
                                 icon: const Icon(Icons.settings),
                                 onPressed: () {
-                                  ScreenPopup(title: "Chọn mạng",
+                                  ScreenPopup(title: "Account.wallet.Network.Selected",
                                     isDismissible: false,
                                     backgroundColor: const Color(0xFF1B1B1B),
                                     heightFactor: .75,         
@@ -63,7 +63,7 @@ class _WalletPageState extends State<WalletPage> {
                                         TextField(
                                           controller: controller.searchController,
                                           decoration: const InputDecoration(
-                                            hintText: 'Tìm kiếm network...',
+                                            hintText: 'Account.wallet.Network.Filter',
                                             prefixIcon: Icon(Icons.search),
                                             border: OutlineInputBorder(),
                                             filled: true,
@@ -143,7 +143,7 @@ class _WalletPageState extends State<WalletPage> {
                                 children: [
                                    GestureDetector(
                                     onTap: (){                                        
-                                      ScreenPopup(title: "Quản lý ví",
+                                      ScreenPopup(title: "Account.wallet.List",
                                         isDismissible: false,
                                         backgroundColor: const Color(0xFF1B1B1B),
                                         heightFactor: .65,
@@ -245,7 +245,7 @@ class _WalletPageState extends State<WalletPage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          controller.walletsInfo?.name??"Thêm ví",
+                                          controller.walletsInfo?.name??tr("Account.wallet.Addnew"),
                                           style: textTheme(context).titleMedium?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16
@@ -265,7 +265,7 @@ class _WalletPageState extends State<WalletPage> {
                                                 text: controller.walletsInfo!.walletAddress!
                                               ));
                                               ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('Đã sao chép địa chỉ ví')),
+                                                SnackBar(content: Text(tr("Common.CopyToClipboard"))),
                                               );
                                             }
                                           },
