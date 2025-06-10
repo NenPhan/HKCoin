@@ -14,6 +14,7 @@ class Endpoints {
   static String addCustomerWalletToken="BlockChanges/AddCustomerWalletToken";
   static String selectedWallet="BlockChanges/SelectedWallet";
   static String getNetWork = "BlockChanges/NetWork";
+  static String deleteWallet(int id) => "BlockChanges/DeleteWallet($id)";
   static String getBlockchainWalletInfo="BlockChanges/GetWalletInfo";  
   static String getBlockchainWalletById(int id) => "BlockChanges/GetWallet($id)";
   static String getBlockchainWallet="BlockChanges/Wallets";

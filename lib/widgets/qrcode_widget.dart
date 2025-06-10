@@ -17,6 +17,8 @@ class QRCodeWidget extends StatefulWidget {
   final Color? foregroundColor;
   final String? fileName;
   final String? logoPath;
+  final bool showShare;
+  final bool showSaveStore;
 
   const QRCodeWidget({
     Key? key,
@@ -26,6 +28,8 @@ class QRCodeWidget extends StatefulWidget {
     this.foregroundColor,
     this.fileName,
     this.logoPath,
+    this.showShare = true,
+    this.showSaveStore = true,
   }) : super(key: key);
 
   @override
@@ -70,20 +74,22 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildActionButton(
-              icon: Icons.share,
-              label: 'Chia sẻ',
-              color: Colors.blue,
-              onPressed: _shareQRCode,
-            ),
+            if(widget.showShare)
+              _buildActionButton(
+                icon: Icons.share,
+                label: 'Chia sẻ',
+                color: Colors.blue,
+                onPressed: _shareQRCode,
+              ),
             const SizedBox(width: 16),
-            _buildActionButton(
-              icon: Icons.save,
-              label: 'Lưu',
-              color: Colors.green,
-              onPressed: _isSaving ? null : _showSaveConfirmationDialog,
-              isLoading: _isSaving,
-            ),
+            if(widget.showSaveStore)
+              _buildActionButton(
+                icon: Icons.save,
+                label: 'Lưu',
+                color: Colors.green,
+                onPressed: _isSaving ? null : _showSaveConfirmationDialog,
+                isLoading: _isSaving,
+              ),
           ],
         ),
       ],

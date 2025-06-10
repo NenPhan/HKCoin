@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ScreenPopup extends StatefulWidget {
   final Widget child;
@@ -34,13 +35,14 @@ class ScreenPopup extends StatefulWidget {
   }) : super(key: key);
 
   void show(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
+    Get.bottomSheet(//showModalBottomSheet(
+      //context: context,
+      this,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black54,
       isDismissible: isDismissible,
-      builder: (context) => this,
+      //builder: (context) => this,
     );
   }
 

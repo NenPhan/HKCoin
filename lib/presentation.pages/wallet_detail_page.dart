@@ -37,7 +37,7 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
         return Scaffold(
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _buildSubmitButton(controller),
+            child: _buildSubmitButton(context, controller),
           ),
           body: SafeArea(
             child: Column(
@@ -303,7 +303,7 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
       }
     );    
   }  
-  Widget _buildSubmitButton(WalletDetailController controller) {
+  Widget _buildSubmitButton(BuildContext context, WalletDetailController controller) {
     return Obx(
       () => MainButton(
         isLoading: controller.isLoadingSubmit.value,
@@ -313,7 +313,37 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
          // if (controller.formKey.currentState!.validate()) {
             // Đảm bảo loading hiển thị ngay lập tức
             controller.isLoadingSubmit.value = true;
-            await Future.delayed(Duration.zero);            
+            await Future.delayed(Duration.zero);       
+            ConfirmDialog.show(
+              // ignore: use_build_context_synchronously
+              context: context,
+              title: '',
+              content: 'Account.Wallet.Detail.Confirm.Delete',
+              okText: 'Account.Wallet.Detail.Confirm.StillDelete',
+              cancelText: 'Common.Cancel',
+              icon: Icons.info_outline, // Add icon
+              iconBorderColor: Colors.white,
+              iconSize:64,                                            
+              onOkPressed: () async {
+                try{                                                                                             
+                  await controller.deleteWallet(controller.walletsInfo!.id!);
+                }catch (e) {
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to delete wallet: $e')),
+                  );
+                  controller.isLoadingSubmit.value = false;
+                } finally {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                  controller.isLoadingSubmit.value = false;
+                }                                        
+              },
+              onCancelPressed: () {                                        
+                Navigator.of(context).pop();
+                controller.isLoadingSubmit.value = false;
+              },
+            );     
             //controller.submitForm();
          // }
         },

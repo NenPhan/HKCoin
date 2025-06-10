@@ -8,6 +8,7 @@ import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/data.repositories/wallet_repository.dart';
+import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -86,6 +87,25 @@ class WalletDetailController extends GetxController {
    
     isLoadingWallets.value = false;
     update(["blockchange-wallets"]);
+  }
+  Future deleteWallet(int walletId) async{    
+    return handleEitherReturn(
+      await WalletRepository().deleteWallet(walletId),
+      (r) async {
+        var blockChangeWallet = Get.find<BlockchangeWalletController>();
+       await blockChangeWallet.getNetworks();
+       await blockChangeWallet.getWalletInfo();
+       update([
+          'wallet-info-page'
+        ]);
+        Get.back();       
+        Get.back();
+        return true;
+      },
+      onError: (message) async {
+        return false;
+      },
+    );
   }
   Future getWalletInfo(int walletId) async {
     isLoading.value = true;    

@@ -97,7 +97,19 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
                     tooltip: 'Copy Private Key',
                   ),
                 ),                              
-                // Bullet list
+                Row(
+                  children: [
+                    const Icon(Icons.cancel, color: Colors.red, size: 14),
+                    const SizedBox(width: 8),
+                    Text(
+                      tr("Account.Wallet.Detail.Backup.Mnemonic.Avoid"),          
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
                 Html(
                   data: tr("Account.Wallet.Detail.Export.PrivateKey.Alert"),
                   style: {
@@ -132,9 +144,10 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
             if (_showQrCode && privateKeyController.text.isNotEmpty)
               QRCodeWidget(
                 data: privateKeyController.text,
-                size: 180,
+                size: 180,                
                 backgroundColor: Colors.white,
-                fileName: 'privateKey_${wallet.name ?? 'default'}.png',
+                showShare: false,
+                showSaveStore: false,
               )
             else
               Column(

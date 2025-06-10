@@ -100,6 +100,21 @@ class WalletDatasource {
       }        
     });    
   }
+  Future<void> deleteWallet(int id) async {
+    await handleRemoteRequest(() async {      
+      await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.deleteWallet(id),
+          needAccessToken: true,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },          
+        ),
+        contentType: "application/json",
+      );
+    });
+  }
   Future<BlockchangeWalletInfo?> getWalletById(int walletId) async {
     return await handleRemoteRequest(() async {        
       var response = await dioClient.call(

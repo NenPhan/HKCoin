@@ -46,6 +46,13 @@ class WalletRepository {
       },
     );
   }  
+    Future<Either<Failure, void>> deleteWallet(int walletId) {
+    return handleRepositoryCall(
+      onRemote: () async {          
+        return Right(await WalletDatasource().deleteWallet(walletId));
+      },
+    );
+  } 
    Future<Either<Failure, BlockchangeWalletInfo?>> getWalletById(int walletId) {
     return handleRepositoryCall(
       onRemote: () async {
