@@ -1,3 +1,4 @@
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -35,6 +36,7 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
   @override
   void initState() {
     super.initState();
+    _disableScreenshots();
     if (Get.arguments is ExportPrivateKeyPageParam) {
       wallet = (Get.arguments as ExportPrivateKeyPageParam).wallet;
       if (wallet.privateKey?.isNotEmpty ?? false) {
@@ -48,10 +50,14 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
       }
     }
   }
+  Future<void> _disableScreenshots() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
 
   @override
   void dispose() {
     privateKeyController.dispose();
+    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.dispose();
   }
 
