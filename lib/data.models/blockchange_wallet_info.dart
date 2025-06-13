@@ -90,6 +90,7 @@ class BlockchangeWalletInfo {
 }
 
 class WalletsModel {
+  final int? id;
   final String walletAddress;
   final String contractAddress; 
   final EthereumNetwork? ethereumNetwork;
@@ -100,6 +101,7 @@ class WalletsModel {
   final int? decimals;
 
   WalletsModel({
+    this.id,
     required this.walletAddress,
     required this.contractAddress,
     required this.ethereumNetwork,
@@ -110,6 +112,7 @@ class WalletsModel {
     this.decimals
   });
   factory WalletsModel.fromJson(Map<String, dynamic> json) => WalletsModel(
+    id: json["Id"],
     walletAddress: json["WalletAddress"],
     contractAddress: json["ContractAddress"],
     ethereumNetwork: EthereumNetwork.values.firstWhere(
@@ -124,6 +127,7 @@ class WalletsModel {
     decimals: json["Decimals"],
   );
   Map<String, dynamic> toJson() => {
+    "Id": id,
     "WalletAddress": walletAddress,
     "ContractAddress": contractAddress,
     "EthereumNetwork": ethereumNetwork?.index,//

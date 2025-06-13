@@ -77,7 +77,7 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
             if(widget.showShare)
               _buildActionButton(
                 icon: Icons.share,
-                label: 'Chia sẻ',
+                label: tr("Common.Share"),
                 color: Colors.blue,
                 onPressed: _shareQRCode,
               ),
@@ -85,7 +85,7 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
             if(widget.showSaveStore)
               _buildActionButton(
                 icon: Icons.save,
-                label: 'Lưu',
+                label: tr("Admin.Common.Save"),
                 color: Colors.green,
                 onPressed: _isSaving ? null : _showSaveConfirmationDialog,
                 isLoading: _isSaving,

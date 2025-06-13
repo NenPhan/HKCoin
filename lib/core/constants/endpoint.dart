@@ -17,6 +17,7 @@ class Endpoints {
   static String deleteWallet(int id) => "BlockChanges/DeleteWallet($id)";
   static String getBlockchainWalletInfo="BlockChanges/GetWalletInfo";  
   static String getBlockchainWalletById(int id) => "BlockChanges/GetWallet($id)";
+  static String getBlockchainWalletTokenById(int id) => "BlockChanges/GetWalletToken($id)";
   static String getBlockchainWallet="BlockChanges/Wallets";
   static String getWalletHistories = "WalletHistories/Search";
   static String getCart = "ShoppingCartItems/GetCart";

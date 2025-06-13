@@ -8,6 +8,7 @@ import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.da
 import 'package:hkcoin/presentation.pages/add_wallet_bycontract_page.dart';
 import 'package:hkcoin/presentation.pages/add_wallet_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_detail_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_detail_page.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/screen_popup_widget.dart';
 
@@ -47,7 +48,7 @@ class _WalletPageState extends State<WalletPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
+                          Row(//Quản lý network
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.settings),
@@ -143,7 +144,7 @@ class _WalletPageState extends State<WalletPage> {
                                 children: [
                                    GestureDetector(
                                     onTap: (){                                        
-                                      ScreenPopup(title: "Account.wallet.List",
+                                      ScreenPopup(title: "Account.wallet.List",//Quản lý ví
                                         isDismissible: false,
                                         backgroundColor: const Color(0xFF1B1B1B),
                                         heightFactor: .65,
@@ -347,68 +348,83 @@ class _WalletPageState extends State<WalletPage> {
                           itemCount: controller.walletInfos.length,
                           itemBuilder: (context, index) {
                             final wallet = controller.walletInfos[index];
-                            return Card(
+                            return Container(
                               margin: const EdgeInsets.symmetric(vertical: 8),
-                              color: const Color(0xFF1E1E1E),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Row(
-                                  children: [
-                                    // Chain Logo/Icon
-                                    Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blue.withOpacity(0.2),
-                                      ),
-                                      child: const Icon(Icons.account_balance_wallet, color: Colors.blue),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () {                                  
+                                  Get.toNamed(
+                                    WalletTokenDetailPage.route,
+                                    arguments: wallet.id,
+                                  );  
+                                },
+                                child: Card(
+                                  margin:  EdgeInsets.zero,
+                                  color: const Color(0xFF1E1E1E),
+                                   shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    const SizedBox(width: 12),
-                                    // Chain Info
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            wallet.chain.name,                                            
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          // const SizedBox(height: 4),
-                                          // Text(
-                                          //   wallet.walletAddress,
-                                          //   style: const TextStyle(
-                                          //     fontSize: 12,
-                                          //     color: Colors.grey,
-                                          //   ),
-                                          //   maxLines: 1,
-                                          //   overflow: TextOverflow.ellipsis,
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                    // Balance Info
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Row(
                                       children: [
-                                        FormattedNumber(value: wallet.totalBalance ,decimalDigits:wallet.chain==Chain.BNB? 5:2,
-                                          style: const TextStyle(fontSize: 18),
-                                          suffix: wallet.chain.name,),
-                                        const SizedBox(height: 4),
-                                        FormattedNumber(value: wallet.totalBalanceUSD ,decimalDigits: 2,
-                                          style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                          prefix: r"$",
-                                          ),                                                                                
+                                        // Chain Logo/Icon
+                                        Container(
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.blue.withOpacity(0.2),
+                                          ),
+                                          child: const Icon(Icons.account_balance_wallet, color: Colors.blue),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        // Chain Info
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                wallet.chain.name,                                            
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              // const SizedBox(height: 4),
+                                              // Text(
+                                              //   wallet.walletAddress,
+                                              //   style: const TextStyle(
+                                              //     fontSize: 12,
+                                              //     color: Colors.grey,
+                                              //   ),
+                                              //   maxLines: 1,
+                                              //   overflow: TextOverflow.ellipsis,
+                                              // ),
+                                            ],
+                                          ),
+                                        ),
+                                        // Balance Info
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            FormattedNumber(value: wallet.totalBalance ,decimalDigits:wallet.chain==Chain.BNB? 5:2,
+                                              style: const TextStyle(fontSize: 18),
+                                              suffix: wallet.chain.name,),
+                                            const SizedBox(height: 4),
+                                            FormattedNumber(value: wallet.totalBalanceUSD ,decimalDigits: 2,
+                                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                              prefix: r"$",
+                                              ),                                                                                
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            );
+                            );                                                      
                           },
                         ),
                       ),

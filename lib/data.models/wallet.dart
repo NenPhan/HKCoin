@@ -55,6 +55,7 @@ class BlockchangeWallet {
 }
 
 class WalletAddress {
+  final int? id;
   final String address;
   final String contractAddress; 
   final Chain chain;
@@ -65,6 +66,7 @@ class WalletAddress {
   int? decimals;
 
   WalletAddress({
+    this.id,
     required this.address,
     required this.contractAddress,
     required this.chain,
@@ -75,6 +77,7 @@ class WalletAddress {
     this.decimals
   });
   factory WalletAddress.fromJson(Map<String, dynamic> json) => WalletAddress(
+    id: json["Id"],
     address: json["WalletAddress"],
     contractAddress: json["ContractAddress"],
      chain: Chain.values.firstWhere(
@@ -86,6 +89,7 @@ class WalletAddress {
     decimals: json["Decimals"]
   );
   Map<String, dynamic> toJson() => {
+    "Id": id,
     "WalletAddress": address,
     "ContractAddress": contractAddress,    
     "Chain": chain.index,//TokenTypeId

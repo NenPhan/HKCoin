@@ -11,8 +11,9 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool enableHomeButton;
   final int? cartCount;
   final Widget? actionWidget;
-
   final Color? backgroundColor;
+  final bool centerTitle; // Thêm thuộc tính mới để kiểm soát vị trí title
+
   const BaseAppBar({
     super.key,
     this.title,
@@ -21,6 +22,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.actionWidget,
     this.enableHomeButton = true,
+    this.centerTitle = false, // Mặc định là false để giữ behavior cũ
   });
 
   @override
@@ -33,17 +35,36 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
       color: backgroundColor ?? Colors.grey[900],
       child: Row(
         children: [
-          isBackEnabled
-              ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-              : const SizedBox(),
-          Text(tr(title ?? ""), style: textTheme(context).titleMedium),
-          // if (actionWidget != null) actionWidget!,
-          const Spacer(),
+          if (isBackEnabled)
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios, size: 32),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          else
+            const SizedBox(),
+
+          // Xử lý hiển thị title theo centerTitle
+          if (!centerTitle) ...[
+            Text(tr(title ?? ""), style: textTheme(context).titleMedium),
+            if (actionWidget != null) actionWidget!,
+          ],
+
+          // Spacer sẽ khác nhau tùy theo centerTitle
+          if (centerTitle) ...[
+            Expanded(
+              child: Center(
+                child: Text(
+                  tr(title ?? ""), 
+                  style: textTheme(context).titleMedium,
+                ),
+              ),
+            ),
+          ] else
+            const Spacer(),
+
+          // Logo bên phải
           Hero(
             tag: "main-logo",
             child: GestureDetector(

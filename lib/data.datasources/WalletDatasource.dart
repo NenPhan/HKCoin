@@ -6,6 +6,7 @@ import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
+import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/customer_wallet_token.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
@@ -130,6 +131,26 @@ class WalletDatasource {
       );            
       if(response !=null && response["Data"] !=null) {
         return BlockchangeWalletInfo.fromJson(response["Data"]);
+      } else{
+        return null;
+      }        
+    });    
+  }
+  Future<BlockchangeWalletTokenInfo?> getWalletTokenById(int walletId) async {
+    return await handleRemoteRequest(() async {        
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getBlockchainWalletTokenById(walletId),
+           headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },          
+          needAccessToken: true,          
+        ),
+        contentType: "application/json",
+      );            
+      if(response !=null && response["Data"] !=null) {
+        return BlockchangeWalletTokenInfo.fromJson(response["Data"]);
       } else{
         return null;
       }        

@@ -24,3 +24,33 @@ extension EthereumNetworkExtension on EthereumNetwork {
     }
   }
 }
+extension StringToEthereumNetwork on String {
+  EthereumNetwork toEthereumNetwork() {
+    switch (toLowerCase()) {
+      case 'bep20':
+        return EthereumNetwork.BEP20;
+      case 'tron':
+        return EthereumNetwork.TRON;
+      case 'erc20':
+        return EthereumNetwork.ERC20;      
+      default:
+        return EthereumNetwork.Default; // Hoặc throw Exception nếu muốn bắt lỗi
+    }
+  }
+}
+extension StringToChain on String {
+  Chain toChain() {
+    switch (toLowerCase()) {
+      case 'usdt':
+        return Chain.USDT;
+      case 'hkc':
+        return Chain.HKC;
+      case 'htx':
+        return Chain.HTX;    
+      case 'bnb':
+        return Chain.BNB;     
+      default:
+        return Chain.None; // Hoặc throw Exception nếu muốn bắt lỗi
+    }
+  }
+}
