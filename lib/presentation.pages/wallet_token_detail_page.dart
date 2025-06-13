@@ -188,9 +188,9 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                               ),
                             ),                                                
                           ),
-                          child: const Text(
-                            'Nhận',
-                            style: TextStyle(fontSize: 18,color: Colors.white),
+                          child: Text(
+                            tr("Account.Wallet.Received"),
+                            style: const TextStyle(fontSize: 18,color: Colors.white),
                           ).tr(),
                         ),
                         const SizedBox(width: 20),
@@ -209,9 +209,9 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                               ),
                             ),
                           ),
-                          child: const Text(
-                            'Gửi',
-                            style: TextStyle(fontSize: 18,color: Colors.white),
+                          child: Text(
+                            tr('Account.Wallet.Send'),
+                            style: const TextStyle(fontSize: 18,color: Colors.white),
                           ).tr(),
                         ),
                       ],
