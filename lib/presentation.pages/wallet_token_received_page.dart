@@ -92,12 +92,13 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                 children: [
                                   TokenIconWidget(
                                     imageUrl: wallet.iconUrl,
-                                    width: 24,
-                                    height: 24,                  
+                                    width: 32,
+                                    height: 32,                  
                                     hasBorder: false,
                                     backgroundColor: Colors.transparent,                                    
                                     placeholder: const CircularProgressIndicator(),
-                                    errorWidget: const Icon(Icons.token, size: 80),
+                                    errorWidget: const Icon(Icons.token, size: 32),
+                                    padding: const EdgeInsets.all(2),
                                   ),     
                                   const SizedBox(width: 8),
                                   Text(
@@ -128,6 +129,16 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                     backgroundColor: Colors.white,
                                     showShare: true,
                                     showSaveStore: false,
+                                    logoWidget: TokenIconWidget(
+                                      imageUrl: wallet.iconUrl,
+                                      width: 24,
+                                      height: 24,                  
+                                      hasBorder: false,
+                                      backgroundColor: Colors.transparent,                                    
+                                      placeholder: const CircularProgressIndicator(),
+                                      errorWidget: const Icon(Icons.token, size: 24),
+                                      padding: const EdgeInsets.all(2),                                      
+                                    ),
                                   ),
                                   const SizedBox(height: 16),
                                   SelectableText(

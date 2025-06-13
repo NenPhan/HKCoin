@@ -17,6 +17,7 @@ class QRCodeWidget extends StatefulWidget {
   final Color? foregroundColor;
   final String? fileName;
   final String? logoPath;
+  final Widget? logoWidget;
   final bool showShare;
   final bool showSaveStore;
 
@@ -28,6 +29,7 @@ class QRCodeWidget extends StatefulWidget {
     this.foregroundColor,
     this.fileName,
     this.logoPath,
+     this.logoWidget, 
     this.showShare = true,
     this.showSaveStore = true,
   }) : super(key: key);
@@ -53,21 +55,43 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
               color: widget.backgroundColor ?? Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: QrImageView(
-              data: widget.data,
-              version: QrVersions.auto,
-              size: widget.size,
-              gapless: true,
-              backgroundColor: widget.backgroundColor ?? Colors.white,
-              foregroundColor: widget.foregroundColor ?? Colors.black,
-              embeddedImage: widget.logoPath != null
-                  ? NetworkImage(widget.logoPath!) // Sử dụng logo từ assets
-                  : null,
-              embeddedImageStyle: QrEmbeddedImageStyle(
-                size: Size(widget.size * 0.25, widget.size * 0.25), // Kích thước logo (25% kích thước QR)
-                
-              ),
-            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                 QrImageView(
+                  data: widget.data,
+                  version: QrVersions.auto,
+                  size: widget.size,
+                  gapless: true,
+                  backgroundColor: widget.backgroundColor ?? Colors.white,
+                  foregroundColor: widget.foregroundColor ?? Colors.black,
+                  embeddedImage: widget.logoPath != null
+                      ? NetworkImage(widget.logoPath!) // Sử dụng logo từ assets
+                      : null,
+                  embeddedImageStyle: QrEmbeddedImageStyle(
+                    size: Size(widget.size * 0.25, widget.size * 0.25), // Kích thước logo (25% kích thước QR)
+                    
+                  ),
+                ),
+                if (widget.logoWidget != null || widget.logoPath != null)
+                  Container(
+                    width: widget.size * 0.2,
+                    height: widget.size * 0.2,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: widget.logoWidget ?? (
+                      widget.logoPath != null
+                        ? Image.network(
+                            widget.logoPath!,
+                            fit: BoxFit.contain,
+                          )
+                        : null
+                    ),
+                  ),
+              ],
+            ),            
           ),
         ),
         const SizedBox(height: 16),
