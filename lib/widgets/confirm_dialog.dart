@@ -32,13 +32,16 @@ class ConfirmDialog extends StatelessWidget {
     this.icon, // Optional icon
     this.iconBorderColor = Colors.blue, // Default border color
     this.showBorder = false,
-     this.iconSize = 32.0,
+    this.iconSize = 32.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Initialize controller for this dialog instance
-    final dialogController = Get.put(ConfirmDialogController(), tag: UniqueKey().toString());
+    final dialogController = Get.put(
+      ConfirmDialogController(),
+      tag: UniqueKey().toString(),
+    );
 
     return AlertDialog(
       title: Column(
@@ -48,62 +51,55 @@ class ConfirmDialog extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border:showBorder? Border.all(
-                  color: iconBorderColor,
-                  width: 3,
-                ):null,
+                border:
+                    showBorder
+                        ? Border.all(color: iconBorderColor, width: 3)
+                        : null,
               ),
               child: Icon(
                 icon,
                 size: iconSize,
-                color: iconBorderColor, // Match icon color with border for consistency
+                color:
+                    iconBorderColor, // Match icon color with border for consistency
               ),
             ),
             const SizedBox(height: 12), // Space between icon and title
           ],
           Text(
-            tr(title),
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            context.tr(title),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),
-      content: Text(
-        tr(content),
-        style: const TextStyle(fontSize: 16),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      content: Text(context.tr(content), style: const TextStyle(fontSize: 16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       actions: [
         TextButton(
           onPressed: onCancelPressed ?? () => Navigator.of(context).pop(),
           child: Text(
-            tr(cancelText),
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-            ),
+            context.tr(cancelText),
+            style: const TextStyle(color: Colors.grey, fontSize: 16),
           ),
         ),
-        Obx(() => ElevatedButton(
-              onPressed: dialogController.isLoading.value
-                  ? null // Disable button when loading
-                  : () async {
+        Obx(
+          () => ElevatedButton(
+            onPressed:
+                dialogController.isLoading.value
+                    ? null // Disable button when loading
+                    : () async {
                       dialogController.isLoading.value = true;
                       onOkPressed?.call();
                       dialogController.isLoading.value = false;
                     },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: okButtonColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: okButtonColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: dialogController.isLoading.value
-                  ? const SizedBox(
+            ),
+            child:
+                dialogController.isLoading.value
+                    ? const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
@@ -111,14 +107,12 @@ class ConfirmDialog extends StatelessWidget {
                         strokeWidth: 2,
                       ),
                     )
-                  : Text(
-                      tr(okText),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                    : Text(
+                      context.tr(okText),
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
-            )),
+          ),
+        ),
       ],
     );
   }
@@ -139,19 +133,20 @@ class ConfirmDialog extends StatelessWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => ConfirmDialog(
-        title: title,
-        content: content,
-        okText: okText,
-        cancelText: cancelText,
-        okButtonColor: okButtonColor,
-        onOkPressed: onOkPressed,
-        onCancelPressed: onCancelPressed,
-        icon: icon,
-        iconBorderColor: iconBorderColor,
-        showBorder: showBorder,
-        iconSize: iconSize,
-      ),
+      builder:
+          (context) => ConfirmDialog(
+            title: title,
+            content: content,
+            okText: okText,
+            cancelText: cancelText,
+            okButtonColor: okButtonColor,
+            onOkPressed: onOkPressed,
+            onCancelPressed: onCancelPressed,
+            icon: icon,
+            iconBorderColor: iconBorderColor,
+            showBorder: showBorder,
+            iconSize: iconSize,
+          ),
     );
   }
 }

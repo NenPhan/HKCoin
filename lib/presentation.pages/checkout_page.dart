@@ -129,7 +129,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      tr("AppShoppingCart.Totals.SubTotal").replaceAll('{0}',controller.cart!.items.first.unitPrice),
+                                      context
+                                          .tr("AppShoppingCart.Totals.SubTotal")
+                                          .replaceAll(
+                                            '{0}',
+                                            controller
+                                                .cart!
+                                                .items
+                                                .first
+                                                .unitPrice,
+                                          ),
                                       style: textTheme(context).bodyMedium
                                           ?.copyWith(color: Colors.white),
                                     ),
@@ -154,7 +163,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
-                                      tr("Checkout.PaymentMethod"),
+                                      context.tr("Checkout.PaymentMethod"),
                                       style: textTheme(context).bodyLarge
                                           ?.copyWith(color: Colors.white),
                                     ),
@@ -288,7 +297,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(tr("Messages.Order.OrderTotal")),
+                            Text(context.tr("Messages.Order.OrderTotal")),
                             Text(
                               controller.orderTotal?.orderTotal ?? "",
                               style: textTheme(context).titleSmall,

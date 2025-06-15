@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<BottomBarItem> items = [
     const BottomBarItem(inActiveItem: Icon(Icons.qr_code, color: Colors.white)),
   ];
-  
+
   void getItems(int index) {
     items = [
       BottomBarItem(

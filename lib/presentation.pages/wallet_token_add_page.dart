@@ -13,12 +13,10 @@ class AddWalletTokenPage extends StatefulWidget {
   static String route = "/add-wallet-token";
 
   @override
-  State<AddWalletTokenPage> createState() =>
-      _AddWalletTokenPageState();
+  State<AddWalletTokenPage> createState() => _AddWalletTokenPageState();
 }
 
-class _AddWalletTokenPageState
-    extends State<AddWalletTokenPage> {
+class _AddWalletTokenPageState extends State<AddWalletTokenPage> {
   final AddWalletTokenController controller = Get.put(
     AddWalletTokenController(),
   );
@@ -33,9 +31,7 @@ class _AddWalletTokenPageState
           body: SafeArea(
             child: Column(
               children: [
-                const BaseAppBar(
-                  title: "Account.WalletToken.Token.Create",
-                ),
+                const BaseAppBar(title: "Account.WalletToken.Token.Create"),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -60,19 +56,18 @@ class _AddWalletTokenPageState
                                         children: [
                                           CustomDropDownButton(
                                             items:
-                                                controller
-                                                    .aviableChainNetworks,
+                                                controller.aviableChainNetworks,
                                             isRequired: true,
                                             selectedValue:
-                                                controller
-                                                    .selectedChainNetwork,
+                                                controller.selectedChainNetwork,
                                             title:
                                                 "Account.WalletToken.Token.Fields.ChainNetwork",
                                             onChanged: (p0) {
-                                              controller.selectedChainNetwork = p0;        
-                                              controller.validate();                                          
-                                            },                                          
-                                          ),                                         
+                                              controller.selectedChainNetwork =
+                                                  p0;
+                                              controller.validate();
+                                            },
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -80,18 +75,21 @@ class _AddWalletTokenPageState
                                 ),
                                 MainTextField(
                                   controller: controller.tokenAddressController,
-                                  label: tr("Account.WalletToken.Token.Fields.TokenAddress"),                                                                                                                                                                     
+                                  label:
+                                      "Account.WalletToken.Token.Fields.TokenAddress",
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return tr("Account.WalletToken.Token.Fields.TokenAddress.Requird");
-                                    }                                  
+                                      return context.tr(
+                                        "Account.WalletToken.Token.Fields.TokenAddress.Requird",
+                                      );
+                                    }
                                     return null;
                                   },
                                   onChanged: (p0) => controller.validate(),
-                                ),                                
+                                ),
                                 _buildActionButton(
                                   size,
-                                  tr("Common.Save"),
+                                  context.tr("Common.Save"),
                                   Icons.save,
                                 ),
                               ],
@@ -113,10 +111,10 @@ class _AddWalletTokenPageState
 
   Widget _buildActionButton(Size size, String text, IconData icon) {
     return SizedBox(
-      width: double.infinity,      
+      width: double.infinity,
       child: ElevatedButton.icon(
         icon: Icon(icon),
-        label: Text(text),        
+        label: Text(text),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
           shape: RoundedRectangleBorder(
@@ -125,8 +123,8 @@ class _AddWalletTokenPageState
         ),
         onPressed: () {
           //if(controller.canSave.value){
-            controller.submitAddToken();
-          //}          
+          controller.submitAddToken();
+          //}
         },
       ),
     );

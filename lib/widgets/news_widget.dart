@@ -35,7 +35,7 @@ class _NewsListWidgetState extends State<NewsListWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    tr("Common.Entity.NewsItem"),
+                    context.tr("Common.Entity.NewsItem"),
                     style: textTheme(context).titleSmall,
                   ),
                 ),
@@ -44,15 +44,17 @@ class _NewsListWidgetState extends State<NewsListWidget> {
                     Get.toNamed(NewsPage.route);
                   },
                   child: Text(
-                    tr("Common.Cms.ReadMore"), // Replace with your translation key
+                    context.tr(
+                      "Common.Cms.ReadMore",
+                    ), // Replace with your translation key
                     style: textTheme(context).bodyMedium?.copyWith(
-                        //  color: Colors.blue, // Customize the style as needed
-                          fontWeight: FontWeight.w400,
-                        ),
+                      //  color: Colors.blue, // Customize the style as needed
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ],
-            ),          
+            ),
             LayoutBuilder(
               builder: (context, constraints) {
                 final itemWidth = (constraints.maxWidth - 10) / 2;
@@ -67,15 +69,15 @@ class _NewsListWidgetState extends State<NewsListWidget> {
                           width: itemWidth,
                           child: const ShimmerContainer(height: 200),
                         );
-                      }                      
-                      final newsItem = widget.news[index];                      
+                      }
+                      final newsItem = widget.news[index];
                       return SizedBox(
                         width: itemWidth,
                         child: GestureDetector(
-                          onTap: () {                                                      
+                          onTap: () {
                             Get.toNamed(
                               NewsDetailPage.route,
-                              arguments: newsItem.id
+                              arguments: newsItem.id,
                             );
                           },
                           child: ClipRRect(
@@ -88,22 +90,24 @@ class _NewsListWidgetState extends State<NewsListWidget> {
                                     newsItem.imageUrl,
                                     fit: BoxFit.cover,
                                     width: itemWidth,
-                                    height: itemWidth * 0.66, // 2:3 aspect ratio
+                                    height:
+                                        itemWidth * 0.66, // 2:3 aspect ratio
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(
                                       scrSize(context).width * 0.03,
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           newsItem.name,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
-                                          style: textTheme(context)
-                                              .bodyMedium
-                                              ?.copyWith(
+                                          style: textTheme(
+                                            context,
+                                          ).bodyMedium?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -112,9 +116,9 @@ class _NewsListWidgetState extends State<NewsListWidget> {
                                           newsItem.shortDescription,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 3,
-                                          style: textTheme(context)
-                                              .bodySmall
-                                              ?.copyWith(
+                                          style: textTheme(
+                                            context,
+                                          ).bodySmall?.copyWith(
                                             fontWeight: FontWeight.w300,
                                           ),
                                         ),

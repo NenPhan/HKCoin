@@ -46,19 +46,24 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
       final index = entry.key + 1; // Start index from 1
       final word = entry.value;
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1), // Reduced outer padding
+        padding: const EdgeInsets.symmetric(
+          horizontal: 2,
+          vertical: 1,
+        ), // Reduced outer padding
         child: TextButton(
-          onPressed: () {                        
-          },
-          style: TextButton.styleFrom(            
+          onPressed: () {},
+          style: TextButton.styleFrom(
             backgroundColor: Colors.blue[50],
             foregroundColor: Colors.black87,
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2), // Reduced inner padding
+            padding: const EdgeInsets.symmetric(
+              horizontal: 4,
+              vertical: 2,
+            ), // Reduced inner padding
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6), // Slightly smaller radius
             ),
             minimumSize: const Size(0, 0), // Allow smaller size
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Reduce tap area            
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Reduce tap area
           ),
           child: Text(
             '$index. $word', // Display index before word
@@ -88,17 +93,18 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
                 // Header
                 const BaseAppBar(title: "Account.Wallet.Detail.Backup"),
                 Text(
-                  tr("Account.Wallet.Detail.Backup.Mnemonic.Title"),                  
+                  context.tr("Account.Wallet.Detail.Backup.Mnemonic.Title"),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 // Mnemonic buttons
-               GridView.count(
+                GridView.count(
                   crossAxisCount: 3, // 3 columns
                   shrinkWrap: true, // Fit content height
-                  physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Disable scrolling
                   mainAxisSpacing: 4, // Compact vertical spacing
                   crossAxisSpacing: 4, // Compact horizontal spacing
                   childAspectRatio: 3, // Wider aspect ratio for compact height
@@ -107,10 +113,16 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
                 // Recommendation section
                 Row(
                   children: [
-                    const Icon(Icons.check_circle, color: Colors.green, size: 14),
+                    const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 14,
+                    ),
                     const SizedBox(width: 8),
                     Text(
-                      tr("Account.Wallet.Detail.Backup.Mnemonic.Recommendation"),                      
+                      context.tr(
+                        "Account.Wallet.Detail.Backup.Mnemonic.Recommendation",
+                      ),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -119,7 +131,9 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
                   ],
                 ),
                 Text(
-                  tr("Account.Wallet.Detail.Backup.Mnemonic.Recommendation.Content"),                  
+                  context.tr(
+                    "Account.Wallet.Detail.Backup.Mnemonic.Recommendation.Content",
+                  ),
                   style: const TextStyle(fontSize: 14),
                 ),
                 // Avoid section
@@ -128,7 +142,7 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
                     const Icon(Icons.cancel, color: Colors.red, size: 14),
                     const SizedBox(width: 8),
                     Text(
-                      tr("Account.Wallet.Detail.Backup.Mnemonic.Avoid"),          
+                      context.tr("Account.Wallet.Detail.Backup.Mnemonic.Avoid"),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -138,7 +152,9 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
                 ),
                 // Bullet list
                 Html(
-                  data: tr("Account.Wallet.Detail.Backup.Mnemonic.Avoid.Content"),
+                  data: context.tr(
+                    "Account.Wallet.Detail.Backup.Mnemonic.Avoid.Content",
+                  ),
                   style: {
                     "body": Style(
                       fontSize: FontSize(14),
@@ -147,19 +163,20 @@ class _WalletDetailBackupPageState extends State<WalletDetailBackupPage> {
                       margin: Margins.zero, // Remove default margins
                     ),
                   },
-                ),                                         
+                ),
               ],
             ),
           ),
         ),
       ),
     );
-  }  
+  }
+
   Widget _buildSubmitButton(BuildContext context) {
     return MainButton(
       width: double.infinity,
-      text: tr("Common.Ok"),
-      onTap: () {        
+      text: "Common.Ok",
+      onTap: () {
         Get.back(); // Navigate back to previous screen
       },
     );

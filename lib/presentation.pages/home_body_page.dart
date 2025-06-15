@@ -28,7 +28,7 @@ class HomeBodyPage extends StatefulWidget {
 
 class _HomeBodyPageState extends State<HomeBodyPage> {
   final HomeBodyController homeBodyController = Get.put(HomeBodyController());
- @override
+  @override
   void initState() {
     ever(homeBodyController.updateResult, (result) {
       if (result != null && result.updateAvailable) {
@@ -37,6 +37,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +120,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              tr("Account.Report.Shopping"),
+                              context.tr("Account.Report.Shopping"),
                               style: textTheme(context).bodyLarge,
                             ),
                             const SizedBox(height: 10),

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 oCcy({String? format}) => NumberFormat(format ?? "#,##0.000", "en_US");
 
@@ -211,7 +212,7 @@ Future<T?> xPopUpDialog<T>(
 }
 
 String? requiredValidator(value, String alert) =>
-    value != "" && value != null ? null : tr(alert);
+    value != "" && value != null ? null : Get.context?.tr(alert);
 
 String dateFormat(DateTime? date, {String format = 'dd/MM/yyyy HH:mm'}) {
   if (date == null) return "";

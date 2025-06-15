@@ -17,7 +17,7 @@ class AboutUsPage extends StatefulWidget {
   State<AboutUsPage> createState() => _AboutUsPageState();
 }
 
-class _AboutUsPageState extends State<AboutUsPage> {  
+class _AboutUsPageState extends State<AboutUsPage> {
   final controller = Get.put(AboutUsController());
   final homecontroller = Get.find<HomeBodyController>();
   String appVersion = '1.0.0';
@@ -37,77 +37,79 @@ class _AboutUsPageState extends State<AboutUsPage> {
       const Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
     );
-    try{
+    try {
       homecontroller.checkUpdate();
-      Get.back();      
-       if (homecontroller.updateResult.value != null && homecontroller.updateResult.value!.updateAvailable) {
-         ever(homecontroller.updateResult, (result) {            
-            if (result != null) {
-              showUpdateDialog(Get.context!, updateResult: result);
-            }
-          });          
-       }else{
+      Get.back();
+      if (homecontroller.updateResult.value != null &&
+          homecontroller.updateResult.value!.updateAvailable) {
+        ever(homecontroller.updateResult, (result) {
+          if (result != null) {
+            showUpdateDialog(context, updateResult: result);
+          }
+        });
+      } else {
         Get.snackbar(
-              tr("Account.PrivateMessage"),
-              tr("Common.LatestVersion"),
-              snackPosition: SnackPosition.BOTTOM,);
-       }
-    }catch(ex){
+          context.tr("Account.PrivateMessage"),
+          context.tr("Common.LatestVersion"),
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (ex) {
       Get.back();
       Get.snackbar(
-        tr("Admin.Common.Errors"),
-        tr("Identity.Error.DefaultError"),
+        context.tr("Admin.Common.Errors"),
+        context.tr("Identity.Error.DefaultError"),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
     Get.snackbar(
-      tr("Account.PrivateMessage"),
-      tr("Common.Update.Checking"),
+      context.tr("Account.PrivateMessage"),
+      context.tr("Common.Update.Checking"),
       snackPosition: SnackPosition.BOTTOM,
     );
   }
 
   Future<void> _launchWebsite() async {
-  final storeUrl = controller.store?.baseUrl; // Get URL from controller
-  
-  if (storeUrl == null || storeUrl.isEmpty) {
-    Get.snackbar(
-      tr("Admin.Common.Errors"),
-      tr("Identity.Error.DefaultError"),
-      snackPosition: SnackPosition.BOTTOM,
-    );
-    return;
-  }
+    final storeUrl = controller.store?.baseUrl; // Get URL from controller
 
-  final uri = Uri.tryParse(storeUrl);
-  if (uri == null || !uri.hasAbsolutePath) {
-    Get.snackbar(
-      tr("Admin.Common.Errors"),
-      tr("Identity.Error.DefaultError"),
-      snackPosition: SnackPosition.BOTTOM,
-    );
-    return;
-  }
+    if (storeUrl == null || storeUrl.isEmpty) {
+      Get.snackbar(
+        context.tr("Admin.Common.Errors"),
+        context.tr("Identity.Error.DefaultError"),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
 
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(
-      uri,
-      mode: LaunchMode.externalApplication, // Opens in browser app
-    );
-  } else {
-    Get.snackbar(
-      tr("Admin.Common.Errors"),
-      tr("Identity.Error.DefaultError"),
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    final uri = Uri.tryParse(storeUrl);
+    if (uri == null || !uri.hasAbsolutePath) {
+      Get.snackbar(
+        context.tr("Admin.Common.Errors"),
+        context.tr("Identity.Error.DefaultError"),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication, // Opens in browser app
+      );
+    } else {
+      Get.snackbar(
+        context.tr("Admin.Common.Errors"),
+        context.tr("Identity.Error.DefaultError"),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
-}
 
   @override
   void initState() {
     super.initState();
     _initPackageInfo();
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,45 +146,47 @@ class _AboutUsPageState extends State<AboutUsPage> {
                                     child: Image.network(
                                       controller.store?.logoUrl ?? '',
                                       fit: BoxFit.contain,
-                                      errorBuilder: (_, __, ___) => Container(
-                                        color: Colors.grey[200],
-                                        child: const Icon(Icons.image_not_supported),
-                                      ),
+                                      errorBuilder:
+                                          (_, __, ___) => Container(
+                                            color: Colors.grey[200],
+                                            child: const Icon(
+                                              Icons.image_not_supported,
+                                            ),
+                                          ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-                                
+
                                 // Tên ứng dụng
                                 Text(
                                   controller.store?.name ?? appName,
-                                  style: textTheme(context).headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: textTheme(context).headlineSmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 8),
-                                
+
                                 // Phiên bản
                                 Text(
                                   'Version $appVersion',
-                                  style: textTheme(context).titleMedium?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                                  style: textTheme(context).titleMedium
+                                      ?.copyWith(color: Colors.grey[600]),
                                   textAlign: TextAlign.center,
                                 ),
                               ],
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20), // Khoảng cách giữa 2 phần
-                          
                           // Card thông tin bổ sung
                           Container(
                             width: scrSize(context).width * 0.9,
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).highlightColor.withOpacity(.12),
+                              color: Theme.of(
+                                context,
+                              ).highlightColor.withOpacity(.12),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
@@ -198,46 +202,60 @@ class _AboutUsPageState extends State<AboutUsPage> {
                                 InkWell(
                                   onTap: _checkForUpdate,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                    ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          tr('Common.CurrentVersion'),
+                                          context.tr('Common.CurrentVersion'),
                                           style: textTheme(context).bodyLarge,
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               appVersion,
-                                              style: textTheme(context).bodyMedium?.copyWith(
+                                              style: textTheme(
+                                                context,
+                                              ).bodyMedium?.copyWith(
                                                 color: Colors.grey[600],
                                               ),
                                             ),
                                             const SizedBox(width: 8),
-                                            const Icon(Icons.arrow_forward_ios, size: 16),
+                                            const Icon(
+                                              Icons.arrow_forward_ios,
+                                              size: 16,
+                                            ),
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                
+
                                 const Divider(height: 20),
-                                
+
                                 // Trang web chính thức
                                 InkWell(
                                   onTap: _launchWebsite,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                    ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          tr('Common.Website'),
+                                          context.tr('Common.Website'),
                                           style: textTheme(context).bodyLarge,
                                         ),
-                                        const Icon(Icons.arrow_forward_ios, size: 16),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 16,
+                                        ),
                                       ],
                                     ),
                                   ),

@@ -47,7 +47,10 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           // Xử lý hiển thị title theo centerTitle
           if (!centerTitle) ...[
-            Text(tr(title ?? ""), style: textTheme(context).titleMedium),
+            Text(
+              context.tr(title ?? ""),
+              style: textTheme(context).titleMedium,
+            ),
             if (actionWidget != null) actionWidget!,
           ],
 
@@ -56,7 +59,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
             Expanded(
               child: Center(
                 child: Text(
-                  tr(title ?? ""), 
+                  context.tr(title ?? ""),
                   style: textTheme(context).titleMedium,
                 ),
               ),

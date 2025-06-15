@@ -48,12 +48,12 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                                 DisableWidget(
                                   child: MainTextField(
                                     controller: controller.usernameController,
-                                    label: tr("Account.Fields.Username"),
+                                    label: context.tr("Account.Fields.Username"),
                                   ),
                                 ),
                                 MainTextField(
                                   controller: controller.fNameController,
-                                  label: tr("Account.Fields.FirstName"),
+                                  label: context.tr("Account.Fields.FirstName"),
                                   validator:
                                       (value) => requiredValidator(
                                         value,
@@ -62,7 +62,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                                 ),
                                 MainTextField(
                                   controller: controller.lNameController,
-                                  label: tr("Account.Fields.LastName"),
+                                  label: context.tr("Account.Fields.LastName"),
                                   validator:
                                       (value) => requiredValidator(
                                         value,
@@ -71,7 +71,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                                 ),
                                 MainTextField(
                                   controller: controller.emailController,
-                                  label: tr("Account.Login.Fields.Email"),
+                                  label: context.tr("Account.Login.Fields.Email"),
                                   validator:
                                       (value) => requiredValidator(
                                         value,
@@ -80,7 +80,7 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                                 ),
                                 MainTextField(
                                   controller: controller.phoneController,
-                                  label: tr("Account.Fields.Phone"),
+                                  label: context.tr("Account.Fields.Phone"),
                                   validator:
                                       (value) => requiredValidator(
                                         value,

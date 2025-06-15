@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_gallery_saver/flutter_image_gallery_saver.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -29,7 +30,7 @@ class QRCodeWidget extends StatefulWidget {
     this.foregroundColor,
     this.fileName,
     this.logoPath,
-     this.logoWidget, 
+    this.logoWidget,
     this.showShare = true,
     this.showSaveStore = true,
   }) : super(key: key);
@@ -41,7 +42,7 @@ class QRCodeWidget extends StatefulWidget {
 class _QRCodeWidgetState extends State<QRCodeWidget> {
   final GlobalKey _qrKey = GlobalKey();
   bool _isSaving = false;
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -58,19 +59,24 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                 QrImageView(
+                QrImageView(
                   data: widget.data,
                   version: QrVersions.auto,
                   size: widget.size,
                   gapless: true,
                   backgroundColor: widget.backgroundColor ?? Colors.white,
                   foregroundColor: widget.foregroundColor ?? Colors.black,
-                  embeddedImage: widget.logoPath != null
-                      ? NetworkImage(widget.logoPath!) // Sử dụng logo từ assets
-                      : null,
+                  embeddedImage:
+                      widget.logoPath != null
+                          ? NetworkImage(
+                            widget.logoPath!,
+                          ) // Sử dụng logo từ assets
+                          : null,
                   embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: Size(widget.size * 0.25, widget.size * 0.25), // Kích thước logo (25% kích thước QR)
-                    
+                    size: Size(
+                      widget.size * 0.25,
+                      widget.size * 0.25,
+                    ), // Kích thước logo (25% kích thước QR)
                   ),
                 ),
                 if (widget.logoWidget != null || widget.logoPath != null)
@@ -81,35 +87,35 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: widget.logoWidget ?? (
-                      widget.logoPath != null
-                        ? Image.network(
-                            widget.logoPath!,
-                            fit: BoxFit.contain,
-                          )
-                        : null
-                    ),
+                    child:
+                        widget.logoWidget ??
+                        (widget.logoPath != null
+                            ? Image.network(
+                              widget.logoPath!,
+                              fit: BoxFit.contain,
+                            )
+                            : null),
                   ),
               ],
-            ),            
+            ),
           ),
         ),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if(widget.showShare)
+            if (widget.showShare)
               _buildActionButton(
                 icon: Icons.share,
-                label: tr("Common.Share"),
+                label: context.tr("Common.Share"),
                 color: Colors.blue,
                 onPressed: _shareQRCode,
               ),
             const SizedBox(width: 16),
-            if(widget.showSaveStore)
+            if (widget.showSaveStore)
               _buildActionButton(
                 icon: Icons.save,
-                label: tr("Admin.Common.Save"),
+                label: context.tr("Admin.Common.Save"),
                 color: Colors.green,
                 onPressed: _isSaving ? null : _showSaveConfirmationDialog,
                 isLoading: _isSaving,
@@ -153,16 +159,16 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text(tr('Common.Approve')),
-            content: Text(tr("Common.QRCode.Question")),
+            title: Text(context.tr('Common.Approve')),
+            content: Text(context.tr("Common.QRCode.Question")),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: Text(tr("Common.Cancel")),
+                child: Text(context.tr("Common.Cancel")),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: Text(tr("Common.Apply")),
+                child: Text(context.tr("Common.Apply")),
               ),
             ],
           ),
@@ -186,7 +192,10 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
     setState(() => _isSaving = true);
     try {
       if (!(await _requestStoragePermission())) {
-        _showSnackBar(tr("Common.QRCode.Storage.Denied"), Colors.red);
+        _showSnackBar(
+          Get.context?.tr("Common.QRCode.Storage.Denied") ?? "",
+          Colors.red,
+        );
         return;
       }
 
@@ -194,8 +203,8 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       final success = await _saveImageToGallery(imageBytes);
       _showSnackBar(
         success
-            ? tr("Common.QRCode.Storage.Success")
-            : tr("Common.QRCode.Storage.Failed"),
+            ? Get.context?.tr("Common.QRCode.Storage.Success") ?? ""
+            : Get.context?.tr("Common.QRCode.Storage.Failed") ?? "",
         success ? Colors.green : Colors.red,
       );
     } catch (e) {
@@ -236,7 +245,7 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       ShareParams(
         files: [XFile(file.path)],
         text: 'QR Code: ${widget.data}',
-        subject: tr("Common.QRCode.Storage.Shared"),
+        subject: context.tr("Common.QRCode.Storage.Shared"),
       ),
     );
   }

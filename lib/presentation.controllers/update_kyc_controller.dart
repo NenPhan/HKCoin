@@ -15,11 +15,11 @@ class UpdateKycController extends GetxController {
   List<IdentificationCardType> iCardTypes = [
     IdentificationCardType(
       id: 0,
-      name: tr("Enums.IdentificationCardType.Passport"),
+      name: Get.context?.tr("Enums.IdentificationCardType.Passport"),
     ),
     IdentificationCardType(
       id: 1,
-      name: tr("Enums.IdentificationCardType.Identification"),
+      name: Get.context?.tr("Enums.IdentificationCardType.Identification"),
     ),
   ];
   final formKey = GlobalKey<FormState>();

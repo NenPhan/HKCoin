@@ -100,7 +100,7 @@ class _ProfitWithdrawalContentPageState
                                 ),
                                 MainTextField(
                                   controller: controller.amountController,
-                                  label: tr("Account.WithDrawalRequest.Amount"),
+                                  label: "Account.WithDrawalRequest.Amount",
                                   keyboardType: TextInputType.number,
                                   enableSelectOnMouseDown: true,
                                   isNumberOnly: true,
@@ -109,46 +109,43 @@ class _ProfitWithdrawalContentPageState
                                   },
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return tr("Field required");
+                                      return context.tr("Field required");
                                     }
                                     if (double.tryParse(value) == null) {
-                                      return tr("Invalid number");
+                                      return context.tr("Invalid number");
                                     }
                                     return null;
                                   },
                                 ),
                                 Visibility(
-                                  visible: controller.showPriceWrap.value,   
+                                  visible: controller.showPriceWrap.value,
                                   maintainState: true,
-                                  maintainSize:false,                               
+                                  maintainSize: false,
                                   child: MainTextField(
                                     controller: controller.amountSwapController,
-                                    label: tr(
-                                      "Account.WithDrawalRequest.Fields.AmountSwap",
-                                    ),
+                                    label:
+                                        "Account.WithDrawalRequest.Fields.AmountSwap",
                                     readOnly: true,
                                   ),
-                                ),                                
+                                ),
                                 Visibility(
                                   visible:
                                       controller
                                           .hiddenExchangePrice, // Ẩn nếu true
                                   maintainState: true,
-                                  maintainSize:false,
+                                  maintainSize: false,
                                   child: MainTextField(
                                     controller:
                                         controller.exchangePriceController,
-                                    label: tr(
-                                      "Account.WithDrawalRequest.TokenExchangePrice",
-                                    ),
+                                    label:
+                                        "Account.WithDrawalRequest.TokenExchangePrice",
                                     readOnly: true,
                                   ),
                                 ),
                                 MainTextField(
                                   controller: controller.walletController,
-                                  label: tr(
-                                    "Account.WithDrawalRequest.WalletTokenAddresExt",
-                                  ),
+                                  label:
+                                      "Account.WithDrawalRequest.WalletTokenAddresExt",
                                   readOnly:
                                       controller
                                               .walletController
@@ -166,13 +163,12 @@ class _ProfitWithdrawalContentPageState
                                   controller: controller.commentController,
                                   isRequired: false,
                                   maxLines: 4,
-                                  label: tr(
-                                    "Account.WithDrawalRequest.Comments",
-                                  ),
+                                  label: "Account.WithDrawalRequest.Comments",
                                 ),
                                 Visibility(
                                   visible: false, // Ẩn hoàn toàn
-                                  maintainState: true, // Giữ trạng thái controller
+                                  maintainState:
+                                      true, // Giữ trạng thái controller
                                   child: TextField(
                                     controller:
                                         controller
@@ -195,7 +191,7 @@ class _ProfitWithdrawalContentPageState
                                 ),
                                 _buildActionButton(
                                   size,
-                                  tr("WithDrawalRequest.Submit"),
+                                  context.tr("WithDrawalRequest.Submit"),
                                   Icons.send,
                                 ),
                               ],

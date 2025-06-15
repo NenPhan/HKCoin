@@ -38,7 +38,6 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
     ]);
   }
 
-
   // Hàm xử lý kéo xuống làm mới
   Future<void> _refreshData(bool isRead) async {
     await controller.gePrivateMessagesData(
@@ -82,7 +81,7 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        tr("Account.PrivateMessage"),
+                        context.tr("Account.PrivateMessage"),
                         style: textTheme(
                           context,
                         ).titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -101,8 +100,8 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
             TabBar(
               controller: _tabController,
               tabs: [
-                Tab(text: tr("Account.PrivateMessage.Tab.Inbox")),
-                Tab(text: tr("Account.PrivateMessage.Tab.Read")),
+                Tab(text: context.tr("Account.PrivateMessage.Tab.Inbox")),
+                Tab(text: context.tr("Account.PrivateMessage.Tab.Read")),
               ],
               labelColor: Colors.amber[900], //Theme.of(context).primaryColor,
               unselectedLabelColor: Colors.grey,
@@ -134,7 +133,7 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
                   );
                 },
               ),
-            ),            
+            ),
           ],
         ),
       ),
@@ -167,7 +166,7 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
         }
 
         if (messages?.isEmpty ?? true) {
-          return Center(child: Text(tr("No messages found")));
+          return Center(child: Text(context.tr("No messages found")));
         }
 
         return RefreshIndicator(

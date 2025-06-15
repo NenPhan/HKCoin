@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -98,13 +99,13 @@ class _MainTextFieldState extends State<MainTextField> {
                   ])
               : null,
       decoration: InputDecoration(
-        hintText: widget.hintText ?? widget.label,
+        hintText: context.tr(widget.hintText ?? widget.label ?? ""),
         label:
             widget.label == null
                 ? null
                 : RichText(
                   text: TextSpan(
-                    text: widget.label,
+                    text: context.tr(widget.label!),
                     style: textTheme(context).bodyMedium,
                     children: [
                       if (widget.isRequired)
@@ -137,7 +138,7 @@ class _MainTextFieldState extends State<MainTextField> {
                   ),
                 ),
       ),
-      validator: widget.validator,
+      validator: (widget.validator),
       onChanged: widget.onChanged,
     );
   }

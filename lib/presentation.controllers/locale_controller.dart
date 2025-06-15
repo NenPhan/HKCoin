@@ -21,7 +21,6 @@ class LocaleController extends GetxController {
     SetLanguage? language = await getLanguage();
     if (language != null && language.languageCulture != null) {
       locale = language.languageCulture!.toLocaleFromIsoCode();
-      await setAppLanguage(newLocale: locale);
     } else {
       if (listLanguage.isNotEmpty) {
         locale =
@@ -31,7 +30,6 @@ class LocaleController extends GetxController {
                 .isoCode!
                 .toLocaleFromIsoCode();
       }
-      await setAppLanguage(newLocale: locale);
     }
   }
 
@@ -60,18 +58,6 @@ class LocaleController extends GetxController {
     ) async {
       listLanguage = r;
     });
-  }
-
-  Future setAppLanguage({Locale? newLocale}) async {
-    final String defaultLocale = Platform.localeName;
-    locale = newLocale ?? defaultLocale.toLocaleFromString();
-
-    await handleEither(
-      await LocaleRepository().getTranslationFile(newLocale ?? locale),
-      (r) {
-        translationFile = r;
-      },
-    );
   }
 }
 

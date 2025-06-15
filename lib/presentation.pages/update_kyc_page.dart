@@ -79,12 +79,14 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 20),
-            AlertWidget(type: controller.verifyKyc
-                  ? AlertType.success
-                  : AlertType.warning,
-            message: controller.verifyKyc
-                  ? "Account.KYC.Veryfied"
-                  : controller.kycStatus?.message ?? ""),           
+            AlertWidget(
+              type:
+                  controller.verifyKyc ? AlertType.success : AlertType.warning,
+              message:
+                  controller.verifyKyc
+                      ? "Account.KYC.Veryfied"
+                      : controller.kycStatus?.message ?? "",
+            ),
             Form(
               key: controller.formKey,
               child: SpacingColumn(
@@ -93,34 +95,32 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                 children: [
                   const SizedBox(height: 20),
                   Text(
-                    tr("Account.YourPersonalDetails"),
+                    context.tr("Account.YourPersonalDetails"),
                     style: textTheme(context).bodyMedium,
                   ),
                   MainTextField(
                     controller: controller.fNameController,
-                    label: tr("Account.KYC.Fields.FirstName"),
+                    label: "Account.KYC.Fields.FirstName",
                     onChanged: (p0) => controller.validate(),
                   ),
                   MainTextField(
                     controller: controller.lNameController,
-                    label: tr("Account.KYC.Fields.LastName"),
+                    label: "Account.KYC.Fields.LastName",
                     onChanged: (p0) => controller.validate(),
                   ),
                   MainTextField(
                     controller: controller.phoneController,
-                    label: tr("Account.KYC.Fields.Phone"),
+                    label: "Account.KYC.Fields.Phone",
                     keyboardType: TextInputType.phone,
                     isNumberOnly: true,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\+?[0-9]*$'),
-                      ),
+                      FilteringTextInputFormatter.allow(RegExp(r'^\+?[0-9]*$')),
                     ],
                     onChanged: (p0) => controller.validate(),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    tr("Account.IdentificationCard").toUpperCase(),
+                    context.tr("Account.IdentificationCard").toUpperCase(),
                     style: textTheme(context).bodyMedium,
                   ),
                   CustomDropDownButton(
@@ -139,13 +139,11 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
                         flex: 2,
                         child: MainTextField(
                           controller: controller.cidController,
-                          label: tr(
-                            "Account.KYC.Fields.IdentificationCardNumber",
-                          ),
+                          label: "Account.KYC.Fields.IdentificationCardNumber",
                           onChanged: (p0) => controller.validate(),
                         ),
                       ),
-                       const SizedBox(width: 8.0),
+                      const SizedBox(width: 8.0),
                       Expanded(
                         flex: 2,
                         child: CustomDropDownButton(
@@ -198,8 +196,10 @@ class _CustomerInfoPageState extends State<UpdateKycPage> {
           spacing: 20,
           children: [
             const SizedBox(),
-            AlertWidget(type: AlertType.warning,
-            message: controller.kycStatus!.message!),            
+            AlertWidget(
+              type: AlertType.warning,
+              message: controller.kycStatus!.message!,
+            ),
             UploadPhotoButton(
               name: "ACCOUNT.KYC.CARD.BEFORE.TITLE",
               enable: index == 0,
@@ -273,7 +273,7 @@ class _UploadPhotoButtonState extends State<UploadPhotoButton> {
                 children: [
                   Expanded(
                     child: Text(
-                      tr(widget.name),
+                      context.tr(widget.name),
                       overflow: TextOverflow.ellipsis,
                       style: textTheme(context).titleSmall,
                     ),

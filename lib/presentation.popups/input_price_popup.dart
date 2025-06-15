@@ -32,7 +32,10 @@ class _InputPricePopupState extends State<InputPricePopup> {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: scrSize(context).height * 0.02,
               children: [
-                Text(tr("Products.EnterProductPrice"), style: textTheme(context).titleSmall),
+                Text(
+                  context.tr("Products.EnterProductPrice"),
+                  style: textTheme(context).titleSmall,
+                ),
                 MainTextField(
                   autofocus: true,
                   keyboardType: TextInputType.number,
@@ -42,7 +45,7 @@ class _InputPricePopupState extends State<InputPricePopup> {
                       (value) =>
                           value != "" && value != null
                               ? null
-                              : tr(
+                              : context.tr(
                                 "Account.Register.Errors.UsernameIsNotProvided",
                               ),
                 ),
@@ -66,7 +69,7 @@ class _InputPricePopupState extends State<InputPricePopup> {
                       ),
                     ),
                     child: Text(
-                      tr("Products.AddtoCart"),
+                      context.tr("Products.AddtoCart"),
                       style: textTheme(context).titleSmall,
                     ),
                   ),

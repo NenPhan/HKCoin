@@ -24,10 +24,12 @@ class WalletExportPrivateKeyPage extends StatefulWidget {
   static String route = "/wallet-export-privatekey";
 
   @override
-  State<WalletExportPrivateKeyPage> createState() => _WalletExportPrivateKeyPageState();
+  State<WalletExportPrivateKeyPage> createState() =>
+      _WalletExportPrivateKeyPageState();
 }
 
-class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage> {
+class _WalletExportPrivateKeyPageState
+    extends State<WalletExportPrivateKeyPage> {
   late BlockchangeWalletInfo wallet;
   late TextEditingController privateKeyController = TextEditingController();
   bool _showQrCode = false; // State to toggle QR code visibility
@@ -48,7 +50,7 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
       }
     }
   }
-  
+
   @override
   void dispose() {
     privateKeyController.dispose();
@@ -71,7 +73,9 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header
-                const BaseAppBar(title: "Account.Wallet.Detail.Export.PrivateKey"),
+                const BaseAppBar(
+                  title: "Account.Wallet.Detail.Export.PrivateKey",
+                ),
                 const AlertWidget(
                   type: AlertType.warning,
                   message: "Account.Wallet.Detail.Confirm.Content",
@@ -79,30 +83,35 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
                 // QR Code Box
                 _buildQrCodeBox(context),
                 // Text Field
-                MainTextField(
-                  controller: privateKeyController,
-                  readOnly: true,
-                ),
+                MainTextField(controller: privateKeyController, readOnly: true),
                 // Copy Button
                 Align(
                   alignment: Alignment.center,
                   child: IconButton(
-                    icon: const Icon(Icons.copy, color: Colors.blue),                    
+                    icon: const Icon(Icons.copy, color: Colors.blue),
                     onPressed: () {
-                      Clipboard.setData(ClipboardData(text: privateKeyController.text));
+                      Clipboard.setData(
+                        ClipboardData(text: privateKeyController.text),
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(tr("Account.Wallet.Detail.Export.PrivateKey.Copied"))),
+                        SnackBar(
+                          content: Text(
+                            context.tr(
+                              "Account.Wallet.Detail.Export.PrivateKey.Copied",
+                            ),
+                          ),
+                        ),
                       );
                     },
                     tooltip: 'Copy Private Key',
                   ),
-                ),                              
+                ),
                 Row(
                   children: [
                     const Icon(Icons.cancel, color: Colors.red, size: 14),
                     const SizedBox(width: 8),
                     Text(
-                      tr("Account.Wallet.Detail.Backup.Mnemonic.Avoid"),          
+                      context.tr("Account.Wallet.Detail.Backup.Mnemonic.Avoid"),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -111,7 +120,9 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
                   ],
                 ),
                 Html(
-                  data: tr("Account.Wallet.Detail.Export.PrivateKey.Alert"),
+                  data: context.tr(
+                    "Account.Wallet.Detail.Export.PrivateKey.Alert",
+                  ),
                   style: {
                     "body": Style(
                       fontSize: FontSize(14),
@@ -137,14 +148,14 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
         });
       },
       child: Container(
-        width: double.infinity,                
+        width: double.infinity,
         child: Stack(
           alignment: Alignment.center,
           children: [
             if (_showQrCode && privateKeyController.text.isNotEmpty)
               QRCodeWidget(
                 data: privateKeyController.text,
-                size: 180,                
+                size: 180,
                 backgroundColor: Colors.white,
                 showShare: false,
                 showSaveStore: false,
@@ -153,18 +164,13 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.visibility_off,
-                    size: 40,
-                    color: Colors.grey[600],
-                  ),
+                  Icon(Icons.visibility_off, size: 40, color: Colors.grey[600]),
                   const SizedBox(height: 8),
                   Text(
-                    tr("Account.Wallet.Detail.Export.PrivateKey.TapShow"),
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 16,
+                    context.tr(
+                      "Account.Wallet.Detail.Export.PrivateKey.TapShow",
                     ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
                   ),
                 ],
               ),
@@ -177,7 +183,7 @@ class _WalletExportPrivateKeyPageState extends State<WalletExportPrivateKeyPage>
   Widget _buildSubmitButton(BuildContext context) {
     return MainButton(
       width: double.infinity,
-      text: tr("Common.Ok"),
+      text: "Common.Ok",
       onTap: () {
         Get.back();
       },

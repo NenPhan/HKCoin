@@ -18,19 +18,22 @@ class WalletTokenDetailPage extends StatefulWidget {
 }
 
 class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
-  final WalletTokenDetailController controller = Get.put(WalletTokenDetailController());
-  Future<void> _onRefresh() async {    
+  final WalletTokenDetailController controller = Get.put(
+    WalletTokenDetailController(),
+  );
+  Future<void> _onRefresh() async {
     // Call getWallet on refresh
-   await controller.getWalletInfo(Get.arguments);
+    await controller.getWalletInfo(Get.arguments);
     // Update GetBuilder
-    controller.update(['wallet-token-detail-page']);    
-  }   
+    controller.update(['wallet-token-detail-page']);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<WalletTokenDetailController>(
       id: "wallet-token-detail-page",
       builder: (controller) {
-        return Scaffold(      
+        return Scaffold(
           body: RefreshIndicator(
             onRefresh: _onRefresh,
             child: SafeArea(
@@ -38,40 +41,56 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
-                    BaseAppBar(title: controller.walletsInfo?.symbol??"",centerTitle: true,),       
+                    BaseAppBar(
+                      title: controller.walletsInfo?.symbol ?? "",
+                      centerTitle: true,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
-                        children: [                      
+                        children: [
                           Expanded(
                             flex: 6, // Tỉ lệ 6
                             child: Container(
                               height: 36, // Chiều cao cố định
-                              margin: const EdgeInsets.only(right: 5), // Khoảng cách phải 5px (tổng 2 bên là 10px)
+                              margin: const EdgeInsets.only(
+                                right: 5,
+                              ), // Khoảng cách phải 5px (tổng 2 bên là 10px)
                               decoration: BoxDecoration(
                                 color: const Color(0xFF1B1B1B),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Center( // Căn giữa nội dung theo chiều dọc và ngang
+                              child: Center(
+                                // Căn giữa nội dung theo chiều dọc và ngang
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
                                   child: Row(
-                                    mainAxisSize: MainAxisSize.min, // Co lại vừa đủ nội dung
+                                    mainAxisSize:
+                                        MainAxisSize
+                                            .min, // Co lại vừa đủ nội dung
                                     children: [
-                                      const Icon(Icons.account_balance_wallet,
-                                          size: 18, color: Colors.white70),
+                                      const Icon(
+                                        Icons.account_balance_wallet,
+                                        size: 18,
+                                        color: Colors.white70,
+                                      ),
                                       const SizedBox(width: 8),
-                                      Expanded( // Cho phép text co dãn trong container
+                                      Expanded(
+                                        // Cho phép text co dãn trong container
                                         child: Text(
-                                          controller.walletsInfo?.walletName ?? 'My Wallet',
+                                          controller.walletsInfo?.walletName ??
+                                              'My Wallet',
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
-                                            color: Colors.white70,                                        
-                                          ),                                      
+                                            color: Colors.white70,
+                                          ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left, // Căn giữa text
+                                          textAlign:
+                                              TextAlign.left, // Căn giữa text
                                         ),
                                       ),
                                     ],
@@ -80,25 +99,31 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                               ),
                             ),
                           ),
-                          
+
                           // Cột bên phải - Địa chỉ ví với nút copy (chiếm 40%)
                           Expanded(
                             flex: 4, // Tỉ lệ 4
                             child: Container(
                               height: 36, // Chiều cao cố định
-                              margin: const EdgeInsets.only(left: 5), // Khoảng cách trái 5px (tổng 2 bên là 10px)
+                              margin: const EdgeInsets.only(
+                                left: 5,
+                              ), // Khoảng cách trái 5px (tổng 2 bên là 10px)
                               decoration: BoxDecoration(
                                 color: const Color(0xFF1B1B1B),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center, // Căn giữa toàn bộ nội dung
+                                mainAxisAlignment:
+                                    MainAxisAlignment
+                                        .center, // Căn giữa toàn bộ nội dung
                                 children: [
-                                  Expanded( // Phần text chiếm hết không gian còn lại
+                                  Expanded(
+                                    // Phần text chiếm hết không gian còn lại
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 12),
                                       child: Text(
-                                        controller.walletsInfo?.walletAddress != null 
+                                        controller.walletsInfo?.walletAddress !=
+                                                null
                                             ? '${controller.walletsInfo!.walletAddress!.substring(0, 5)}...${controller.walletsInfo!.walletAddress!.substring(controller.walletsInfo!.walletAddress!.length - 4)}'
                                             : '0x1a2...b3c4',
                                         style: const TextStyle(
@@ -107,7 +132,8 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center, // Căn giữa text
+                                        textAlign:
+                                            TextAlign.center, // Căn giữa text
                                       ),
                                     ),
                                   ),
@@ -116,9 +142,19 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                                     child: IconButton(
                                       icon: const Icon(Icons.copy, size: 18),
                                       onPressed: () {
-                                        if (controller.walletsInfo?.walletAddress != null) {
+                                        if (controller
+                                                .walletsInfo
+                                                ?.walletAddress !=
+                                            null) {
                                           Clipboard.setData(
-                                            ClipboardData(text: controller.walletsInfo?.walletAddress??""));
+                                            ClipboardData(
+                                              text:
+                                                  controller
+                                                      .walletsInfo
+                                                      ?.walletAddress ??
+                                                  "",
+                                            ),
+                                          );
                                         }
                                       },
                                       padding: EdgeInsets.zero,
@@ -132,29 +168,41 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 40),
-                    
+
                     // Biểu tượng logo to tròn
                     TokenIconWidget(
                       imageUrl: controller.walletsInfo?.iconUrl,
                       width: 80,
-                      height: 80,                  
+                      height: 80,
                       hasBorder: false,
-                      backgroundColor: Colors.transparent,                                    
-                      placeholder: const CircularProgressIndicator(), // Tùy chọn
-                      errorWidget: const Icon(Icons.token,size: 80,), // Tùy chọn
+                      backgroundColor: Colors.transparent,
+                      placeholder:
+                          const CircularProgressIndicator(), // Tùy chọn
+                      errorWidget: const Icon(
+                        Icons.token,
+                        size: 80,
+                      ), // Tùy chọn
                       padding: const EdgeInsets.all(8),
-                    ),                
-                    const SizedBox(height: 40),                
+                    ),
+                    const SizedBox(height: 40),
                     // Số dư
-                    FormattedNumber(value: controller.walletsInfo?.totalBalance ,decimalDigits:controller.walletsInfo?.chain==Chain.BNB? 5:2,
-                                                  style: const TextStyle(fontSize: 40),
-                                                  suffix: controller.walletsInfo?.chain!.name,),              
+                    FormattedNumber(
+                      value: controller.walletsInfo?.totalBalance,
+                      decimalDigits:
+                          controller.walletsInfo?.chain == Chain.BNB ? 5 : 2,
+                      style: const TextStyle(fontSize: 40),
+                      suffix: controller.walletsInfo?.chain!.name,
+                    ),
                     const SizedBox(height: 8),
-                    FormattedNumber(value: controller.walletsInfo?.balanceUSD ,decimalDigits:2,
-                                                  style: const TextStyle(fontSize: 18),
-                                                  prefix:r"$"),
+                    FormattedNumber(
+                      value: controller.walletsInfo?.balanceUSD,
+                      decimalDigits: 2,
+                      style: const TextStyle(fontSize: 18),
+                      prefix: r"$",
+                    ),
+
                     // Số dư bằng USD
                     // Text(
                     //   ,,
@@ -163,9 +211,8 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                     //     color: Colors.grey[600],
                     //   ),
                     // ),
-                    
                     const SizedBox(height: 40),
-                    
+
                     // 2 nút Nhận và Gửi
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -174,24 +221,32 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                           onPressed: () {
                             Get.toNamed(
                               WalletTokenReceivedPage.route,
-                              arguments: WalletTokenReceivedPageParam(wallet: controller.walletsInfo!),
+                              arguments: WalletTokenReceivedPageParam(
+                                wallet: controller.walletsInfo!,
+                              ),
                             );
-                          },                      
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 8),
+                              horizontal: 32,
+                              vertical: 8,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(
-                                color: Colors.white70,width: 2
+                                color: Colors.white70,
+                                width: 2,
                               ),
-                            ),                                                
+                            ),
                           ),
                           child: Text(
-                            tr("Account.Wallet.Received"),
-                            style: const TextStyle(fontSize: 18,color: Colors.white),
-                          ).tr(),
+                            context.tr("Account.Wallet.Received"),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 20),
                         ElevatedButton(
@@ -201,30 +256,36 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 8),
+                              horizontal: 32,
+                              vertical: 8,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(
-                                color: Colors.white70,width: 2
+                                color: Colors.white70,
+                                width: 2,
                               ),
                             ),
                           ),
                           child: Text(
-                            tr('Account.Wallet.Send'),
-                            style: const TextStyle(fontSize: 18,color: Colors.white),
-                          ).tr(),
+                            context.tr('Account.Wallet.Send'),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 40),                                
+                    const SizedBox(height: 40),
                   ],
                 ),
-              ),              
+              ),
             ),
-          ),              
+          ),
         );
-      }
-    );    
-  }  
+      },
+    );
+  }
 }

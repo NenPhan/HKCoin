@@ -31,40 +31,52 @@ class AddAddressController extends GetxController {
     getCountries();
     super.onInit();
   }
+
   Future getCountries() async {
     handleEither(await UtilRepository().getCountries(), (r) {
       listCountries = r;
       update(["province-drop-down"]);
     });
   }
- Future getProvinces({int countryId = 230}) async {
-    handleEither(await UtilRepository().getProvinces(countryId: countryId), (r) {
+
+  Future getProvinces({int countryId = 230}) async {
+    handleEither(await UtilRepository().getProvinces(countryId: countryId), (
+      r,
+    ) {
       listProvince = r;
       update(["province-drop-down"]);
     });
   }
+
   bool validateForm() {
-    countryError = selectedCountry == null ? tr("Address.Fields.Country.Required"): null;
-    provinceError = selectedProvince == null ?  tr("Address.Fields.StateProvince.Required") : null;
+    countryError =
+        selectedCountry == null
+            ? Get.context?.tr("Address.Fields.Country.Required")
+            : null;
+    provinceError =
+        selectedProvince == null
+            ? Get.context?.tr("Address.Fields.StateProvince.Required")
+            : null;
     update(['province-drop-down']);
     return countryError == null && provinceError == null;
   }
+
   Future save() async {
     isLoading.value = true;
     var isValidated = formKey.currentState!.validate();
-     if (selectedCountry == null) {
-      countryError = tr("Address.Fields.Country.Required");
+    if (selectedCountry == null) {
+      countryError = Get.context?.tr("Address.Fields.Country.Required");
       update(["province-drop-down"]);
     } else {
       countryError = null;
     }
     if (selectedProvince == null) {
-      provinceError = tr("Address.Fields.StateProvince.Required");
+      provinceError = Get.context?.tr("Address.Fields.StateProvince.Required");
       update(["province-drop-down"]);
     } else {
       provinceError = null;
       update(["province-drop-down"]);
-         if (isValidated && selectedCountry != null && selectedProvince != null) {
+      if (isValidated && selectedCountry != null && selectedProvince != null) {
         await handleEither(
           await CheckoutRepository().addAddress(
             AddAddressParam(

@@ -1,12 +1,10 @@
-import 'package:hkcoin/core/time_converter.dart';
-
 class Network {
   int? id;
   int? chainId;
   String? name;
   String? rpcUrl;
   int? displayOrder;
-  bool? networkDefault;  
+  bool? networkDefault;
 
   Network({
     this.id,
@@ -14,7 +12,7 @@ class Network {
     this.name,
     this.rpcUrl,
     this.displayOrder,
-    this.networkDefault,    
+    this.networkDefault,
   });
 
   factory Network.fromJson(Map<String, dynamic> json) => Network(
@@ -23,7 +21,7 @@ class Network {
     name: json["Name"],
     rpcUrl: json["RpcUrl"],
     displayOrder: json["DisplayOrder"],
-    networkDefault: json["NetworkDefault"],    
+    networkDefault: json["NetworkDefault"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +30,6 @@ class Network {
     "Name": name,
     "RpcUrl": rpcUrl,
     "DisplayOrder": displayOrder,
-    "NetworkDefault": networkDefault,    
+    "NetworkDefault": networkDefault,
   };
 }

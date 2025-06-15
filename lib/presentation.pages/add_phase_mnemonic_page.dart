@@ -37,7 +37,10 @@ class AddMnemonicPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFormContent(CreateWalletController controller, BuildContext context) {
+  Widget _buildFormContent(
+    CreateWalletController controller,
+    BuildContext context,
+  ) {
     return Form(
       key: controller.formKey,
       child: SpacingColumn(
@@ -48,14 +51,25 @@ class AddMnemonicPage extends StatelessWidget {
           _buildActionButtons(controller, context),
           const SizedBox(height: 20),
           Obx(() {
-            if (controller.detectedInputType.value == CreateWalletType.Mnemonic) {
-              return Text(tr("Account.wallet.Detected.Mnemonic"), style: TextStyle(color: Colors.green));
-            } else if (controller.detectedInputType.value == CreateWalletType.PrivateKey) {
-              return Text(tr("Account.wallet.Detected.PrivateKey"), style: TextStyle(color: Colors.green));
+            if (controller.detectedInputType.value ==
+                CreateWalletType.Mnemonic) {
+              return Text(
+                context.tr("Account.wallet.Detected.Mnemonic"),
+                style: const TextStyle(color: Colors.green),
+              );
+            } else if (controller.detectedInputType.value ==
+                CreateWalletType.PrivateKey) {
+              return Text(
+                context.tr("Account.wallet.Detected.PrivateKey"),
+                style: const TextStyle(color: Colors.green),
+              );
             } else if (controller.mnemonicController.text.isNotEmpty) {
-              return Text(tr("Account.wallet.Detected.NotDetermined"), style: TextStyle(color: Colors.orange));
+              return Text(
+                context.tr("Account.wallet.Detected.NotDetermined"),
+                style: const TextStyle(color: Colors.orange),
+              );
             }
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }),
           _buildSubmitButton(controller),
         ],
@@ -67,21 +81,26 @@ class AddMnemonicPage extends StatelessWidget {
     return MainTextField(
       controller: controller.mnemonicController,
       label: 'Mnemonic',
-      hintText: tr("Account.wallet.Enter.PlaceHoled"),
+      hintText: "Account.wallet.Enter.PlaceHoled",
       maxLines: 8,
       minLines: 6,
-      validator: (value) => value?.trim().isEmpty ?? true 
-          ? tr("Account.wallet.Enter.Mnemonic.Required") 
-          : null,
+      validator:
+          (value) =>
+              value?.trim().isEmpty ?? true
+                  ? Get.context?.tr("Account.wallet.Enter.Mnemonic.Required")
+                  : null,
     );
   }
 
-  Widget _buildActionButtons(CreateWalletController controller, BuildContext context) {
+  Widget _buildActionButtons(
+    CreateWalletController controller,
+    BuildContext context,
+  ) {
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller.mnemonicController,
       builder: (context, value, _) {
         final hasText = value.text.trim().isNotEmpty;
-        
+
         return FutureBuilder<ClipboardData?>(
           future: Clipboard.getData(Clipboard.kTextPlain),
           builder: (context, snapshot) {
@@ -103,11 +122,18 @@ class AddMnemonicPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPasteButton(CreateWalletController controller, bool hasClipboard, String clipboardText) {
+  Widget _buildPasteButton(
+    CreateWalletController controller,
+    bool hasClipboard,
+    String clipboardText,
+  ) {
     return IconButton(
-      onPressed: hasClipboard ? () => controller.mnemonicController.text = clipboardText : null,
+      onPressed:
+          hasClipboard
+              ? () => controller.mnemonicController.text = clipboardText
+              : null,
       icon: const Icon(Icons.paste, color: Colors.white, size: 18),
-      tooltip: tr('Common.Paste'),
+      tooltip: Get.context?.tr('Common.Paste'),
       style: IconButton.styleFrom(
         backgroundColor: hasClipboard ? Colors.white24 : Colors.white12,
         shape: const CircleBorder(),
@@ -115,7 +141,10 @@ class AddMnemonicPage extends StatelessWidget {
     );
   }
 
-  Widget _buildQRScanButton(CreateWalletController controller, BuildContext context) {
+  Widget _buildQRScanButton(
+    CreateWalletController controller,
+    BuildContext context,
+  ) {
     return IconButton(
       onPressed: () => _navigateToQRScanPage(controller, context),
       icon: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 18),
@@ -127,17 +156,21 @@ class AddMnemonicPage extends StatelessWidget {
     );
   }
 
-  void _navigateToQRScanPage(CreateWalletController controller, BuildContext context) {
+  void _navigateToQRScanPage(
+    CreateWalletController controller,
+    BuildContext context,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => QRScanPage(
-          showDialogOnScan: false,
-          onScanResult: (result) {
-            controller.mnemonicController.text = result;
-            Navigator.of(context).pop();
-          },
-        ),
+        builder:
+            (_) => QRScanPage(
+              showDialogOnScan: false,
+              onScanResult: (result) {
+                controller.mnemonicController.text = result;
+                Navigator.of(context).pop();
+              },
+            ),
       ),
     );
   }
@@ -147,15 +180,13 @@ class AddMnemonicPage extends StatelessWidget {
       onPressed: hasText ? () => controller.mnemonicController.clear() : null,
       icon: const Icon(Icons.clear, color: Colors.white, size: 18),
       label: Text(
-        tr("Common.Delete"),
+        Get.context?.tr("Common.Delete") ?? "",
         style: const TextStyle(color: Colors.white),
       ),
       style: TextButton.styleFrom(
         foregroundColor: Colors.white,
         backgroundColor: Colors.white24,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }
@@ -168,11 +199,11 @@ class AddMnemonicPage extends StatelessWidget {
         text: "Common.Save",
         onTap: () async {
           //if (controller.validate()) {
-            // Đảm bảo loading hiển thị ngay lập tức
-            controller.isLoadingSubmit.value = true;
-            await Future.delayed(Duration.zero);
-            
-            controller.submitAddToken(CreateWalletType.Mnemonic);
+          // Đảm bảo loading hiển thị ngay lập tức
+          controller.isLoadingSubmit.value = true;
+          await Future.delayed(Duration.zero);
+
+          controller.submitAddToken(CreateWalletType.Mnemonic);
           //}
         },
       ),

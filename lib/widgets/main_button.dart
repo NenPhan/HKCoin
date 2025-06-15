@@ -58,7 +58,7 @@ class _MainButtonState extends State<MainButton> {
                     children: [
                       if (widget.icon != null) widget.icon!,
                       Text(
-                        tr(widget.text),
+                        context.tr(widget.text),
                         style: textTheme(context).titleSmall,
                       ),
                     ],
