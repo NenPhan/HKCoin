@@ -21,7 +21,7 @@ class LocaleDatasource {
           HttpMethod.GET,
           host: AppConfig().host,
           endpoint:
-              "/resourcestring.${locale.languageCode}-${locale.countryCode}.json",
+              "/translations/${locale.languageCode}-${locale.countryCode}.json",
           needBasicAuth: false,
           needAccessToken: false,
         ),

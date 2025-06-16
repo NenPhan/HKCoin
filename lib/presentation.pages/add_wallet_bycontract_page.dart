@@ -246,7 +246,7 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
       ),
     );
   }
-   void _navigateToQRScanPage(CreateWalletWithContractController controller, BuildContext context) {
+  void _navigateToQRScanPage(CreateWalletWithContractController controller, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(

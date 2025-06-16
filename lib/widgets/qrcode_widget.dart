@@ -63,6 +63,8 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
                   version: QrVersions.auto,
                   size: widget.size,
                   gapless: true,
+                  errorCorrectionLevel: QrErrorCorrectLevel.H,
+                  padding: const EdgeInsets.all(2),
                   backgroundColor: widget.backgroundColor ?? Colors.white,
                   foregroundColor: widget.foregroundColor ?? Colors.black,
                   embeddedImage: widget.logoPath != null
@@ -71,6 +73,14 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: Size(widget.size * 0.25, widget.size * 0.25), // Kích thước logo (25% kích thước QR)
                     
+                  ),
+                  dataModuleStyle: const QrDataModuleStyle(
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: Colors.black,
+                  ),
+                  eyeStyle: const QrEyeStyle(
+                    eyeShape: QrEyeShape.square,
+                    color: Colors.black,
                   ),
                 ),
                 if (widget.logoWidget != null || widget.logoPath != null)

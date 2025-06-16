@@ -1,31 +1,34 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
-import 'package:hkcoin/core/utils/encryptor.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
+import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/data.repositories/wallet_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
-class BlockchangeWalletController extends GetxController {
+
+class WalletTokenSendingController extends GetxController {
+  final formKey = GlobalKey<FormState>();
+  int walletId=0;
    final listNetwork = <Network>[].obs;
    final wallets = <BlockchangeWallet>[].obs;
    final walletInfos = <WalletsModel>[].obs;
    var selectedNetwork = Rxn<Network>();
+   var mnemonicWords = <String>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isLoadingWallets = false.obs;
-   BlockchangeWalletInfo? walletsInfo;
-   final TextEditingController searchController = TextEditingController();   
+  BlockchangeWalletTokenInfo? walletsInfo;
+   final TextEditingController walletAddressController = TextEditingController();   
+   final TextEditingController walletAmountController = TextEditingController();   
+   final RxBool isLoadingSubmit = false.obs;
   @override
-  void onInit() {    
-    getNetworks();
-    getWalletInfo();
+  void onInit() {        
+    //getWalletInfo(Get.arguments);
     super.onInit();
   }
   Future getNetworks() async {        
@@ -74,98 +77,50 @@ class BlockchangeWalletController extends GetxController {
       ); // Lọc mạng theo tên
     }    
   }
-  Future<void> selectNetwork(Network network) async {
-    selectedNetwork.value = network; // Cập nhật mạng được chọn
-    await Storage().saveNetWork(network); // Lưu mạng đã chọn
-    update(["blockchange-networks"]);
-    await getWalletInfo();
-    update(["blockchange-networks"]);
-  }
-  Future<void> selectWallet(BlockchangeWallet wallet) async {
-    try{
-      await handleEitherReturn(
-        await WalletRepository().selectedWallet(
-          BlockchangeWallet(
-            id: wallet.id
-          ),
-        ),
-        (r) async {         
-          //Get.toNamed(WalletPage.route);
-          //Get.back();
-        },
-      );
-    }catch(e){}
-    update(["blockchange-networks"]);
-    getWalletInfo();
-    update(["wallet-info-page"]);  
-
-  }
-  Future getWallets() async {
-    isLoadingWallets.value = true;    
-    update(["blockchange-wallets"]);   
-      await handleEither(await WalletRepository().getWallets(), (r) async {
-        //wallets.value = r;        
-        await fetchWalletsBalance(r);
-      });
-   
-    isLoadingWallets.value = false;
-    update(["blockchange-wallets"]);
-  }
-  Future getWalletInfo() async {
+ 
+  Future getWalletInfo(int walletId) async {
     isLoading.value = true;    
-    update(["wallet-info-page"]);   
-      await handleEither(await WalletRepository().getWalletInfo(), (r) {
+    update(["wallet-token-detail-page"]);   
+      await handleEither(await WalletRepository().getWalletTokenById(walletId), (r) {
         if(r !=null){
-          walletsInfo = r;
+          walletsInfo = r;                                
           fetchWalletBalance(walletsInfo!);     
-        }        
+        }
       });
    
     isLoading.value = false;
-    update(["wallet-info-page"]);
+    update(["wallet-token-detail-page"]);
   }
-  Future fetchWalletBalance(BlockchangeWalletInfo wallets) async {
+  Future fetchWalletBalance(BlockchangeWalletTokenInfo wallet) async {
     final networkStore = await Storage().getNetWork() ?? selectedNetwork.value;
     if (networkStore == null) {
       Get.snackbar('Error', 'No network selected');
       return;
     }    
     walletInfos.clear();
-    wallets.walletAddressFormat = _formatAddress(wallets.walletAddress);
-    final web3Client = Web3Client(networkStore.rpcUrl!, http.Client());
-    double totalBalance = 0.0;
-    double totalBalanceUSD = 0.0;       
-     for (var wallet in walletsInfo!.walletAddressModel!) {      
-        //final credentials = EthPrivateKey.fromHex(decryptText(wallet.privateKey!,""));
-        //final address = await credentials.extractAddress();        
-        // Lấy số dư từ BNB (Binance Smart Chain)
-        try {                            
-         if(wallet.chain==Chain.BNB){
-            var bnb = await web3Client.getBalance(EthereumAddress.fromHex(wallet.walletAddress));
-            wallet.totalBalance = fromWeiToBNB(bnb.getInWei.toDouble());     
-            wallet.totalBalanceUSD = wallet.totalBalance!* await fetchBnbPrice(); 
-            walletInfos.add(wallet);
-            totalBalance+=wallet.totalBalanceUSD!;  
-         }else if(wallet.chain!=Chain.BNB){
-            final result = await getTokenBalance(
-              wallet.walletAddress, 
-              wallet.contractAddress,
-              web3Client,
-            );          
-            wallet.totalBalance = result['balance'].toDouble();      
-            walletInfos.add(wallet);
-            if(wallet.chain==Chain.USDT){
-              totalBalance+=wallet.totalBalance!;
-            }                                   
-          }                 
-        } catch (e) {
-          debugPrint('Lỗi khi lấy số dư BNB: $e');
-          //Get.snackbar('Error', 'Lỗi khi lấy số dư BNB: $e');
-        }       
-     }           
-    wallets.totalBalance = totalBalance;
-    update(["wallet-info-page"]);
-    wallets.balanceUSD = totalBalanceUSD;
+    //wallets.walletAddressFormat = _formatAddress(wallets.walletAddress);
+    final web3Client = Web3Client(networkStore.rpcUrl!, http.Client());    
+    try {                            
+      if(wallet.chain==Chain.BNB){
+        var bnb = await web3Client.getBalance(EthereumAddress.fromHex(wallet.walletAddress!));
+        wallet.totalBalance = fromWeiToBNB(bnb.getInWei.toDouble());     
+        wallet.balanceUSD = wallet.totalBalance!*665;                        
+      }else if(wallet.chain!=Chain.BNB){
+        final result = await getTokenBalance(
+          wallet.walletAddress!, 
+          wallet.contractAddress!,
+          web3Client,
+        );          
+        wallet.totalBalance = result['balance'].toDouble();                  
+        // if(wallet.chain==Chain.USDT){
+        //   totalBalance+=wallet.totalBalance!;
+        // }                                   
+      }                 
+    } catch (e) {
+      debugPrint('Lỗi khi lấy số dư BNB: $e');
+      //Get.snackbar('Error', 'Lỗi khi lấy số dư BNB: $e');
+    }                        
+    update(["wallet-token-detail-page"]);    
     //wallet.unit = unit;
     web3Client.dispose();
   }
@@ -203,23 +158,6 @@ class BlockchangeWalletController extends GetxController {
     update(["blockchange-wallets"]);
   web3Client.dispose();
 }
-  Future<double> fetchBnbPrice() async {
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd'),
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['binancecoin']['usd'].toDouble();
-      } else {
-        print('Lỗi lấy tỷ giá BNB: ${response.statusCode}');
-        return 600.0; // Giá trị mặc định
-      }
-    } catch (e) {
-      print('Lỗi lấy tỷ giá BNB: $e');
-      return 600.0; // Giá trị mặc định
-    }
-  }
   @override
   void onClose() {    
     super.onClose();
@@ -311,5 +249,5 @@ class BlockchangeWalletController extends GetxController {
   String formatNumber(double number) {
     final formatter = NumberFormat("#,##0.00", "en_US"); // Locale Đức (dùng dấu . cho nghìn)
     return formatter.format(number);
-  }
+  }   
 }

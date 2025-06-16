@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hkcoin/core/time_converter.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_detail_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';

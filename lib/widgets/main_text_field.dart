@@ -21,6 +21,7 @@ class MainTextField extends StatefulWidget {
     this.enableSelectOnMouseDown = false,
     this.isNumberOnly = false,
     this.inputFormatters,
+    this.suffixWidget
   });
   final TextEditingController? controller;
   final String? label;
@@ -37,6 +38,7 @@ class MainTextField extends StatefulWidget {
   final bool enableSelectOnMouseDown;
   final bool isNumberOnly;
   final List<TextInputFormatter>? inputFormatters;
+   final Widget? suffixWidget;
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -65,10 +67,14 @@ class _MainTextFieldState extends State<MainTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final shouldObscure = widget.suffixWidget == null 
+      ? obscureText 
+      : false;
+
     return TextFormField(
       controller: widget.controller,
       style: const TextStyle(color: Colors.white),
-      obscureText: obscureText,
+      obscureText: shouldObscure,
       autofocus: widget.autofocus,
       keyboardType: widget.keyboardType,
       readOnly: widget.readOnly,
@@ -123,19 +129,29 @@ class _MainTextFieldState extends State<MainTextField> {
           vertical: 20,
         ),
         suffixIcon:
-            !widget.obscureText
-                ? null
-                : GestureDetector(
-                  onTap: () {
-                    if (widget.obscureText) {
-                      obscureText = !obscureText;
-                      setState(() {});
-                    }
-                  },
-                  child: Icon(
-                    obscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
+          !widget.obscureText
+              ? null
+              : widget.suffixWidget !=null?
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: widget.suffixWidget,
+                    )
+                  ],
+                )                  
+              : GestureDetector(
+                onTap: () {
+                  if (widget.obscureText) {
+                    obscureText = !obscureText;
+                    setState(() {});
+                  }
+                },
+                child: Icon(
+                  obscureText ? Icons.visibility : Icons.visibility_off,
                 ),
+              ),
       ),
       validator: widget.validator,
       onChanged: widget.onChanged,

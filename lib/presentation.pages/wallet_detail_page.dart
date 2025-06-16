@@ -15,7 +15,6 @@ import 'package:hkcoin/presentation.pages/wallet_detail_backup_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_detail_privatekey_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/confirm_dialog.dart';
-import 'package:hkcoin/widgets/dropdown_popup.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 import 'package:hkcoin/widgets/screen_popup_widget.dart';
@@ -136,6 +135,7 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
                                     children: [
                                       // Backup row
                                       GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
                                         onTap: () {
                                           if(controller.walletsInfo?.createWalletTypeId==CreateWalletType.Mnemonic.index){
                                             Get.toNamed(
@@ -198,7 +198,8 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
                                       const SizedBox(height: 8),
                                       const Divider(height: 1, color: Colors.grey),
                                       const SizedBox(height: 8),
-                                      GestureDetector(                                        
+                                      GestureDetector(         
+                                        behavior: HitTestBehavior.opaque,                               
                                         onTap: () {
                                           ScreenPopup(title: "Account.Wallet.Detail.CopyPublicKey",                                            
                                             backgroundColor: const Color(0xFF1B1B1B),
@@ -242,6 +243,7 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
                                                 Text(tr("Account.Wallet.Detail.Export.PublicKey")),
                                                 const SizedBox(width: 4),
                                                 GestureDetector(
+                                                  behavior: HitTestBehavior.opaque,
                                                   onTap: () {
                                                     // Show note information
                                                     showDialog(
@@ -277,6 +279,7 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
                                       const Divider(height: 1, color: Colors.grey),
                                       const SizedBox(height: 8),
                                       GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
                                         onTap: () {
                                          
                                           ConfirmDialog.show(

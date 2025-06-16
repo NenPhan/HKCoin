@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_detail_controller.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_received_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_send_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
@@ -196,7 +197,10 @@ class _WalletTokenDetailPageState extends State<WalletTokenDetailPage> {
                         const SizedBox(width: 20),
                         ElevatedButton(
                           onPressed: () {
-                            // Xử lý gửi tiền
+                            Get.toNamed(
+                              WalletTokenSendingPage.route,
+                              arguments: WalletTokenSendingPageParam(wallet: controller.walletsInfo!),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
