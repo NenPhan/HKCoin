@@ -38,18 +38,21 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   child: Column(
                     children: [
                       const SizedBox(height: 15),
-                      _buildWalletCard(title: "Account.wallet.CreateNew",description: "Account.wallet.CreateNew.Hint",
-                      icon: Icons.add,
-                      iconColor: Colors.amber.shade900,
-                      cardBackgroundColor: Colors.white12,
-                      iconBackgroundColor: Colors.white24,
-                      titleColor: Colors.white70,
-                      onTap: () {
-                        ScreenPopup(title: "Account.wallet.CreateNew",   
-                          headerColor: Colors.grey.shade300, 
-                          titleColor: Colors.black87,         
-                          iconColor: Colors.black87,           
-                            isDismissible: false,                          
+                      _buildWalletCard(
+                        title: "Account.wallet.CreateNew",
+                        description: "Account.wallet.CreateNew.Hint",
+                        icon: Icons.add,
+                        iconColor: Colors.amber.shade900,
+                        cardBackgroundColor: Colors.white12,
+                        iconBackgroundColor: Colors.white24,
+                        titleColor: Colors.white70,
+                        onTap: () {
+                          ScreenPopup(
+                            title: "Account.wallet.CreateNew",
+                            headerColor: Colors.grey.shade300,
+                            titleColor: Colors.black87,
+                            iconColor: Colors.black87,
+                            isDismissible: false,
                             heightFactor: .7,
                             child: Column(
                               children: [
@@ -60,37 +63,55 @@ class _AddWalletPageState extends State<AddWalletPage> {
                                   titleColor: Colors.black87,
                                   description: 'Mô tả nhanh',
                                   descriptionColor: Colors.grey.shade700,
-                                  expanTextColor: Colors.black54,     
-                                  detailText: "Account.wallet.CreateNew.DetailText",                         
-                                  buttonText: 'Account.wallet.CreateNew.BtnInput',
-                                  onButtonPressed: () {                                    
+                                  expanTextColor: Colors.black54,
+                                  detailText:
+                                      "Account.wallet.CreateNew.DetailText",
+                                  buttonText:
+                                      'Account.wallet.CreateNew.BtnInput',
+                                  onButtonPressed: () {
                                     ConfirmDialog.show(
                                       context: context,
                                       title: 'Common.Confirm',
-                                      content: 'Bạn có muốn tiếp tục hành động này không?',
+                                      content:
+                                          'Bạn có muốn tiếp tục hành động này không?',
                                       okText: 'Common.OK',
                                       cancelText: 'Common.Cancel',
                                       onOkPressed: () async {
-                                        try{
-                                          await controller.createWalletAutoGenerateMnemonic();
-                                          final blockchangeWalletController = Get.find<BlockchangeWalletController>();
-                                          await Get.toNamed(AddWalletPage.route)?.then((result) {
+                                        try {
+                                          await controller
+                                              .createWalletAutoGenerateMnemonic();
+                                          final blockchangeWalletController =
+                                              Get.find<
+                                                BlockchangeWalletController
+                                              >();
+                                          await Get.toNamed(
+                                            AddWalletPage.route,
+                                          )?.then((result) {
                                             if (result != null) {
-                                              blockchangeWalletController.getWalletInfo();                                            
-                                              Get.offAllNamed(WalletPage.route);// Navigate back to WalletPage
+                                              blockchangeWalletController
+                                                  .getWalletInfo();
+                                              Get.offAllNamed(
+                                                WalletPage.route,
+                                              ); // Navigate back to WalletPage
                                             }
                                           });
-                                        }catch (e) {
+                                        } catch (e) {
                                           // ignore: use_build_context_synchronously
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text('Failed to create wallet: $e')),
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Failed to create wallet: $e',
+                                              ),
+                                            ),
                                           );
                                         } finally {
                                           // ignore: use_build_context_synchronously
                                           Navigator.of(context).pop();
-                                        }                                        
+                                        }
                                       },
-                                      onCancelPressed: () {                                        
+                                      onCancelPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                     );
@@ -105,64 +126,70 @@ class _AddWalletPageState extends State<AddWalletPage> {
                                       'label': 'Account.wallet.Tags.PrivateKey',
                                       'textColor': Colors.black,
                                       'backgroundColor': Colors.grey.shade300,
-                                    },                                 
+                                    },
                                   ],
                                   buttonColor: Colors.amber.shade900,
                                   buttonTextColor: Colors.white,
                                   backgroundHeaderColor: Colors.teal.shade50,
-                                ),                              
+                                ),
                               ],
-                            ),)
-                        .show(context);
-                      }),
+                            ),
+                          ).show(context);
+                        },
+                      ),
                       const SizedBox(height: 12),
-                      _buildWalletCard(title: "Account.wallet.Enter",description: "Account.wallet.Enter.Hint",
-                      icon: Icons.expand_more,
-                      iconColor: Colors.amber.shade900,
-                      cardBackgroundColor: Colors.white12,
-                      iconBackgroundColor: Colors.white24,
-                      titleColor: Colors.white70,
-                      onTap: () {
-                        ScreenPopup(title: "Account.wallet.Enter",   
-                        headerColor: Colors.grey.shade300, 
-                        titleColor: Colors.black87,         
-                        iconColor: Colors.black87,           
-                          isDismissible: false,                          
-                          heightFactor: .7,
-                          child: Column(
-                            children: [
-                              buildExpandableCard(
-                                icon: Icons.account_balance_wallet,
-                                iconColor: Colors.teal,
-                                title: 'Account.wallet.CreateNew.Hint',
-                                titleColor: Colors.black87,
-                                description: 'Mô tả nhanh',
-                                descriptionColor: Colors.grey.shade700,
-                                expanTextColor: Colors.black54,                              
-                                buttonText: 'Account.wallet.CreateNew.BtnInput',
-                                onButtonPressed: () {
-                                  Get.toNamed(AddMnemonicPage.route);
-                                },
-                               tags: [
-                                  {
-                                    'label': 'Account.wallet.Tags.Mnemonic',
-                                    'textColor': Colors.black,
-                                    'backgroundColor': Colors.grey.shade300,
+                      _buildWalletCard(
+                        title: "Account.wallet.Enter",
+                        description: "Account.wallet.Enter.Hint",
+                        icon: Icons.expand_more,
+                        iconColor: Colors.amber.shade900,
+                        cardBackgroundColor: Colors.white12,
+                        iconBackgroundColor: Colors.white24,
+                        titleColor: Colors.white70,
+                        onTap: () {
+                          ScreenPopup(
+                            title: "Account.wallet.Enter",
+                            headerColor: Colors.grey.shade300,
+                            titleColor: Colors.black87,
+                            iconColor: Colors.black87,
+                            isDismissible: false,
+                            heightFactor: .7,
+                            child: Column(
+                              children: [
+                                buildExpandableCard(
+                                  icon: Icons.account_balance_wallet,
+                                  iconColor: Colors.teal,
+                                  title: 'Account.wallet.CreateNew.Hint',
+                                  titleColor: Colors.black87,
+                                  description: 'Mô tả nhanh',
+                                  descriptionColor: Colors.grey.shade700,
+                                  expanTextColor: Colors.black54,
+                                  buttonText:
+                                      'Account.wallet.CreateNew.BtnInput',
+                                  onButtonPressed: () {
+                                    Get.toNamed(AddMnemonicPage.route);
                                   },
-                                  {
-                                    'label': 'Account.wallet.Tags.PrivateKey',
-                                    'textColor': Colors.black,
-                                    'backgroundColor': Colors.grey.shade300,
-                                  },                                 
-                                ],
-                                buttonColor: Colors.amber.shade900,
-                                buttonTextColor: Colors.white,
-                                backgroundHeaderColor: Colors.teal.shade50,
-                              ),
-                            ],
-                          ),)
-                        .show(context);
-                      }),                     
+                                  tags: [
+                                    {
+                                      'label': 'Account.wallet.Tags.Mnemonic',
+                                      'textColor': Colors.black,
+                                      'backgroundColor': Colors.grey.shade300,
+                                    },
+                                    {
+                                      'label': 'Account.wallet.Tags.PrivateKey',
+                                      'textColor': Colors.black,
+                                      'backgroundColor': Colors.grey.shade300,
+                                    },
+                                  ],
+                                  buttonColor: Colors.amber.shade900,
+                                  buttonTextColor: Colors.white,
+                                  backgroundHeaderColor: Colors.teal.shade50,
+                                ),
+                              ],
+                            ),
+                          ).show(context);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -173,13 +200,16 @@ class _AddWalletPageState extends State<AddWalletPage> {
       ),
     );
   }
+
   Widget _buildWalletCard({
     required String title,
     String? description,
     required IconData icon,
     required VoidCallback onTap,
     Color iconColor = Colors.blue,
-    Color iconBackgroundColor = const Color(0xFFE3F2FD), // mặc định blue.shade50
+    Color iconBackgroundColor = const Color(
+      0xFFE3F2FD,
+    ), // mặc định blue.shade50
     Color cardBackgroundColor = Colors.white,
     Color titleColor = Colors.black87,
   }) {
@@ -189,9 +219,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
       child: Card(
         color: cardBackgroundColor,
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -212,7 +240,8 @@ class _AddWalletPageState extends State<AddWalletPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(tr(title),
+                    Text(
+                      context.tr(title),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -220,7 +249,8 @@ class _AddWalletPageState extends State<AddWalletPage> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(tr(description ?? ""),
+                    Text(
+                      context.tr(description ?? ""),
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade600,
@@ -237,7 +267,8 @@ class _AddWalletPageState extends State<AddWalletPage> {
         ),
       ),
     );
-  }  
+  }
+
   Widget buildExpandableCard({
     required IconData icon,
     required Color iconColor,
@@ -252,7 +283,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
     required Color buttonColor,
     required Color buttonTextColor,
     required Color backgroundHeaderColor,
-    Color backgroundBodyColor=const Color(0xFFF5F5F5),
+    Color backgroundBodyColor = const Color(0xFFF5F5F5),
     Color borderColor = const Color(0xFFE0E0E0),
     Color expanTextColor = const Color(0xFFE0E0E0),
   }) {
@@ -277,7 +308,9 @@ class _AddWalletPageState extends State<AddWalletPage> {
                 Container(
                   decoration: BoxDecoration(
                     color: backgroundHeaderColor,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
                   ),
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -298,24 +331,28 @@ class _AddWalletPageState extends State<AddWalletPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(tr(title),
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: titleColor)),
-                            const SizedBox(height: 4),
-                            if (detailText != null && detailText.isNotEmpty)
-                            InkWell(
-                              onTap: () => setState(() => expanded = !expanded),
-                              child: Text(
-                                tr("Common.ExpandCollapseAll"),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: expanTextColor,
-                                  decoration: TextDecoration.underline,
-                                ),
+                            Text(
+                              context.tr(title),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: titleColor,
                               ),
                             ),
+                            const SizedBox(height: 4),
+                            if (detailText != null && detailText.isNotEmpty)
+                              InkWell(
+                                onTap:
+                                    () => setState(() => expanded = !expanded),
+                                child: Text(
+                                  context.tr("Common.ExpandCollapseAll"),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: expanTextColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -325,13 +362,16 @@ class _AddWalletPageState extends State<AddWalletPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: buttonColor,
                           foregroundColor: buttonTextColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
                           textStyle: const TextStyle(fontSize: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Text(tr(buttonText)),
+                        child: Text(context.tr(buttonText)),
                       ),
                     ],
                   ),
@@ -343,53 +383,70 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   color: backgroundBodyColor,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [      
-                      const SizedBox(height: 10),              
+                    children: [
+                      const SizedBox(height: 10),
                       // Tags
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: tags.map((tag) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: tag['backgroundColor'] ?? Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                tr(tag['label'] ?? ''),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: tag['textColor'] ?? Colors.black87,
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                          children:
+                              tags.map((tag) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        tag['backgroundColor'] ??
+                                        Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    context.tr(tag['label'] ?? ''),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: tag['textColor'] ?? Colors.black87,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                         ),
                       ),
                       const SizedBox(height: 10),
                       AnimatedSize(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.bounceInOut,
-                        child: expanded && detailText != null && detailText.isNotEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                                child: Text(
-                                  tr(detailText),
-                                  style: TextStyle(fontSize: 14, color: descriptionColor),
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      )
+                        child:
+                            expanded &&
+                                    detailText != null &&
+                                    detailText.isNotEmpty
+                                ? Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    8,
+                                    16,
+                                    16,
+                                  ),
+                                  child: Text(
+                                    context.tr(detailText),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: descriptionColor,
+                                    ),
+                                  ),
+                                )
+                                : const SizedBox.shrink(),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-        );        
+        );
       },
     );
   }

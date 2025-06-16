@@ -10,8 +10,7 @@ class Injection {
   static Future setup() async {
     // final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
     await Storage.init();
-    var localController = Get.put(LocaleController());
-    await localController.initLocale();
+    Get.put(LocaleController());
     var cartController = Get.put(CartController());
     cartController.getCartData();
     var messageController = Get.put(PrivateMessageController());

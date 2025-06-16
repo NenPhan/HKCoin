@@ -29,7 +29,7 @@ class _CoinExchangeRateWidgetState extends State<CoinExchangeRateWidget> {
         children: [
           Assets.icons.hkcLogoIcon.image(width: 50),
           Text(
-            tr("Tradings.Exchange"),
+            context.tr("Tradings.Exchange"),
             textAlign: TextAlign.center,
             style: textTheme(context).bodyLarge,
           ),

@@ -40,7 +40,7 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   MainButton(
-                    text: tr("Account.WalletToken.Btn"),
+                    text: "Account.WalletToken.Btn",
                     onTap: () {
                       Get.toNamed(AddWalletTokenPage.route)?.then((result) {
                         controller.getWalletTokens();
@@ -70,12 +70,12 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      tr(
-                                        "Account.WalletToken.Balance",
-                                      ).replaceAll(
-                                        "{0}",
-                                        "${item.token ?? ""} BEP20",
-                                      ),
+                                      context
+                                          .tr("Account.WalletToken.Balance")
+                                          .replaceAll(
+                                            "{0}",
+                                            "${item.token ?? ""} BEP20",
+                                          ),
                                       style: textTheme(context).bodyLarge
                                           ?.copyWith(color: Colors.deepOrange),
                                     ),
@@ -104,7 +104,9 @@ class _WalletTokenPageState extends State<WalletTokenPage> {
                                     //   item.walletQrCode ?? "",
                                     //   width: scrSize(context).width * 0.6,
                                     // ),
-                                    Text(tr("Account.WalletToken.Address")),
+                                    Text(
+                                      context.tr("Account.WalletToken.Address"),
+                                    ),
                                     Text(item.walletToken ?? ""),
                                     MainButton(
                                       width: scrSize(context).width * 0.25,

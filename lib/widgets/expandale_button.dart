@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -36,7 +37,10 @@ class _ExpandaleButtonState extends State<ExpandaleButton> {
                         child: Icon(Icons.arrow_back_ios),
                       ),
                     ),
-                    Text(widget.title, style: textTheme(context).bodyLarge),
+                    Text(
+                      context.tr(widget.title),
+                      style: textTheme(context).bodyLarge,
+                    ),
                   ],
                 ),
               ),

@@ -6,7 +6,9 @@ import 'package:hkcoin/core/time_converter.dart';
 BlockchangeWalletInfo myWalletFromJson(String str) =>
     BlockchangeWalletInfo.fromJson(json.decode(str));
 
-String blockchangeWalletInfoToJson(BlockchangeWalletInfo data) => json.encode(data.toJson());
+String blockchangeWalletInfoToJson(BlockchangeWalletInfo data) =>
+    json.encode(data.toJson());
+
 class BlockchangeWalletInfo {
   final int? id;
   final String? name;
@@ -15,11 +17,11 @@ class BlockchangeWalletInfo {
   final int? networkId;
   double? totalBalance;
   double? balanceUSD;
-  final String? encryptedMnemonic;  
+  final String? encryptedMnemonic;
   final String? privateKey;
   final String? publicKey;
-  final String? encryptionSalt;  
-  final int? createWalletTypeId; 
+  final String? encryptionSalt;
+  final int? createWalletTypeId;
   final String? createWalletType;
   final DateTime? createdOnUtc;
   List<WalletsModel>? walletAddressModel;
@@ -35,31 +37,32 @@ class BlockchangeWalletInfo {
     this.privateKey,
     this.publicKey,
     this.encryptionSalt,
-    this.createWalletTypeId,   
+    this.createWalletTypeId,
     this.createWalletType,
     this.createdOnUtc,
-    this.walletAddressModel 
+    this.walletAddressModel,
   });
-  factory BlockchangeWalletInfo.fromJson(Map<String, dynamic> json) => BlockchangeWalletInfo(
-    id: json["Id"],
-    name: json["Name"],
-    walletAddress: json["WalletAddress"],
-    networkId: json["NetworkId"],
-    totalBalance: json["TotalBalance"],
-    encryptedMnemonic: json["EncryptedMnemonic"],
-    privateKey: json["PrivateKey"],
-    publicKey: json["PublicKey"],
-    encryptionSalt: json["EncryptionSalt"],
-    createWalletTypeId: json["CreateWalletTypeId"],
-    createWalletType: json["CreateWalletType"],
-    createdOnUtc: DateTime.parse(json["CreatedOnUtc"]).convertToUserTime(),
-     walletAddressModel:
+  factory BlockchangeWalletInfo.fromJson(Map<String, dynamic> json) =>
+      BlockchangeWalletInfo(
+        id: json["Id"],
+        name: json["Name"],
+        walletAddress: json["WalletAddress"],
+        networkId: json["NetworkId"],
+        totalBalance: json["TotalBalance"],
+        encryptedMnemonic: json["EncryptedMnemonic"],
+        privateKey: json["PrivateKey"],
+        publicKey: json["PublicKey"],
+        encryptionSalt: json["EncryptionSalt"],
+        createWalletTypeId: json["CreateWalletTypeId"],
+        createWalletType: json["CreateWalletType"],
+        createdOnUtc: DateTime.parse(json["CreatedOnUtc"]).convertToUserTime(),
+        walletAddressModel:
             json["WalletsModel"] == null
                 ? null
                 : (json["WalletsModel"] as List)
                     .map((e) => WalletsModel.fromJson(e))
                     .toList(),
-  );
+      );
 
   Map<String, dynamic> toJson() => {
     "Id": id,
@@ -69,30 +72,30 @@ class BlockchangeWalletInfo {
     "TotalBalance": totalBalance,
     "EncryptedMnemonic": encryptedMnemonic,
     "PrivateKey": privateKey,
-    "PublicKey": publicKey,    
+    "PublicKey": publicKey,
     "EncryptionSalt": encryptionSalt,
     "CreateWalletTypeId": createWalletTypeId,
     "CreateWalletType": createWalletType,
-    "CreatedOnUtc":createdOnUtc,
+    "CreatedOnUtc": createdOnUtc,
     "WalletsModel": walletAddressModel?.map((e) => e.toJson()).toList() ?? [],
-  };  
+  };
   BlockchangeWalletInfo copyWith({
     String? mnemonicOrPrivateKey,
     String? privateKey,
-    String? publicKey,    
+    String? publicKey,
   }) {
     return BlockchangeWalletInfo(
-      encryptedMnemonic: mnemonicOrPrivateKey ?? this.encryptedMnemonic,
+      encryptedMnemonic: mnemonicOrPrivateKey ?? encryptedMnemonic,
       privateKey: privateKey ?? this.privateKey,
-      publicKey: publicKey ?? this.publicKey,            
-    );  
+      publicKey: publicKey ?? this.publicKey,
+    );
   }
 }
 
 class WalletsModel {
   final int? id;
   final String walletAddress;
-  final String contractAddress; 
+  final String contractAddress;
   final EthereumNetwork? ethereumNetwork;
   final Chain chain;
   double? totalBalance;
@@ -109,7 +112,7 @@ class WalletsModel {
     this.totalBalance,
     this.totalBalanceUSD,
     this.symbol,
-    this.decimals
+    this.decimals,
   });
   factory WalletsModel.fromJson(Map<String, dynamic> json) => WalletsModel(
     id: json["Id"],
@@ -118,21 +121,21 @@ class WalletsModel {
     ethereumNetwork: EthereumNetwork.values.firstWhere(
       (e) => e.index == json["EthereumNetwork"] as int,
       orElse: () => EthereumNetwork.BEP20,
-    ),    
+    ),
     chain: Chain.values.firstWhere(
       (e) => e.index == json["Chain"] as int,
       orElse: () => Chain.HKC,
     ),
-    symbol: json["Symbol"]??"",
+    symbol: json["Symbol"] ?? "",
     decimals: json["Decimals"],
   );
   Map<String, dynamic> toJson() => {
     "Id": id,
     "WalletAddress": walletAddress,
     "ContractAddress": contractAddress,
-    "EthereumNetwork": ethereumNetwork?.index,//
-    "Chain": chain.index,//Token
-    "Symbol": symbol??"",
-    "Decimals": decimals    
+    "EthereumNetwork": ethereumNetwork?.index, //
+    "Chain": chain.index, //Token
+    "Symbol": symbol ?? "",
+    "Decimals": decimals,
   };
 }

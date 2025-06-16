@@ -58,7 +58,7 @@ class _CartPageState extends State<CartPage> {
                                         Opacity(
                                           opacity: 0.5,
                                           child: Text(
-                                            tr(
+                                            context.tr(
                                               "ShoppingCart.Mini.EmptyCart.Title",
                                             ),
                                             style:
@@ -177,7 +177,18 @@ class _CartPageState extends State<CartPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        tr("AppShoppingCart.Totals.SubTotal").replaceAll('{0}',controller.cart!.items.first.unitPrice),
+                                        context
+                                            .tr(
+                                              "AppShoppingCart.Totals.SubTotal",
+                                            )
+                                            .replaceAll(
+                                              '{0}',
+                                              controller
+                                                  .cart!
+                                                  .items
+                                                  .first
+                                                  .unitPrice,
+                                            ),
                                         style: textTheme(context).bodyLarge
                                             ?.copyWith(color: Colors.white),
                                       ),

@@ -56,7 +56,10 @@ class AppGetRoutes {
     ),
     GetPage(name: NewsPage.route, page: () => const NewsPage()),
     GetPage(name: NewsDetailPage.route, page: () => const NewsDetailPage()),
-    GetPage(name: NewsCategoryDetailPage.route, page: () => const NewsCategoryDetailPage()),
+    GetPage(
+      name: NewsCategoryDetailPage.route,
+      page: () => const NewsCategoryDetailPage(),
+    ),
     GetPage(name: CartPage.route, page: () => const CartPage()),
     GetPage(name: CustomerInfoPage.route, page: () => const CustomerInfoPage()),
     GetPage(
@@ -78,22 +81,57 @@ class AppGetRoutes {
     ),
     GetPage(name: UpdateKycPage.route, page: () => const UpdateKycPage()),
     GetPage(name: KycCameraPage.route, page: () => const KycCameraPage()),
-    GetPage(name: ProfitWithdrawalContentPage.route, page: () => const ProfitWithdrawalContentPage()),
-    GetPage(name: InvestmentWithdrawalContentPage.route, page: () => const InvestmentWithdrawalContentPage()),
-    GetPage(name: CustomerDownlinesPage.route, page: () => const CustomerDownlinesPage()),
-    GetPage(name: PrivateMessagePage.route, page: () => const PrivateMessagePage()),
-    GetPage(name: PrivateMesageDetailPage.route, page: () => const PrivateMesageDetailPage()),    
-    GetPage(name: AddWalletTokenPage.route, page: () => const AddWalletTokenPage()),    
-    GetPage(name: AddWalletPage.route, page: () => const AddWalletPage()),  
+    GetPage(
+      name: ProfitWithdrawalContentPage.route,
+      page: () => const ProfitWithdrawalContentPage(),
+    ),
+    GetPage(
+      name: InvestmentWithdrawalContentPage.route,
+      page: () => const InvestmentWithdrawalContentPage(),
+    ),
+    GetPage(
+      name: CustomerDownlinesPage.route,
+      page: () => const CustomerDownlinesPage(),
+    ),
+    GetPage(
+      name: PrivateMessagePage.route,
+      page: () => const PrivateMessagePage(),
+    ),
+    GetPage(
+      name: PrivateMesageDetailPage.route,
+      page: () => const PrivateMesageDetailPage(),
+    ),
+    GetPage(
+      name: AddWalletTokenPage.route,
+      page: () => const AddWalletTokenPage(),
+    ),
+    GetPage(name: AddWalletPage.route, page: () => const AddWalletPage()),
     GetPage(name: AddMnemonicPage.route, page: () => const AddMnemonicPage()),
     GetPage(name: WalletPage.route, page: () => const WalletPage()),
-    GetPage(name: AddWalletWithContractPage.route, page: () => const AddWalletWithContractPage()),
+    GetPage(
+      name: AddWalletWithContractPage.route,
+      page: () => const AddWalletWithContractPage(),
+    ),
     GetPage(name: WalletDetailPage.route, page: () => const WalletDetailPage()),
-    GetPage(name: WalletDetailBackupPage.route, page: () => const WalletDetailBackupPage()),
-    GetPage(name: WalletExportPrivateKeyPage.route, page: () => const WalletExportPrivateKeyPage()),
-    GetPage(name: WalletTokenDetailPage.route, page: () => const WalletTokenDetailPage()),       
-    GetPage(name: WalletTokenReceivedPage.route, page: () => const WalletTokenReceivedPage()),   
-    GetPage(name: WalletTokenSendingPage.route, page: () => const WalletTokenSendingPage()),      
-     
+    GetPage(
+      name: WalletDetailBackupPage.route,
+      page: () => const WalletDetailBackupPage(),
+    ),
+    GetPage(
+      name: WalletExportPrivateKeyPage.route,
+      page: () => const WalletExportPrivateKeyPage(),
+    ),
+    GetPage(
+      name: WalletTokenDetailPage.route,
+      page: () => const WalletTokenDetailPage(),
+    ),
+    GetPage(
+      name: WalletTokenReceivedPage.route,
+      page: () => const WalletTokenReceivedPage(),
+    ),
+    GetPage(
+      name: WalletTokenSendingPage.route,
+      page: () => const WalletTokenSendingPage(),
+    ),
   ];
 }

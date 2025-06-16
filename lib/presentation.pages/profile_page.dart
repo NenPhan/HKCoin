@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +23,6 @@ import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
-import 'package:restart_app/restart_app.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -33,50 +34,46 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   List items = [
     {
-      "name": tr("Account.WithDrawalRequest.Create"), 
+      "name": "Account.WithDrawalRequest.Create",
       "icon": Icons.local_atm,
-      "page": WithDrawRequestPage.route
-    },      
-    {
-      "name": tr("Account.Downlines.Customers"),
-      "icon": Icons.people_alt_outlined,
-      "page": CustomerDownlinesPage.route
+      "page": WithDrawRequestPage.route,
     },
     {
-      "name": tr("Account.Management"),
+      "name": "Account.Downlines.Customers",
+      "icon": Icons.people_alt_outlined,
+      "page": CustomerDownlinesPage.route,
+    },
+    {
+      "name": "Account.Management",
       "items": [
         {
-          "name": tr("Account.CustomerInfo"),
+          "name": "Account.CustomerInfo",
           "icon": Icons.person,
           "page": CustomerInfoPage.route,
         },
         {
-          "name": tr("Account.WalletToken"),
+          "name": "Account.WalletToken",
           "icon": Icons.wallet,
           "page": WalletTokenPage.route,
         },
         {
-          "name": tr("Account.CustomerOrders"),
+          "name": "Account.CustomerOrders",
           "icon": Icons.description,
           "page": MyOrdersPage.route,
         },
         {
-          "name": tr("Account.KYC"),
+          "name": "Account.KYC",
           "icon": Icons.security,
           "page": UpdateKycPage.route,
         },
       ],
     },
     {
-      "name": tr("Account.ChangePassword"),
+      "name": "Account.ChangePassword",
       "icon": Icons.shield_outlined,
       "page": ChangePasswordPage.route,
     },
-    {
-      "name":tr("AboutUs"),
-      "icon":Icons.info,
-      "page":AboutUsPage.route
-    }
+    {"name": "AboutUs", "icon": Icons.info, "page": AboutUsPage.route},
   ];
   @override
   void initState() {
@@ -88,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return InkWell(
       onTap: () {
         onTap?.call();
-        if (item["page"] != null) {               
+        if (item["page"] != null) {
           Get.toNamed(item["page"]);
         }
       },
@@ -98,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
           spacing: scrSize(context).width * 0.05,
           children: [
             Icon(item["icon"], size: scrSize(context).width * 0.07),
-            Text(tr(item["name"]), style: textTheme(context).bodyLarge),
+            Text(context.tr(item["name"]), style: textTheme(context).bodyLarge),
           ],
         ),
       ),
@@ -172,17 +169,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                           "";
                                       xPopUpDialog(
                                         context,
-                                        title: tr(
+                                        title: context.tr(
                                           "Account.CustomerInfo.Popup.QRCode.Title",
                                         ),
-                                        description: tr(
+                                        description: context.tr(
                                           "Account.CustomerInfo.Popup.QRCode.Description",
                                         ),
                                         child: QRCodeWidget(
                                           data: qrData, // Dữ liệu QR code
                                           size: 250, // Kích thước
                                           backgroundColor:
-                                              Colors.white, // Màu nền                                                                                        
+                                              Colors.white, // Màu nền
                                           fileName:
                                               'affiliateLink_${controller.customerInfo!.customerNumber}.png', // Tùy chọn tên file khi lưu
                                         ),
@@ -210,7 +207,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius: BorderRadius.circular(50),
                                 onTap: () {
                                   try {
-                                    if (controller.customerInfo?.customerNumber !=
+                                    if (controller
+                                            .customerInfo
+                                            ?.customerNumber !=
                                         null) {
                                       Clipboard.setData(
                                         ClipboardData(
@@ -237,7 +236,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     children: [
                                       const SizedBox(height: 4),
                                       Text(
-                                        controller.customerInfo?.customerNumber ??
+                                        controller
+                                                .customerInfo
+                                                ?.customerNumber ??
                                             "",
                                         style: textTheme(context).labelMedium,
                                       ),
@@ -319,10 +320,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 .first,
                         items: Get.find<LocaleController>().listLanguage,
                         onChanged: (language) async {
+                          inspect(language);
+                          var locale = language!.isoCode!.toLocaleFromIsoCode();
+                          await context.setLocale(locale);
+                          await Get.updateLocale(locale);
                           await Get.find<LocaleController>().setLanguage(
-                            language?.id,
+                            language.id,
                           );
-                          Restart.restartApp();
+                          // Restart.restartApp();
                         },
                         itemDesign: (item) {
                           return SpacingRow(

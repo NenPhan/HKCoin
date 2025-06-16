@@ -20,17 +20,20 @@ class WalletTokenReceivedPage extends StatefulWidget {
   static String route = "/wallet-token-received";
 
   @override
-  State<WalletTokenReceivedPage> createState() => _WalletTokenReceivedPageState();
+  State<WalletTokenReceivedPage> createState() =>
+      _WalletTokenReceivedPageState();
 }
 
 class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
-  final WalletTokenDetailController controller = Get.put(WalletTokenDetailController());
+  final WalletTokenDetailController controller = Get.put(
+    WalletTokenDetailController(),
+  );
   late BlockchangeWalletTokenInfo wallet;
   @override
   void initState() {
     super.initState();
     if (Get.arguments is WalletTokenReceivedPageParam) {
-      wallet = (Get.arguments as WalletTokenReceivedPageParam).wallet;     
+      wallet = (Get.arguments as WalletTokenReceivedPageParam).wallet;
     }
   }
 
@@ -39,17 +42,20 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
     return GetBuilder<WalletTokenDetailController>(
       id: "wallet-token-received-page",
       builder: (controller) {
-        return Scaffold(          
+        return Scaffold(
           body: SafeArea(
             child: Column(
               children: [
-                const BaseAppBar(title: "Account.Wallet.Received", centerTitle: true),
+                const BaseAppBar(
+                  title: "Account.Wallet.Received",
+                  centerTitle: true,
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [                         
+                      children: [
                         // Header với tên ví
                         Container(
                           width: double.infinity,
@@ -60,7 +66,10 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.account_balance_wallet, color: Colors.white70),
+                              const Icon(
+                                Icons.account_balance_wallet,
+                                color: Colors.white70,
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 wallet.walletName!,
@@ -72,9 +81,9 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                               ),
                             ],
                           ),
-                        ),                      
+                        ),
                         const SizedBox(height: 24),
-                        
+
                         // Box thông tin ví
                         Container(
                           width: double.infinity,
@@ -92,13 +101,17 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                   TokenIconWidget(
                                     imageUrl: wallet.iconUrl,
                                     width: 32,
-                                    height: 32,                  
+                                    height: 32,
                                     hasBorder: false,
-                                    backgroundColor: Colors.transparent,                                    
-                                    placeholder: const CircularProgressIndicator(),
-                                    errorWidget: const Icon(Icons.token, size: 32),
+                                    backgroundColor: Colors.transparent,
+                                    placeholder:
+                                        const CircularProgressIndicator(),
+                                    errorWidget: const Icon(
+                                      Icons.token,
+                                      size: 32,
+                                    ),
                                     padding: const EdgeInsets.all(2),
-                                  ),     
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     wallet.symbol ?? 'BNB Chain',
@@ -118,25 +131,29 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                 ],
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // QR Code và địa chỉ
                               Column(
                                 children: [
                                   QRCodeWidget(
                                     data: wallet.walletAddress!,
-                                    size: 250,                
+                                    size: 250,
                                     backgroundColor: Colors.white,
                                     showShare: true,
                                     showSaveStore: false,
                                     logoWidget: TokenIconWidget(
                                       imageUrl: wallet.iconUrl,
                                       width: 24,
-                                      height: 24,                  
+                                      height: 24,
                                       hasBorder: false,
-                                      backgroundColor: Colors.transparent,                                    
-                                      placeholder: const CircularProgressIndicator(),
-                                      errorWidget: const Icon(Icons.token, size: 24),
-                                      padding: const EdgeInsets.all(2),                                      
+                                      backgroundColor: Colors.transparent,
+                                      placeholder:
+                                          const CircularProgressIndicator(),
+                                      errorWidget: const Icon(
+                                        Icons.token,
+                                        size: 24,
+                                      ),
+                                      padding: const EdgeInsets.all(2),
                                     ),
                                   ),
                                   const SizedBox(height: 16),
@@ -146,14 +163,14 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                       fontSize: 14,
                                       fontFamily: 'monospace',
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ],
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // 2 button Chia sẻ và Chép
                         Row(
                           children: [
@@ -163,7 +180,9 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.blue),
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -176,28 +195,43 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                   children: [
                                     const Icon(Icons.share, color: Colors.blue),
                                     const SizedBox(width: 8),
-                                    Text(tr("Common.Share"), style: const TextStyle(color: Colors.blue)),
+                                    Text(
+                                      context.tr("Common.Share"),
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                             const SizedBox(width: 16),
-                            
+
                             // Button Chép
                             Expanded(
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue[700],
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 onPressed: () {
                                   if (wallet.walletAddress != null) {
-                                    Clipboard.setData(ClipboardData(text: wallet.walletAddress!));
+                                    Clipboard.setData(
+                                      ClipboardData(
+                                        text: wallet.walletAddress!,
+                                      ),
+                                    );
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(tr("Common.CopyToClipboard"))),
+                                      SnackBar(
+                                        content: Text(
+                                          context.tr("Common.CopyToClipboard"),
+                                        ),
+                                      ),
                                     );
                                   }
                                 },
@@ -206,7 +240,12 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                                   children: [
                                     const Icon(Icons.copy, color: Colors.white),
                                     const SizedBox(width: 8),
-                                    Text(tr("Common.Copy"), style: const TextStyle(color: Colors.white)),
+                                    Text(
+                                      context.tr("Common.Copy"),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -214,7 +253,7 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Cảnh báo
                         Container(
                           width: double.infinity,
@@ -224,13 +263,18 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            tr("Account.Wallet.Received.Alert").replaceAll('{0}', wallet.symbol ?? 'BNB')
-                            .replaceAll('{1}', wallet.ethereumNetwork!.name),
+                            context
+                                .tr("Account.Wallet.Received.Alert")
+                                .replaceAll('{0}', wallet.symbol ?? 'BNB')
+                                .replaceAll(
+                                  '{1}',
+                                  wallet.ethereumNetwork!.name,
+                                ),
                             style: const TextStyle(color: Colors.orange),
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // // Button Nạp tiền
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
@@ -244,9 +288,12 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
                             Get.back();
                             Get.back();
                           },
-                          icon: const Icon(Icons.arrow_downward, color: Colors.white),
+                          icon: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                          ),
                           label: Text(
-                            tr("Account.Wallet.Received.Btn.Other"),                            
+                            context.tr("Account.Wallet.Received.Btn.Other"),
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -258,12 +305,13 @@ class _WalletTokenReceivedPageState extends State<WalletTokenReceivedPage> {
             ),
           ),
         );
-      }
-    );    
-  } 
+      },
+    );
+  }
+
   Future<void> _shareWalletAddress() async {
     if (wallet.walletAddress == null) return;
-    
+
     final shareText = '''
 Địa chỉ ví ${wallet.symbol ?? 'của tôi'}:
 ${wallet.walletAddress}
@@ -271,18 +319,18 @@ ${wallet.walletAddress}
 Chỉ gửi ${wallet.symbol ?? 'BNB'} và BEP20 token đến địa chỉ này.
 Gửi các loại tiền khác có thể bị mất vĩnh viễn.
 ''';
-    
+
     try {
       await SharePlus.instance.share(
-      ShareParams(     
-        text: shareText,
-        subject: 'Địa chỉ ví ${wallet.symbol ?? ''}',
-      ),
-    );     
-    } catch (e) {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(content: Text('Lỗi khi chia sẻ')),
+        ShareParams(
+          text: shareText,
+          subject: 'Địa chỉ ví ${wallet.symbol ?? ''}',
+        ),
       );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        Get.context!,
+      ).showSnackBar(const SnackBar(content: Text('Lỗi khi chia sẻ')));
     }
-  }   
+  }
 }

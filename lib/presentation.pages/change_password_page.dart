@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -50,9 +49,8 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                 MainTextField(
                                   controller: controller.oldPasswordController,
                                   obscureText: true,
-                                  label: tr(
-                                    "Account.ChangePassword.Fields.OldPassword",
-                                  ),
+                                  label:
+                                      "Account.ChangePassword.Fields.OldPassword",
                                   validator:
                                       (value) => requiredValidator(
                                         value,
@@ -62,9 +60,8 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                 MainTextField(
                                   controller: controller.newPasswordController,
                                   obscureText: true,
-                                  label: tr(
-                                    "Account.ChangePassword.Fields.NewPassword",
-                                  ),
+                                  label:
+                                      "Account.ChangePassword.Fields.NewPassword",
                                   validator:
                                       (value) => requiredValidator(
                                         value,
@@ -75,9 +72,8 @@ class _CustomerInfoPageState extends State<ChangePasswordPage> {
                                   controller:
                                       controller.confirmPasswordController,
                                   obscureText: true,
-                                  label: tr(
-                                    "Account.ChangePassword.Fields.ConfirmNewPassword",
-                                  ),
+                                  label:
+                                      "Account.ChangePassword.Fields.ConfirmNewPassword",
                                   validator:
                                       (value) => requiredValidator(
                                         value,

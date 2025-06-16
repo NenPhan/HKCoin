@@ -39,7 +39,7 @@ class CustomDropdownSearch<T> extends StatelessWidget {
         showSearchBox: true,
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
-            hintText: tr(labelText),
+            hintText: context.tr(labelText),
             hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
             prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
             filled: true,
@@ -56,15 +56,22 @@ class CustomDropdownSearch<T> extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: Colors.black, width: 1.5),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
           ),
           style: const TextStyle(color: Colors.white),
         ),
-        itemBuilder: customItemBuilder ??
+        itemBuilder:
+            customItemBuilder ??
             (context, T? item, isSelected) {
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.grey[800] : Colors.black,
                   borderRadius: BorderRadius.circular(6),
@@ -81,9 +88,10 @@ class CustomDropdownSearch<T> extends StatelessWidget {
                       child: Text(
                         itemAsString(item),
                         style: textTheme(context).bodyMedium?.copyWith(
-                              color: isSelected ? Colors.white : Colors.grey[200],
-                              fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-                            ),
+                          color: isSelected ? Colors.white : Colors.grey[200],
+                          fontWeight:
+                              isSelected ? FontWeight.w500 : FontWeight.normal,
+                        ),
                       ),
                     ),
                   ],
@@ -100,23 +108,24 @@ class CustomDropdownSearch<T> extends StatelessWidget {
       itemAsString: itemAsString,
       selectedItem: selectedItem,
       onChanged: (T? value) {
-          if (onChanged != null) {
-            onChanged!(value);
-          }
-        },
+        if (onChanged != null) {
+          onChanged!(value);
+        }
+      },
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
-          labelText: tr(labelText),
+          labelText: context.tr(labelText),
           labelStyle: TextStyle(color: Colors.grey[300]),
           filled: true,
           fillColor: Colors.grey[900],
-          prefixIcon: icon != null
-                ? Icon(
+          prefixIcon:
+              icon != null
+                  ? Icon(
                     icon,
                     color: Colors.grey[400], // Đồng bộ với labelStyle
                     size: 20.0,
                   )
-                : null, //
+                  : null, //
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Colors.black, width: 1),
@@ -131,7 +140,10 @@ class CustomDropdownSearch<T> extends StatelessWidget {
           ),
           errorText: errorText,
           errorStyle: TextStyle(color: Colors.red[300]),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 20,
+          ),
         ),
       ),
       enabled: isEnabled,

@@ -31,7 +31,7 @@ class _DeleteCartPopupState extends State<DeleteCartPopup> {
               spacing: scrSize(context).height * 0.01,
               children: [
                 Text(
-                  tr("ShoppingCart.Deleted"),
+                  context.tr("ShoppingCart.Deleted"),
                   style: textTheme(context).titleSmall,
                 ),
                 SizedBox(
@@ -49,7 +49,7 @@ class _DeleteCartPopupState extends State<DeleteCartPopup> {
                       ),
                     ),
                     child: Text(
-                      tr("Common.Apply"),
+                      context.tr("Common.Apply"),
                       style: textTheme(context).titleSmall,
                     ),
                   ),
@@ -68,7 +68,7 @@ class _DeleteCartPopupState extends State<DeleteCartPopup> {
                       ),
                     ),
                     child: Text(
-                      tr("Common.Back"),
+                      context.tr("Common.Back"),
                       style: textTheme(context).titleSmall,
                     ),
                   ),

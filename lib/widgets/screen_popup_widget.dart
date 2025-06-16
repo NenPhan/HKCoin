@@ -35,7 +35,8 @@ class ScreenPopup extends StatefulWidget {
   }) : super(key: key);
 
   void show(BuildContext context) {
-    Get.bottomSheet(//showModalBottomSheet(
+    Get.bottomSheet(
+      //showModalBottomSheet(
       //context: context,
       this,
       isScrollControlled: true,
@@ -67,20 +68,29 @@ class _ScreenPopupState extends State<ScreenPopup> {
         minHeight: MediaQuery.sizeOf(context).height * widget.heightFactor,
       ),
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: widget.backgroundColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(widget.borderRadius)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(widget.borderRadius),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: widget.headerColor ?? widget.backgroundColor,
-                  border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.shade200),
+                  ),
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(widget.borderRadius),
                   ),
@@ -90,24 +100,24 @@ class _ScreenPopupState extends State<ScreenPopup> {
                     widget.leftIcon != null
                         ? widget.iconColor != null
                             ? ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                  widget.iconColor!,
-                                  BlendMode.srcIn,
-                                ),
-                                child: widget.leftIcon,
-                              )
+                              colorFilter: ColorFilter.mode(
+                                widget.iconColor!,
+                                BlendMode.srcIn,
+                              ),
+                              child: widget.leftIcon,
+                            )
                             : widget.leftIcon!
                         : IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              color: widget.iconColor ?? Colors.white60,
-                            ),
-                            onPressed: () => Navigator.pop(context),
+                          icon: Icon(
+                            Icons.close,
+                            color: widget.iconColor ?? Colors.white60,
                           ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
                     Expanded(
                       child: Center(
                         child: Text(
-                          tr(widget.title),
+                          context.tr(widget.title),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -126,13 +136,22 @@ class _ScreenPopupState extends State<ScreenPopup> {
                   child: widget.child,
                 ),
               ),
-              if (widget.footerButtons != null && widget.footerButtons!.isNotEmpty)
+              if (widget.footerButtons != null &&
+                  widget.footerButtons!.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      ...widget.footerButtons!.expand((button) => [button, const SizedBox(width: 8)]).toList()..removeLast(),
+                      ...widget.footerButtons!
+                          .expand(
+                            (button) => [button, const SizedBox(width: 8)],
+                          )
+                          .toList()
+                        ..removeLast(),
                     ],
                   ),
                 ),

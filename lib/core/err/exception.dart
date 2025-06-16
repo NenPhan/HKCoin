@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/err/failures.dart';
 
 ///One Exception can be many failures
@@ -31,8 +32,10 @@ class ErrorHandler {
   ///map err from server to correct
 
   static final errors = {
-    "Email or password is incorrect": 'email_or_pass_incorrect'.tr(),
-    "Token expired": 'token_expired'.tr(),
+    "Email or password is incorrect": Get.context?.tr(
+      'email_or_pass_incorrect',
+    ),
+    "Token expired": Get.context?.tr('token_expired'),
   };
 
   static String? parse(
@@ -54,7 +57,7 @@ class ErrorHandler {
       return error.replaceAll("E_SEN001", "");
     }
     if (defaultError != null || shouldUseDefaultError) {
-      return defaultError ?? 'an_error_has_occured'.tr();
+      return defaultError ?? Get.context?.tr('an_error_has_occured');
     }
     return errors.containsKey(error) ? errors[error] : error;
   }

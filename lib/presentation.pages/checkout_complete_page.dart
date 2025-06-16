@@ -46,7 +46,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                         children: [
                           SizedBox(height: scrSize(context).height * 0.02),
                           Text(
-                            tr("Checkout.OrderTotals.Information"),
+                            context.tr("Checkout.OrderTotals.Information"),
                             style: textTheme(context).titleMedium,
                           ),
                           IntrinsicHeight(
@@ -132,7 +132,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            tr(title),
+            context.tr(title),
             style: textTheme(
               context,
             ).bodyMedium?.copyWith(color: Colors.grey[600]),
@@ -161,7 +161,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
               color: Colors.grey[900],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(tr("Account.Order.Fields.BillingAddress")),
+            child: Text(context.tr("Account.Order.Fields.BillingAddress")),
           ),
           _buildAlert(data?.notifiesAlert ?? ""),
           if (data?.infoPayment?.qRCodePayment != null)
@@ -172,9 +172,9 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
               ),
             ),
           Html(
-            data: tr(
-              "Checkout.Billing.Information.WalletAddress",
-            ).replaceAll("{0}", data?.infoPayment?.walletAddress ?? ""),
+            data: context
+                .tr("Checkout.Billing.Information.WalletAddress")
+                .replaceAll("{0}", data?.infoPayment?.walletAddress ?? ""),
           ),
           MainButton(
             width: scrSize(context).width * 0.25,

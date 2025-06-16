@@ -4,10 +4,10 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/login_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
-import 'package:restart_app/restart_app.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -61,12 +61,12 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           MainTextField(
                             controller: controller.usernameController,
-                            hintText: tr("Account.Login.Fields.UserName"),
+                            hintText: "Account.Login.Fields.UserName",
                             validator:
                                 (value) =>
                                     value != "" && value != null
                                         ? null
-                                        : tr(
+                                        : context.tr(
                                           "Account.Login.Fields.UserName.Required",
                                         ),
                           ),
@@ -74,12 +74,12 @@ class _LoginPageState extends State<LoginPage> {
                           MainTextField(
                             controller: controller.passwordController,
                             obscureText: true,
-                            hintText: tr("Account.Login.Fields.Password"),
+                            hintText: "Account.Login.Fields.Password",
                             validator:
                                 (value) =>
                                     value != "" && value != null
                                         ? null
-                                        : tr(
+                                        : context.tr(
                                           "Account.Login.Fields.Password.Required",
                                         ),
                           ),
@@ -98,8 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (controller.isLoading.value) return;
                       controller.login(() async {
                         await Future.delayed(const Duration(seconds: 1));
-                        // Get.offAllNamed(HomePage.route);
-                        Restart.restartApp();
+                        Get.offAllNamed(HomePage.route);
                       });
                     },
                   );
@@ -119,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   child: Text(
-                    tr('Account.Register'),
+                    context.tr('Account.Register'),
                     style: textTheme(context).titleSmall,
                   ),
                 ),

@@ -19,24 +19,25 @@ class WalletDatasource {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
-          endpoint: Endpoints.getNetWork,      
-           headers: {
+          endpoint: Endpoints.getNetWork,
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },    
+          },
         ),
-      );      
+      );
       return (response["Data"] as List)
           .map((e) => Network.fromJson(e))
           .toList();
     });
   }
+
   Future<BlockchangeWallet> createWallet(BlockchangeWallet wallet) async {
-    return await handleRemoteRequest(() async {      
+    return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.POST,
           endpoint: Endpoints.addWallet,
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           needAccessToken: true,
@@ -45,15 +46,18 @@ class WalletDatasource {
         contentType: "application/json",
       );
       return BlockchangeWallet.fromJson(response["Data"]);
-    });    
+    });
   }
-  Future<CustomerWalletToken> createCustomerToken(CustomerWalletToken wallet) async {
-    return await handleRemoteRequest(() async {      
+
+  Future<CustomerWalletToken> createCustomerToken(
+    CustomerWalletToken wallet,
+  ) async {
+    return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.POST,
           endpoint: Endpoints.addCustomerWalletToken,
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           needAccessToken: true,
@@ -62,47 +66,50 @@ class WalletDatasource {
         contentType: "application/json",
       );
       return CustomerWalletToken.fromJson(response["Data"]);
-    });    
+    });
   }
+
   Future<bool> selectedWallet(BlockchangeWallet wallet) async {
-    return await handleRemoteRequest(() async {      
-      var response = await dioClient.call(
+    return await handleRemoteRequest(() async {
+      await dioClient.call(
         DioParams(
           HttpMethod.POST,
           endpoint: Endpoints.selectedWallet,
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
           needAccessToken: true,
           body: wallet.toJson(),
         ),
         contentType: "application/json",
-      );    
-      return true;  
-    });    
+      );
+      return true;
+    });
   }
+
   Future<BlockchangeWalletInfo?> getWalletInfo() async {
-    return await handleRemoteRequest(() async {      
+    return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getBlockchainWalletInfo,
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
-          needAccessToken: true,          
+          needAccessToken: true,
         ),
         contentType: "application/json",
-      );            
-      if(response !=null && response["Data"] !=null) {
+      );
+      if (response != null && response["Data"] != null) {
         return BlockchangeWalletInfo.fromJson(response["Data"]);
-      } else{
+      } else {
         return null;
-      }        
-    });    
+      }
+    });
   }
+
   Future<void> deleteWallet(int id) async {
-    await handleRemoteRequest(() async {      
+    await handleRemoteRequest(() async {
       await dioClient.call(
         DioParams(
           HttpMethod.POST,
@@ -110,68 +117,71 @@ class WalletDatasource {
           needAccessToken: true,
           headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },          
+          },
         ),
         contentType: "application/json",
       );
     });
   }
+
   Future<BlockchangeWalletInfo?> getWalletById(int walletId) async {
-    return await handleRemoteRequest(() async {        
+    return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getBlockchainWalletById(walletId),
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },          
-          needAccessToken: true,          
+          },
+          needAccessToken: true,
         ),
         contentType: "application/json",
-      );            
-      if(response !=null && response["Data"] !=null) {
+      );
+      if (response != null && response["Data"] != null) {
         return BlockchangeWalletInfo.fromJson(response["Data"]);
-      } else{
+      } else {
         return null;
-      }        
-    });    
+      }
+    });
   }
+
   Future<BlockchangeWalletTokenInfo?> getWalletTokenById(int walletId) async {
-    return await handleRemoteRequest(() async {        
+    return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getBlockchainWalletTokenById(walletId),
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          },          
-          needAccessToken: true,          
+          },
+          needAccessToken: true,
         ),
         contentType: "application/json",
-      );            
-      if(response !=null && response["Data"] !=null) {
+      );
+      if (response != null && response["Data"] != null) {
         return BlockchangeWalletTokenInfo.fromJson(response["Data"]);
-      } else{
+      } else {
         return null;
-      }        
-    });    
+      }
+    });
   }
+
   Future<List<BlockchangeWallet>> getWallets() async {
-    return await handleRemoteRequest(() async {      
+    return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
           HttpMethod.GET,
           endpoint: Endpoints.getBlockchainWallet,
-           headers: {
+          headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
-          needAccessToken: true,          
+          needAccessToken: true,
         ),
         contentType: "application/json",
       );
-       return (response["Data"] as List)
+      return (response["Data"] as List)
           .map((e) => BlockchangeWallet.fromJson(e))
-          .toList();     
-    });    
+          .toList();
+    });
   }
 }

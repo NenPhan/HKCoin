@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,8 @@ class QRScannerController {
       _cameraController?.dispose();
       _cameraController = CameraController(
         _cameras[_currentCameraIndex],
-        ResolutionPreset.medium, // Use medium resolution to reduce processing load
+        ResolutionPreset
+            .medium, // Use medium resolution to reduce processing load
         enableAudio: false,
         imageFormatGroup: ImageFormatGroup.yuv420, // Ensure consistent format
       );
@@ -56,7 +59,9 @@ class QRScannerController {
         _isFlashOn ? FlashMode.torch : FlashMode.off,
       );
       if (!_cameraController!.value.isStreamingImages && _context != null) {
-        await _cameraController!.startImageStream((image) => _processCameraImage(image, context: _context!));
+        await _cameraController!.startImageStream(
+          (image) => _processCameraImage(image, context: _context!),
+        );
       }
     } catch (e) {
       isCameraInitialized.value = false;
@@ -72,7 +77,8 @@ class QRScannerController {
   }
 
   Future<void> toggleFlash() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
+    if (_cameraController == null || !_cameraController!.value.isInitialized)
+      return;
     try {
       _isFlashOn = !_isFlashOn;
       isFlashOn.value = _isFlashOn;
@@ -84,17 +90,22 @@ class QRScannerController {
     }
   }
 
-  Future<void> _processCameraImage(CameraImage image, {required BuildContext context}) async {
+  Future<void> _processCameraImage(
+    CameraImage image, {
+    required BuildContext context,
+  }) async {
     if (_isProcessing) return; // Throttle frame processing
     _isProcessing = true;
     isProcessing.value = true;
 
     try {
-      final inputImage = await compute(_convertCameraImage, image); // Offload to isolate
-      final barcodes = await _barcodeScanner.processImage(inputImage).timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => [],
-      );
+      final inputImage = await compute(
+        _convertCameraImage,
+        image,
+      ); // Offload to isolate
+      final barcodes = await _barcodeScanner
+          .processImage(inputImage)
+          .timeout(const Duration(seconds: 5), onTimeout: () => []);
 
       if (barcodes.isNotEmpty) {
         _scanResult = barcodes.first.displayValue ?? 'No data';
@@ -123,7 +134,9 @@ class QRScannerController {
         bytes: bytes,
         metadata: InputImageMetadata(
           size: Size(image.width.toDouble(), image.height.toDouble()),
-          rotation: InputImageRotation.rotation0deg, // Simplified for isolate compatibility
+          rotation:
+              InputImageRotation
+                  .rotation0deg, // Simplified for isolate compatibility
           format: InputImageFormat.nv21,
           bytesPerRow: image.planes[0].bytesPerRow,
         ),
@@ -145,7 +158,9 @@ class QRScannerController {
 
   Future<void> pickImageFromGallery(BuildContext context) async {
     try {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
       if (pickedFile == null) {
         scanResult.value = 'No image selected';
         return;
@@ -174,22 +189,25 @@ class QRScannerController {
   }
 
   Future<void> handleScannedResult(BuildContext context, String result) async {
-    try{
+    try {
       // if (_isRegisterRefCodeUrl(result)) {
       //   await _handleRegisterRefCode(context, result);
       // } else if (_isValidUrl(result)) {
       //   await _handleExternalUrl(context, result);
-      // } else 
+      // } else
       if (showDialogOnScan) {
         _showResultDialog(context, result);
       }
-    }catch(e){return;}    
+    } catch (e) {
+      return;
+    }
   }
 
   bool _isRegisterRefCodeUrl(String url) {
     try {
       final uri = Uri.parse(url);
-      return uri.queryParameters.containsKey('refcode') || uri.path.contains('register');
+      return uri.queryParameters.containsKey('refcode') ||
+          uri.path.contains('register');
     } catch (e) {
       return false;
     }
@@ -197,9 +215,12 @@ class QRScannerController {
 
   Future<void> _handleRegisterRefCode(BuildContext context, String url) async {
     try {
-      final uri = Uri.parse(url);
-      final refCode = uri.queryParameters['refcode'] ?? '';
-      Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
+      // final uri = Uri.parse(url);
+      // final refCode = uri.queryParameters['refcode'] ?? '';
+      Navigator.of(
+        context,
+        rootNavigator: true,
+      ).popUntil((route) => route.isFirst);
       // Uncomment and adjust based on your app's navigation
       // Navigator.push(
       //   context,
@@ -224,46 +245,46 @@ class QRScannerController {
       _showResultDialog(context, 'Error launching URL: $e');
     }
   }
+
   bool _isValidUrl(String url) {
     try {
       final uri = Uri.parse(url);
-      return uri.scheme.isNotEmpty && (uri.scheme == 'http' || uri.scheme == 'https');
+      return uri.scheme.isNotEmpty &&
+          (uri.scheme == 'http' || uri.scheme == 'https');
     } catch (e) {
       return false;
     }
   }
 
   void _showResultDialog(BuildContext context, String result) {
-    try{
+    try {
       stopScanning();
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Scan Result'),
-          content: SelectableText(result),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+        builder:
+            (context) => AlertDialog(
+              title: const Text('Scan Result'),
+              content: SelectableText(result),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: result));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Copied to clipboard')),
+                    );
+                    Navigator.pop(context);
+                    startScanning(context: context);
+                  },
+                  child: const Text('Copy'),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: result));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Copied to clipboard')),
-                );
-                Navigator.pop(context);
-                startScanning(context:  context);
-              },
-              child: const Text('Copy'),
-            ),
-          ],
-        ),
       );
-    }catch(ex){
-
-    }
-    
+    } catch (ex) {}
   }
 
   void startScanning({required BuildContext context}) {
@@ -271,7 +292,9 @@ class QRScannerController {
         _cameraController!.value.isInitialized &&
         !_cameraController!.value.isStreamingImages) {
       _context = context;
-      _cameraController!.startImageStream((image) => _processCameraImage(image, context: context));
+      _cameraController!.startImageStream(
+        (image) => _processCameraImage(image, context: context),
+      );
       scanResult.value = '';
     }
   }

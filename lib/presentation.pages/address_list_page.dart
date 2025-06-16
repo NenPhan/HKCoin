@@ -96,7 +96,7 @@ class _AddressListPageState extends State<AddressListPage> {
           children: [
             const Icon(Icons.add, color: Colors.deepOrange),
             Text(
-              tr("Account.CustomerAddresses.AddNew"),
+              context.tr("Account.CustomerAddresses.AddNew"),
               style: textTheme(
                 context,
               ).bodyMedium?.copyWith(color: Colors.deepOrange),

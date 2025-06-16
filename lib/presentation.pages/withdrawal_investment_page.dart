@@ -97,18 +97,17 @@ class _InvestmentWithdrawalContentPageState
                                 MainTextField(
                                   controller:
                                       controller.amountSwapToHKCController,
-                                  label: tr(
-                                    "Account.WithDrawalRequest.AmountToHKC",
-                                  ),
+                                  label:
+                                      "Account.WithDrawalRequest.AmountToHKC",
                                   keyboardType: TextInputType.number,
                                   enableSelectOnMouseDown: true,
                                   isNumberOnly: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return tr("Field required");
+                                      return context.tr("Field required");
                                     }
                                     if (double.tryParse(value) == null) {
-                                      return tr("Invalid number");
+                                      return context.tr("Invalid number");
                                     }
                                     return null;
                                   },
@@ -116,9 +115,8 @@ class _InvestmentWithdrawalContentPageState
                                 MainTextField(
                                   controller:
                                       controller.walletTokenAddresController,
-                                  label: tr(
-                                    "Account.WithDrawalRequest.WalletHKCTokenAddres",
-                                  ),
+                                  label:
+                                      "Account.WithDrawalRequest.WalletHKCTokenAddres",
                                   readOnly:
                                       controller
                                               .walletTokenAddresController
@@ -139,9 +137,7 @@ class _InvestmentWithdrawalContentPageState
                                   controller: controller.commentController,
                                   isRequired: false,
                                   maxLines: 4,
-                                  label: tr(
-                                    "Account.WithDrawalRequest.Comments",
-                                  ),
+                                  label: "Account.WithDrawalRequest.Comments",
                                 ),
                                 Visibility(
                                   visible: false, // Ẩn hoàn toàn
@@ -168,7 +164,7 @@ class _InvestmentWithdrawalContentPageState
                                 ),
                                 _buildActionButton(
                                   size,
-                                  tr("WithDrawalRequest.Submit"),
+                                  context.tr("WithDrawalRequest.Submit"),
                                   Icons.send,
                                 ),
                               ],
@@ -232,7 +228,7 @@ class _InvestmentWithdrawalContentPageState
                 padding: EdgeInsets.all(scrSize(context).width * 0.03),
                 color: Colors.white,
                 child: Text(
-                  tr(alert),
+                  context.tr(alert),
                   style: textTheme(
                     context,
                   ).bodyMedium?.copyWith(color: Colors.indigo[900]),

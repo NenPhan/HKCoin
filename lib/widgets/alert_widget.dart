@@ -3,12 +3,7 @@ import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 // Enum for alert types
-enum AlertType {
-  error,
-  success,
-  info,
-  warning,
-}
+enum AlertType { error, success, info, warning }
 
 // Extension to define default properties for each alert type
 extension AlertTypeExtension on AlertType {
@@ -95,21 +90,19 @@ class AlertWidget extends StatelessWidget {
               width: scrSize(context).width * 0.15,
               color: customIconBackgroundColor ?? type.iconBackgroundColor,
               child: Center(
-                child: Icon(
-                  customIcon ?? type.icon,
-                  color: Colors.white,
-                ),
+                child: Icon(customIcon ?? type.icon, color: Colors.white),
               ),
             ),
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(scrSize(context).width * 0.03),
-                color: customContentBackgroundColor ?? type.contentBackgroundColor,
+                color:
+                    customContentBackgroundColor ?? type.contentBackgroundColor,
                 child: Text(
-                  tr(message), // Use translation
+                  context.tr(message), // Use translation
                   style: textTheme(context).bodyMedium?.copyWith(
-                        color: customTextColor ?? type.textColor,
-                      ),
+                    color: customTextColor ?? type.textColor,
+                  ),
                 ),
               ),
             ),

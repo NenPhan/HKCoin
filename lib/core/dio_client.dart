@@ -126,7 +126,7 @@ extension ResponseExtension on Response {
 
   // handle return data from server side to client
   Map<String, dynamic> handleError(List<int> allowedStatusCodes) {
-    String defaultErr = 'Identity.Error.DefaultError'.tr();
+    String defaultErr = Get.context?.tr('Identity.Error.DefaultError') ?? "";
     if (data == null) return {};
     try {
       Map<String, dynamic> json;

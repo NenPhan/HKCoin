@@ -44,7 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             const SizedBox(height: 20),
                             MainTextField(
                               controller: registerController.fNameController,
-                              label: tr("Account.Fields.FirstName"),
+                              label: context.tr("Account.Fields.FirstName"),
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             MainTextField(
                               controller: registerController.lNameController,
-                              label: tr("Account.Fields.LastName"),
+                              label: context.tr("Account.Fields.LastName"),
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller: registerController.emailController,
                               keyboardType: TextInputType.emailAddress,
-                              label: tr("Account.Login.Fields.Email"),
+                              label: context.tr("Account.Login.Fields.Email"),
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -72,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             MainTextField(
                               controller: registerController.phoneController,
-                              label: tr("Account.Fields.Phone"),
+                              label: context.tr("Account.Fields.Phone"),
                               keyboardType: TextInputType.phone,
                               isNumberOnly: true,
                               inputFormatters: [
@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             MainTextField(
                               controller: registerController.passwordController,
-                              label: tr("Account.Fields.Password"),
+                              label: context.tr("Account.Fields.Password"),
                               obscureText: true,
                               validator:
                                   (value) => requiredValidator(
@@ -99,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller:
                                   registerController.confirmPasswordController,
-                              label: tr("Account.Fields.ConfirmPassword"),
+                              label: context.tr("Account.Fields.ConfirmPassword"),
                               obscureText: true,
                               validator:
                                   (value) => requiredValidator(
@@ -110,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller:
                                   registerController.referralCodeController,
-                              label: tr("Account.Register.ReferralCode"),
+                              label: context.tr("Account.Register.ReferralCode"),
                               readOnly: registerController.referralCodeController.text.isNotEmpty,
                               validator:
                                   (value) => requiredValidator(

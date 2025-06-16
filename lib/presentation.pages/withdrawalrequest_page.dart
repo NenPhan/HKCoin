@@ -52,7 +52,7 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  tr("Account.Report.Shopping"),
+                                  context.tr("Account.Report.Shopping"),
                                   style: theme.textTheme.titleLarge?.copyWith(
                                     fontSize: size.width * 0.05,
                                     fontWeight: FontWeight.normal,
@@ -87,7 +87,7 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  tr("Account.Report.Walletmain"),
+                                  context.tr("Account.Report.Walletmain"),
                                   style: theme.textTheme.titleLarge?.copyWith(
                                     fontSize: size.width * 0.05,
                                     fontWeight: FontWeight.normal,
@@ -127,7 +127,7 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                         },
                         icon: const Icon(Icons.download), // Icon for Button 1
                         label: Text(
-                          tr("Account.WithDrawalRequest.Profits.Title"),
+                          context.tr("Account.WithDrawalRequest.Profits.Title"),
                         ), // Replace with your localized text
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
@@ -142,11 +142,11 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                       const SizedBox(width: 8.0),
                       ElevatedButton.icon(
                         onPressed: () {
-                          Get.toNamed(InvestmentWithdrawalContentPage.route);                          
+                          Get.toNamed(InvestmentWithdrawalContentPage.route);
                         },
                         icon: const Icon(Icons.download), // Icon for Button 2
                         label: Text(
-                          tr("Account.WithDrawalRequest.Title"),
+                          context.tr("Account.WithDrawalRequest.Title"),
                         ), // Replace with your localized text
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(

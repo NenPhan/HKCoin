@@ -17,20 +17,23 @@ class AddWalletWithContractPage extends StatefulWidget {
   static String route = "/add-wallet-with-contract";
 
   @override
-  State<AddWalletWithContractPage> createState() => _AddWalletWithContractPageState();
+  State<AddWalletWithContractPage> createState() =>
+      _AddWalletWithContractPageState();
 }
 
 class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
-  final CreateWalletWithContractController controller = Get.put(CreateWalletWithContractController());
+  final CreateWalletWithContractController controller = Get.put(
+    CreateWalletWithContractController(),
+  );
   @override
   void initState() {
     final args = Get.arguments as Map<String, dynamic>;
-    if(args.isNotEmpty){
+    if (args.isNotEmpty) {
       final walletAddress = args['walletAddress'];
       final id = args['id'];
       controller.walletId = id;
       controller.selectedWalletAddress = walletAddress;
-    }    
+    }
     super.initState();
   }
 
@@ -61,90 +64,119 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                             key: controller.formKey,
                             child: SpacingColumn(
                               children: [
-                                const SizedBox(height: 15),    
+                                const SizedBox(height: 15),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(bottom: 8.0),
+                                      padding: const EdgeInsets.only(
+                                        bottom: 8.0,
+                                      ),
                                       child: Text(
-                                        tr("Account.wallet.withContract.NetWork"),
+                                        context.tr(
+                                          "Account.wallet.withContract.NetWork",
+                                        ),
                                         style: TextStyle(
                                           // Thêm style cho label nếu cần
                                         ),
                                       ),
-                                    ),                 
+                                    ),
                                     PopupDropdown<Network>(
-                                      title: '',                                      
+                                      title: '',
                                       items: controller.listNetwork,
                                       itemLabel: (item) => item.name!,
-                                      selectedItem: controller.selectNetwork,                        
-                                      onChanged: (Network? network){
-                                        controller.selectNetwork = network;    
-                                          controller.update([
-                                              'add-wallet-contract-page',
-                                            ]);                    
+                                      selectedItem: controller.selectNetwork,
+                                      onChanged: (Network? network) {
+                                        controller.selectNetwork = network;
+                                        controller.update([
+                                          'add-wallet-contract-page',
+                                        ]);
                                       },
                                       validator: (val) {
-                                        if (val == null) return tr('Account.wallet.withContract.NetWork.Required');
+                                        if (val == null) {
+                                          return context.tr(
+                                            'Account.wallet.withContract.NetWork.Required',
+                                          );
+                                        }
                                         return null;
-                                      },                                  
-                                      iconBuilder: (item) => const Icon(Icons.wifi),
+                                      },
+                                      iconBuilder:
+                                          (item) => const Icon(Icons.wifi),
                                       textColor: Colors.white,
                                       titleColor: Colors.white,
                                       labelColor: Colors.white,
-                                      placeholder: 'Account.wallet.withContract.SelectNetWork',
-                                      popupBackgroundColor: Colors.grey.shade900,
+                                      placeholder:
+                                          'Account.wallet.withContract.SelectNetWork',
+                                      popupBackgroundColor:
+                                          Colors.grey.shade900,
                                     ),
                                   ],
-                                ),                                
+                                ),
                                 const SizedBox(height: 20),
                                 Container(
-                                  constraints: const BoxConstraints(minHeight: 60),
-                                  child:Stack(
+                                  constraints: const BoxConstraints(
+                                    minHeight: 60,
+                                  ),
+                                  child: Stack(
                                     children: [
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           // Label
                                           Padding(
-                                            padding: const EdgeInsets.only(bottom: 8.0, right: 40),
+                                            padding: const EdgeInsets.only(
+                                              bottom: 8.0,
+                                              right: 40,
+                                            ),
                                             child: Text(
-                                              tr("Account.wallet.withContract.ContractAddress"),
+                                              context.tr(
+                                                "Account.wallet.withContract.ContractAddress",
+                                              ),
                                               style: const TextStyle(
                                                 // Thêm style cho label nếu cần
                                               ),
                                             ),
-                                          ),                                                                                    
+                                          ),
                                           MainTextField(
-                                            controller: controller.contractController,  
-                                            hintText: tr("Account.wallet.withContract.ContractAddress"),                                          
+                                            controller:
+                                                controller.contractController,
+                                            hintText:
+                                                "Account.wallet.withContract.ContractAddress",
                                             onChanged: (value) {
-                                              controller.updateContractInfomation();
+                                              controller
+                                                  .updateContractInfomation();
                                               controller.update([
                                                 'add-wallet-contract-page',
-                                              ]);   
+                                              ]);
                                             },
-                                            validator: (value) => requiredValidator(
-                                              value,
-                                              "Account.wallet.withContract.ContractAddress.Required",
-                                            ),
+                                            validator:
+                                                (value) => requiredValidator(
+                                                  value,
+                                                  "Account.wallet.withContract.ContractAddress.Required",
+                                                ),
                                           ),
                                         ],
                                       ),
-                                      
+
                                       // Icon scan ở bên phải label
                                       Positioned(
                                         right: 0,
                                         top: -12,
                                         child: IconButton(
-                                          icon: const Icon(Icons.qr_code_scanner_outlined),
-                                          onPressed: () => _navigateToQRScanPage(controller, context),
+                                          icon: const Icon(
+                                            Icons.qr_code_scanner_outlined,
+                                          ),
+                                          onPressed:
+                                              () => _navigateToQRScanPage(
+                                                controller,
+                                                context,
+                                              ),
                                           tooltip: 'Quét QR',
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
                                   // child: Stack(
                                   //   children: [
 
@@ -157,14 +189,14 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                   //           controller.updateContractInfomation();
                                   //           controller.update([
                                   //             'add-wallet-contract-page',
-                                  //           ]);   
+                                  //           ]);
                                   //         },
                                   //         validator: (value) => requiredValidator(
                                   //           value,
                                   //           "Account.wallet.withContract.ContractAddress.Required",
-                                  //         ),                                                                                                                        
+                                  //         ),
                                   //       ),
-                                  //     ),                                      
+                                  //     ),
                                   //     Positioned(
                                   //       right: 8,
                                   //       top: 0,
@@ -179,44 +211,55 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                   //     ),
                                   //   ],
                                   // ),
-                                ),                                                  
+                                ),
                                 Visibility(
-                                  visible: controller.contractController.text.isNotEmpty,   
+                                  visible:
+                                      controller
+                                          .contractController
+                                          .text
+                                          .isNotEmpty,
                                   maintainState: true,
-                                  maintainSize:false,                                                                 
+                                  maintainSize: false,
                                   child: Column(
                                     children: [
                                       const SizedBox(height: 20),
                                       MainTextField(
-                                        controller: controller.contractSymbolController,                                        
-                                        label: tr(
-                                          "Account.wallet.withContract.Symbol",
-                                        ),
+                                        controller:
+                                            controller.contractSymbolController,
+                                        label:
+                                            "Account.wallet.withContract.Symbol",
+
                                         readOnly: true,
                                       ),
                                     ],
-                                  )                                                                    
-                                ),        
+                                  ),
+                                ),
                                 Visibility(
-                                  visible: controller.contractController.text.isNotEmpty,   
+                                  visible:
+                                      controller
+                                          .contractController
+                                          .text
+                                          .isNotEmpty,
                                   maintainState: true,
-                                  maintainSize:false,                               
+                                  maintainSize: false,
                                   child: Column(
                                     children: [
                                       const SizedBox(height: 20),
                                       MainTextField(
-                                        controller: controller.contractDecimalController,
-                                        label: tr(
+                                        controller:
+                                            controller
+                                                .contractDecimalController,
+                                        label: context.tr(
                                           "Account.wallet.withContract.Decimal",
                                         ),
                                         readOnly: true,
                                       ),
                                     ],
-                                  )                                                                    
-                                ),                            
+                                  ),
+                                ),
                               ],
-                            )
-                          )                      
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -226,9 +269,10 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
             ),
           ),
         );
-      }
-    );    
-  }  
+      },
+    );
+  }
+
   Widget _buildSubmitButton(CreateWalletWithContractController controller) {
     return Obx(
       () => MainButton(
@@ -236,31 +280,34 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
         width: double.infinity,
         text: "Common.Save",
         onTap: () async {
-         // if (controller.formKey.currentState!.validate()) {
-            // Đảm bảo loading hiển thị ngay lập tức
-            controller.isLoadingSubmit.value = true;
-            await Future.delayed(Duration.zero);            
-            controller.submitForm();
-         // }
+          // if (controller.formKey.currentState!.validate()) {
+          // Đảm bảo loading hiển thị ngay lập tức
+          controller.isLoadingSubmit.value = true;
+          await Future.delayed(Duration.zero);
+          controller.submitForm();
+          // }
         },
       ),
     );
   }
-  void _navigateToQRScanPage(CreateWalletWithContractController controller, BuildContext context) {
+
+  void _navigateToQRScanPage(
+    CreateWalletWithContractController controller,
+    BuildContext context,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => QRScanPage(
-          showDialogOnScan: false,                  
-          onScanResult: (result) {
-            controller.contractController.text = result;
-            controller.updateContractInfomation();     
-            controller.update([
-              'add-wallet-contract-page',
-            ]);                    
-            Navigator.of(context).pop();
-          },
-        ),
+        builder:
+            (_) => QRScanPage(
+              showDialogOnScan: false,
+              onScanResult: (result) {
+                controller.contractController.text = result;
+                controller.updateContractInfomation();
+                controller.update(['add-wallet-contract-page']);
+                Navigator.of(context).pop();
+              },
+            ),
       ),
     );
   }

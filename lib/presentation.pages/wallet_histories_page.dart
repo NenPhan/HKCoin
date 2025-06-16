@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -28,22 +30,22 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
   final ScrollController _verticalScrollController = ScrollController();
   Future<void> _loadMoreData() async {
     if (!controller.isLoadingMore.value &&
-        (controller.walletHistoriesPagination?.hasNextPage ?? false)) {      
+        (controller.walletHistoriesPagination?.hasNextPage ?? false)) {
       await controller.getWalletHistoriesData(
         page: (controller.walletHistoriesPagination?.pageNumber ?? 0) + 1,
         isLoadMore: true,
       );
     } else {
-      log("Load more not triggered: isLoadingMore=${controller.isLoadingMore.value}, hasNextPage=${controller.walletHistoriesPagination?.hasNextPage}");
+      log(
+        "Load more not triggered: isLoadingMore=${controller.isLoadingMore.value}, hasNextPage=${controller.walletHistoriesPagination?.hasNextPage}",
+      );
     }
   }
+
   // Hàm xử lý kéo xuống làm mới
   Future<void> _refreshData() async {
     log("Refresh data requested");
-    await controller.getWalletHistoriesData(
-      page: 1,
-      isLoadMore: false,
-    );
+    await controller.getWalletHistoriesData(page: 1, isLoadMore: false);
   }
 
   @override
@@ -60,7 +62,7 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
         child: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
-            slivers:[
+            slivers: [
               SliverToBoxAdapter(
                 child: Column(
                   children: [
@@ -84,37 +86,42 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                       if (walletController.walletInfo == null) {
                         return Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Text(tr("No wallet information available")),
+                          child: Text(
+                            context.tr("No wallet information available"),
+                          ),
                         );
                       }
                       return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         child: SpacingColumn(
                           spacing: 10,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               padding: EdgeInsets.all(
-                                  scrSize(context).width * 0.04,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[900],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: SpacingColumn(
-                                  spacing: 10,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      tr("Account.Report.Walletmain"),
-                                      style: textTheme(context).bodyLarge,
-                                    ),
-                                    Text(
-                                      walletController.walletInfo!.walletMain,
-                                      style: textTheme(context).titleLarge,
-                                    ),
-                                  ],
-                                ),
+                                scrSize(context).width * 0.04,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[900],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: SpacingColumn(
+                                spacing: 10,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    context.tr("Account.Report.Walletmain"),
+                                    style: textTheme(context).bodyLarge,
+                                  ),
+                                  Text(
+                                    walletController.walletInfo!.walletMain,
+                                    style: textTheme(context).titleLarge,
+                                  ),
+                                ],
+                              ),
                             ),
                             Container(
                               padding: EdgeInsets.all(
@@ -129,7 +136,7 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
-                                    tr("Account.Report.Shopping"),
+                                    context.tr("Account.Report.Shopping"),
                                     style: textTheme(context).bodyLarge,
                                   ),
                                   Text(
@@ -137,7 +144,9 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                                     style: textTheme(context).titleLarge,
                                   ),
                                   Text(
-                                    walletController.walletInfo!.profitsShopping,
+                                    walletController
+                                        .walletInfo!
+                                        .profitsShopping,
                                     style: textTheme(context).bodyLarge,
                                   ),
                                 ],
@@ -156,7 +165,7 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
-                                    tr("Account.Report.Coupon"),
+                                    context.tr("Account.Report.Coupon"),
                                     style: textTheme(context).bodyLarge,
                                   ),
                                   Text(
@@ -179,7 +188,7 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
-                                    tr("Account.Report.OrderTotal"),
+                                    context.tr("Account.Report.OrderTotal"),
                                     style: textTheme(context).bodyLarge,
                                   ),
                                   Text(
@@ -192,30 +201,38 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                           ],
                         ),
                       );
-                    }),  
+                    }),
                   ],
                 ),
               ),
               SliverFillRemaining(
-                child:Column(
+                child: Column(
                   children: [
                     Expanded(
                       child: GetBuilder<WalletHistoryController>(
                         id: "wallet-histories-list",
-                        builder: (controller) {                                  
+                        builder: (controller) {
                           if (controller.isInitialLoading.value) {
                             return const LoadingWidget();
                           }
-                          if (controller.walletHistoriesPagination?.walletHistories?.isEmpty ?? true) {
+                          if (controller
+                                  .walletHistoriesPagination
+                                  ?.walletHistories
+                                  ?.isEmpty ??
+                              true) {
                             return Center(
-                              child: Text(tr("No transactions found")),
+                              child: Text(context.tr("No transactions found")),
                             );
                           }
                           return RefreshIndicator(
                             onRefresh: _refreshData,
                             child: PaginationScrollWidget(
                               scrollController: _verticalScrollController,
-                              hasMoreData: controller.walletHistoriesPagination?.hasNextPage ?? false,
+                              hasMoreData:
+                                  controller
+                                      .walletHistoriesPagination
+                                      ?.hasNextPage ??
+                                  false,
                               onLoadMore: _loadMoreData,
                               child: Scrollbar(
                                 controller: _horizontalScrollController,
@@ -225,87 +242,115 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
                                   scrollDirection: Axis.horizontal,
                                   child: DataTable(
                                     columnSpacing: 20,
-                                    horizontalMargin: scrSize(context).width * 0.03,
-                                    headingRowColor: WidgetStateProperty.resolveWith<Color>(
-                                      (Set<WidgetState> states) => Colors.grey[900]!,
-                                    ),
+                                    horizontalMargin:
+                                        scrSize(context).width * 0.03,
+                                    headingRowColor:
+                                        WidgetStateProperty.resolveWith<Color>(
+                                          (Set<WidgetState> states) =>
+                                              Colors.grey[900]!,
+                                        ),
                                     columns: List.generate(
                                       controller.listColumn.length,
                                       (index) {
                                         return DataColumn(
                                           label: Text(
-                                            tr(controller.listColumn[index]),
-                                            style: textTheme(context).bodyMedium?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            context.tr(
+                                              controller.listColumn[index],
+                                            ),
+                                            style: textTheme(
+                                              context,
+                                            ).bodyMedium?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                             maxLines: 3,
                                           ),
                                         );
                                       },
                                     ),
-                                    rows: controller
-                                        .walletHistoriesPagination!
-                                        .walletHistories!
-                                        .map(
-                                          (histories) => DataRow(
-                                            cells: [
-                                              _buildDataCell(
-                                                text: histories.code?.toString() ?? '-',
-                                              ),
-                                              _buildDataCell(
-                                                text: histories.amount ?? '-',
-                                              ),
-                                              _buildDataCell(
-                                                text: histories.reasonStr ?? '-',
-                                              ),
-                                              _buildDataCell(
-                                                text: histories.walletType ?? '-',
-                                              ),
-                                              _buildDataCell(
-                                                widget: Container(
-                                                  padding: const EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 4,
+                                    rows:
+                                        controller
+                                            .walletHistoriesPagination!
+                                            .walletHistories!
+                                            .map(
+                                              (histories) => DataRow(
+                                                cells: [
+                                                  _buildDataCell(
+                                                    text:
+                                                        histories.code
+                                                            ?.toString() ??
+                                                        '-',
                                                   ),
-                                                  decoration: BoxDecoration(
-                                                    color: _getStatusColor(histories.statusId),
-                                                    borderRadius: BorderRadius.circular(4),
+                                                  _buildDataCell(
+                                                    text:
+                                                        histories.amount ?? '-',
                                                   ),
-                                                  child: Text(
-                                                    histories.status.toString(),
-                                                    style: textTheme(context).bodySmall?.copyWith(
+                                                  _buildDataCell(
+                                                    text:
+                                                        histories.reasonStr ??
+                                                        '-',
+                                                  ),
+                                                  _buildDataCell(
+                                                    text:
+                                                        histories.walletType ??
+                                                        '-',
+                                                  ),
+                                                  _buildDataCell(
+                                                    widget: Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 4,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: _getStatusColor(
+                                                          histories.statusId,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              4,
+                                                            ),
+                                                      ),
+                                                      child: Text(
+                                                        histories.status
+                                                            .toString(),
+                                                        style: textTheme(
+                                                          context,
+                                                        ).bodySmall?.copyWith(
                                                           color: Colors.white,
                                                         ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  _buildDataCell(
+                                                    text:
+                                                        histories.message ??
+                                                        '-',
+                                                  ),
+                                                  _buildDataCell(
+                                                    text: dateFormat(
+                                                      histories.createdOnUtc,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              _buildDataCell(
-                                                text: histories.message ?? '-',
-                                              ),
-                                              _buildDataCell(
-                                                text: dateFormat(histories.createdOnUtc),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                        .toList(),
+                                            )
+                                            .toList(),
                                   ),
                                 ),
                               ),
                             ),
-                          );                  
+                          );
                         },
-                        
-                      ),   
+                      ),
                     ),
                     const SizedBox(height: homeBottomPadding),
                   ],
-                )                                             
+                ),
               ),
-            ]            
+            ],
           ),
-        ),        
+        ),
       ),
     );
   }
@@ -314,9 +359,9 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
     return DataCell(
       text != null
           ? Text(
-              text,
-              style: textTheme(context).bodyMedium?.copyWith(color: Colors.white),
-            )
+            text,
+            style: textTheme(context).bodyMedium?.copyWith(color: Colors.white),
+          )
           : widget ?? const SizedBox(),
     );
   }
@@ -335,47 +380,50 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
         return Colors.grey;
     }
   }
+
   void showHalfScreenPopup(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true, // Cho phép sheet chiếm phần lớn màn hình
-    builder: (context) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.5, // Chiếm 50% chiều cao màn hình
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const Text(
-              'Popup một nửa màn hình',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            // Thêm nội dung của bạn ở đây
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Đóng'),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-  void _showWalletPopup(BuildContext context) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(tr("Wallet Information")),
-        content: Text(tr("Wallet details would be shown here")),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(tr("Close")),
+      isScrollControlled: true, // Cho phép sheet chiếm phần lớn màn hình
+      builder: (context) {
+        return Container(
+          height:
+              MediaQuery.of(context).size.height *
+              0.5, // Chiếm 50% chiều cao màn hình
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const Text(
+                'Popup một nửa màn hình',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              // Thêm nội dung của bạn ở đây
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Đóng'),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-
+  void _showWalletPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(context.tr("Wallet Information")),
+            content: Text(context.tr("Wallet details would be shown here")),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.tr("Close")),
+              ),
+            ],
+          ),
+    );
+  }
 }

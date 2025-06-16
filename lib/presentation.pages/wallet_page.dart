@@ -22,12 +22,13 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> {
   final controller = Get.put(BlockchangeWalletController());
-  Future<void> _onRefresh() async {    
+  Future<void> _onRefresh() async {
     // Call getWallet on refresh
-   await controller.getWalletInfo();
+    await controller.getWalletInfo();
     // Update GetBuilder
-    controller.update(['wallet-info-page']);    
-  }   
+    controller.update(['wallet-info-page']);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BlockchangeWalletController>(
@@ -40,54 +41,88 @@ class _WalletPageState extends State<WalletPage> {
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
-                  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                  padding: EdgeInsets.all(
+                    MediaQuery.of(context).size.width * 0.03,
+                  ),
                   child: Column(
                     children: [
                       // Header Row
                       Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(//Quản lý network
+                          Row(
+                            //Quản lý network
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.settings),
                                 onPressed: () {
-                                  ScreenPopup(title: "Account.wallet.Network.Selected",
+                                  ScreenPopup(
+                                    title: "Account.wallet.Network.Selected",
                                     isDismissible: false,
                                     backgroundColor: const Color(0xFF1B1B1B),
-                                    heightFactor: .75,         
-                                    //onShow: () =>controller.getNetworks(),     
-                                    child: Obx(() => Column(
-                                      children: [    
-                                        const SizedBox(height: 10),                                                                        
-                                        TextField(
-                                          controller: controller.searchController,
-                                          decoration: const InputDecoration(
-                                            hintText: 'Account.wallet.Network.Filter',
-                                            prefixIcon: Icon(Icons.search),
-                                            border: OutlineInputBorder(),
-                                            filled: true,
-                                            fillColor: Colors.white10,
+                                    heightFactor: .75,
+                                    //onShow: () =>controller.getNetworks(),
+                                    child: Obx(
+                                      () => Column(
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          TextField(
+                                            controller:
+                                                controller.searchController,
+                                            decoration: const InputDecoration(
+                                              hintText:
+                                                  'Account.wallet.Network.Filter',
+                                              prefixIcon: Icon(Icons.search),
+                                              border: OutlineInputBorder(),
+                                              filled: true,
+                                              fillColor: Colors.white10,
+                                            ),
+                                            onChanged: (value) {
+                                              //controller.filterNetworks(value);
+                                            },
                                           ),
-                                          onChanged: (value) {
-                                            //controller.filterNetworks(value);
-                                          },
-                                        ),
-                                        const SizedBox(height: 10),
+                                          const SizedBox(height: 10),
                                           SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.55,
+                                            height:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.height *
+                                                0.55,
                                             child: ListView.builder(
                                               padding: EdgeInsets.zero,
-                                              itemCount: controller.listNetwork.length, // Fix null list
-                                              itemBuilder: (ctx, index) {                                                
-                                                final network = controller.listNetwork[index];
-                                                final isSelected = controller.selectedNetwork.value?.id == network.id; // Fix null selected                                                
+                                              itemCount:
+                                                  controller
+                                                      .listNetwork
+                                                      .length, // Fix null list
+                                              itemBuilder: (ctx, index) {
+                                                final network =
+                                                    controller
+                                                        .listNetwork[index];
+                                                final isSelected =
+                                                    controller
+                                                        .selectedNetwork
+                                                        .value
+                                                        ?.id ==
+                                                    network
+                                                        .id; // Fix null selected
                                                 return Card(
-                                                  margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                                                  color: isSelected ? const Color(0xFF353434) : null,
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 4,
+                                                        vertical: 4,
+                                                      ),
+                                                  color:
+                                                      isSelected
+                                                          ? const Color(
+                                                            0xFF353434,
+                                                          )
+                                                          : null,
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(4),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          4,
+                                                        ),
                                                   ),
                                                   child: Stack(
                                                     children: [
@@ -100,192 +135,348 @@ class _WalletPageState extends State<WalletPage> {
                                                             width: 4,
                                                             height: 15,
                                                             decoration: const BoxDecoration(
-                                                              color: Colors.blue,
-                                                              borderRadius: BorderRadius.only(
-                                                                topLeft: Radius.circular(4),
-                                                                bottomLeft: Radius.circular(4),
-                                                              ),
+                                                              color:
+                                                                  Colors.blue,
+                                                              borderRadius:
+                                                                  BorderRadius.only(
+                                                                    topLeft:
+                                                                        Radius.circular(
+                                                                          4,
+                                                                        ),
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                          4,
+                                                                        ),
+                                                                  ),
                                                             ),
                                                           ),
                                                         ),
                                                       ListTile(
-                                                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                                        leading: const Icon(Icons.wifi, color: Colors.white70, size: 24),
-                                                        title: Text(
-                                                          network.name ?? "Unnamed Wallet",
-                                                          style: const TextStyle(color: Colors.white),
+                                                        contentPadding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 8,
+                                                              vertical: 4,
+                                                            ),
+                                                        leading: const Icon(
+                                                          Icons.wifi,
+                                                          color: Colors.white70,
+                                                          size: 24,
                                                         ),
-                                                        trailing: const Icon(Icons.more_vert, color: Colors.white70),
-                                                        onTap: (){
-                                                          controller.selectNetwork(network);
-                                                          Navigator.pop(context);
+                                                        title: Text(
+                                                          network.name ??
+                                                              "Unnamed Wallet",
+                                                          style:
+                                                              const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                        ),
+                                                        trailing: const Icon(
+                                                          Icons.more_vert,
+                                                          color: Colors.white70,
+                                                        ),
+                                                        onTap: () {
+                                                          controller
+                                                              .selectNetwork(
+                                                                network,
+                                                              );
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
                                                         },
                                                       ),
                                                     ],
                                                   ),
                                                 );
                                               },
-                                            ),                                            
+                                            ),
                                           ),
-                                      ],
-                                    )),
-                                    ).show(context);  
+                                        ],
+                                      ),
+                                    ),
+                                  ).show(context);
                                 },
-                              ),                           
+                              ),
                             ],
                           ),
                           Flexible(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                   GestureDetector(
-                                    onTap: (){                                        
-                                      ScreenPopup(title: "Account.wallet.List",//Quản lý ví
-                                        isDismissible: false,
-                                        backgroundColor: const Color(0xFF1B1B1B),
-                                        heightFactor: .65,
-                                        onShow: () => controller.getWallets(),                                 
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                          SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.4,
-                                              child: GetBuilder<BlockchangeWalletController>(                                                
-                                                id: "blockchange-wallets",
-                                                builder: (controller) {
-                                                  if (controller.isLoadingWallets.value || controller.wallets.isEmpty) {
-                                                    return const Center(child: CircularProgressIndicator());
-                                                  }                       
-                                                                                                          
-                                                  return ListView.builder(
-                                                    padding: EdgeInsets.zero,
-                                                    itemCount: controller.wallets.length,
-                                                    itemBuilder: (ctx, index) {
-                                                      final wallet = controller.wallets[index];
-                                                      return ListTile(
-                                                        contentPadding: const EdgeInsets.only(left: 15), 
-                                                        minVerticalPadding: 0,
-                                                        onTap: () {                                                          
-                                                          if(!wallet.selected!){
-                                                            controller.selectWallet(wallet);
-                                                            Get.back(result: true);
-                                                          }                                                          
-                                                        },
-                                                        title: Text(wallet.name ?? "Unnamed Wallet"),
-                                                        subtitle:FormattedNumber(value: wallet.balance??0,decimalDigits: 2,
-                                                          style: const TextStyle(fontSize: 18),
-                                                          prefix: r"$",),                                                        
-                                                        trailing: Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                          children: [
-                                                            if (wallet.selected??false)
-                                                              const CircleAvatar(
-                                                                radius: 10,
-                                                                backgroundColor: Colors.blue,
-                                                                child: Icon(Icons.check, size: 12, color: Colors.white),
-                                                              ),
-                                                            const SizedBox(width: 5),
-                                                            InkWell(
-                                                              borderRadius: BorderRadius.circular(20),
-                                                              onTap: () {
-                                                                Get.toNamed(
-                                                                  WalletDetailPage.route,
-                                                                  arguments: wallet.id,
-                                                                );                                                                                                                             
-                                                              },
-                                                              child: const Padding(
-                                                                padding: EdgeInsets.all(8.0),
-                                                                child: Icon(Icons.more_vert),
-                                                              ),
-                                                            ),                                                            
-                                                          ],
-                                                        ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        ScreenPopup(
+                                          title:
+                                              "Account.wallet.List", //Quản lý ví
+                                          isDismissible: false,
+                                          backgroundColor: const Color(
+                                            0xFF1B1B1B,
+                                          ),
+                                          heightFactor: .65,
+                                          onShow: () => controller.getWallets(),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.height *
+                                                    0.4,
+                                                child: GetBuilder<
+                                                  BlockchangeWalletController
+                                                >(
+                                                  id: "blockchange-wallets",
+                                                  builder: (controller) {
+                                                    if (controller
+                                                            .isLoadingWallets
+                                                            .value ||
+                                                        controller
+                                                            .wallets
+                                                            .isEmpty) {
+                                                      return const Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
                                                       );
-                                                    },
-                                                  );
-                                                },
+                                                    }
+
+                                                    return ListView.builder(
+                                                      padding: EdgeInsets.zero,
+                                                      itemCount:
+                                                          controller
+                                                              .wallets
+                                                              .length,
+                                                      itemBuilder: (
+                                                        ctx,
+                                                        index,
+                                                      ) {
+                                                        final wallet =
+                                                            controller
+                                                                .wallets[index];
+                                                        return ListTile(
+                                                          contentPadding:
+                                                              const EdgeInsets.only(
+                                                                left: 15,
+                                                              ),
+                                                          minVerticalPadding: 0,
+                                                          onTap: () {
+                                                            if (!wallet
+                                                                .selected!) {
+                                                              controller
+                                                                  .selectWallet(
+                                                                    wallet,
+                                                                  );
+                                                              Get.back(
+                                                                result: true,
+                                                              );
+                                                            }
+                                                          },
+                                                          title: Text(
+                                                            wallet.name ??
+                                                                "Unnamed Wallet",
+                                                          ),
+                                                          subtitle: FormattedNumber(
+                                                            value:
+                                                                wallet
+                                                                    .balance ??
+                                                                0,
+                                                            decimalDigits: 2,
+                                                            style:
+                                                                const TextStyle(
+                                                                  fontSize: 18,
+                                                                ),
+                                                            prefix: r"$",
+                                                          ),
+                                                          trailing: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .stretch,
+                                                            children: [
+                                                              if (wallet
+                                                                      .selected ??
+                                                                  false)
+                                                                const CircleAvatar(
+                                                                  radius: 10,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .blue,
+                                                                  child: Icon(
+                                                                    Icons.check,
+                                                                    size: 12,
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                                ),
+                                                              const SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              InkWell(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                                onTap: () {
+                                                                  Get.toNamed(
+                                                                    WalletDetailPage
+                                                                        .route,
+                                                                    arguments:
+                                                                        wallet
+                                                                            .id,
+                                                                  );
+                                                                },
+                                                                child: const Padding(
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        8.0,
+                                                                      ),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .more_vert,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
                                               ),
-                                            ),                            
                                               SafeArea(
                                                 top: false,
-                                                bottom: false, 
+                                                bottom: false,
                                                 child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
+                                                      ),
                                                   child: SizedBox(
                                                     width: double.infinity,
                                                     child: ElevatedButton.icon(
                                                       style: ElevatedButton.styleFrom(
-                                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                                        minimumSize: const Size.fromHeight(50),
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 12,
+                                                            ),
+                                                        minimumSize:
+                                                            const Size.fromHeight(
+                                                              50,
+                                                            ),
                                                       ),
                                                       onPressed: () {
-                                                        Get.toNamed(AddWalletPage.route)?.then((result) {
+                                                        Get.toNamed(
+                                                          AddWalletPage.route,
+                                                        )?.then((result) {
                                                           if (result != null) {
-                                                           controller.getWalletInfo();
-                                                            Get.back(result: true);
+                                                            controller
+                                                                .getWalletInfo();
+                                                            Get.back(
+                                                              result: true,
+                                                            );
                                                           }
                                                         });
                                                       },
-                                                      icon: const Icon(Icons.save, size: 18),
-                                                      label: Text(tr("Account.wallet.Addnew"), style: const TextStyle(fontSize: 14)),
+                                                      icon: const Icon(
+                                                        Icons.save,
+                                                        size: 18,
+                                                      ),
+                                                      label: Text(
+                                                        context.tr(
+                                                          "Account.wallet.Addnew",
+                                                        ),
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                          ],
-                                        )
-                                        )
-                                      .show(context);  
-                                    },
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          controller.walletsInfo?.name??tr("Account.wallet.Addnew"),
-                                          style: textTheme(context).titleMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16
-                                              ),
-                                        ),            
-                                        const Icon(
-                                          Icons.arrow_drop_down,
-                                          size: 20,
-                                        ), 
-                                        IconButton(
-                                          icon: const Icon(Icons.copy, size: 16),
-                                          padding: EdgeInsets.zero,
-                                          constraints: const BoxConstraints(),
-                                          onPressed: () {
-                                            if (controller.walletsInfo?.walletAddress != null) {                                            
-                                              Clipboard.setData(ClipboardData(
-                                                text: controller.walletsInfo!.walletAddress!
-                                              ));
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text(tr("Common.CopyToClipboard"))),
-                                              );
-                                            }
-                                          },
-                                        ),                                       
-                                      ],
+                                            ],
+                                          ),
+                                        ).show(context);
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            controller.walletsInfo?.name ??
+                                                context.tr(
+                                                  "Account.wallet.Addnew",
+                                                ),
+                                            style: textTheme(
+                                              context,
+                                            ).titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_drop_down,
+                                            size: 20,
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.copy,
+                                              size: 16,
+                                            ),
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            onPressed: () {
+                                              if (controller
+                                                      .walletsInfo
+                                                      ?.walletAddress !=
+                                                  null) {
+                                                Clipboard.setData(
+                                                  ClipboardData(
+                                                    text:
+                                                        controller
+                                                            .walletsInfo!
+                                                            .walletAddress!,
+                                                  ),
+                                                );
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      context.tr(
+                                                        "Common.CopyToClipboard",
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),       
-                                ],
-                              ),
-                              Text(
-                                controller.walletsInfo?.walletAddressFormat??"",
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
+                                  ],
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  controller.walletsInfo?.walletAddressFormat ??
+                                      "",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),                                               
                           IconButton(
                             icon: const Icon(Icons.qr_code_scanner),
                             onPressed: () {
@@ -297,50 +488,60 @@ class _WalletPageState extends State<WalletPage> {
                       const SizedBox(height: 40),
                       // Balance
                       FormattedNumber(
-                        value: controller.walletsInfo?.totalBalance??0,
+                        value: controller.walletsInfo?.totalBalance ?? 0,
                         decimalDigits: 2,
                         style: const TextStyle(fontSize: 22),
                         prefix: r"$",
-                      ),                                                                                                                      
-                      const SizedBox(height: 40),                      
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2), // Nền trắng nhạt
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.add, size: 28),
-                                constraints: const BoxConstraints(),
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  if(controller.walletsInfo == null){
-                                    Get.toNamed(AddWalletPage.route)?.then((result) {
-                                      if (result != null) {
-                                        controller.getWalletInfo();
-                                         Get.back(result: true);
-                                      }
-                                    });
-                                  }else{
-                                    Get.toNamed(AddWalletWithContractPage.route,
-                                    arguments: {
-                                      'walletAddress': controller.walletsInfo!.walletAddress!,
-                                      'id': controller.walletsInfo!.id!, // Thêm id vào arguments
-                                    },)?.then((result) {
-                                      if (result != null) {
-                                        controller.getWalletInfo();
-                                         Get.back(result: true);
-                                      }
-                                    });
-                                  }                            
-                                },
-                              ),
-                            ),
-                          ), // Hide widget when walletInfo is null                                        
+                      ),
+                      const SizedBox(height: 40),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(
+                              0.2,
+                            ), // Nền trắng nhạt
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.add, size: 28),
+                            constraints: const BoxConstraints(),
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              if (controller.walletsInfo == null) {
+                                Get.toNamed(AddWalletPage.route)?.then((
+                                  result,
+                                ) {
+                                  if (result != null) {
+                                    controller.getWalletInfo();
+                                    Get.back(result: true);
+                                  }
+                                });
+                              } else {
+                                Get.toNamed(
+                                  AddWalletWithContractPage.route,
+                                  arguments: {
+                                    'walletAddress':
+                                        controller.walletsInfo!.walletAddress!,
+                                    'id':
+                                        controller
+                                            .walletsInfo!
+                                            .id!, // Thêm id vào arguments
+                                  },
+                                )?.then((result) {
+                                  if (result != null) {
+                                    controller.getWalletInfo();
+                                    Get.back(result: true);
+                                  }
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      ), // Hide widget when walletInfo is null
                       SizedBox(
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -352,18 +553,18 @@ class _WalletPageState extends State<WalletPage> {
                               margin: const EdgeInsets.symmetric(vertical: 8),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(12),
-                                onTap: () {                                  
+                                onTap: () {
                                   Get.toNamed(
                                     WalletTokenDetailPage.route,
                                     arguments: wallet.id,
-                                  );  
+                                  );
                                 },
                                 child: Card(
-                                  margin:  EdgeInsets.zero,
+                                  margin: EdgeInsets.zero,
                                   color: const Color(0xFF1E1E1E),
-                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(12),
                                     child: Row(
@@ -376,16 +577,20 @@ class _WalletPageState extends State<WalletPage> {
                                             shape: BoxShape.circle,
                                             color: Colors.blue.withOpacity(0.2),
                                           ),
-                                          child: const Icon(Icons.account_balance_wallet, color: Colors.blue),
+                                          child: const Icon(
+                                            Icons.account_balance_wallet,
+                                            color: Colors.blue,
+                                          ),
                                         ),
                                         const SizedBox(width: 12),
                                         // Chain Info
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                wallet.chain.name,                                            
+                                                wallet.chain.name,
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
@@ -407,16 +612,30 @@ class _WalletPageState extends State<WalletPage> {
                                         ),
                                         // Balance Info
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
-                                            FormattedNumber(value: wallet.totalBalance ,decimalDigits:wallet.chain==Chain.BNB? 5:2,
-                                              style: const TextStyle(fontSize: 18),
-                                              suffix: wallet.chain.name,),
+                                            FormattedNumber(
+                                              value: wallet.totalBalance,
+                                              decimalDigits:
+                                                  wallet.chain == Chain.BNB
+                                                      ? 5
+                                                      : 2,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                              ),
+                                              suffix: wallet.chain.name,
+                                            ),
                                             const SizedBox(height: 4),
-                                            FormattedNumber(value: wallet.totalBalanceUSD ,decimalDigits: 2,
-                                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            FormattedNumber(
+                                              value: wallet.totalBalanceUSD,
+                                              decimalDigits: 2,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
                                               prefix: r"$",
-                                              ),                                                                                
+                                            ),
                                           ],
                                         ),
                                       ],
@@ -424,7 +643,7 @@ class _WalletPageState extends State<WalletPage> {
                                   ),
                                 ),
                               ),
-                            );                                                      
+                            );
                           },
                         ),
                       ),
@@ -434,7 +653,7 @@ class _WalletPageState extends State<WalletPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              tr("Account.wallet.Token.DontSee"),
+                              context.tr("Account.wallet.Token.DontSee"),
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
@@ -442,28 +661,38 @@ class _WalletPageState extends State<WalletPage> {
                             ),
                             InkWell(
                               onTap: () {
-                               if(controller.walletsInfo == null){
-                                  Get.toNamed(AddWalletPage.route)?.then((result) {
+                                if (controller.walletsInfo == null) {
+                                  Get.toNamed(AddWalletPage.route)?.then((
+                                    result,
+                                  ) {
                                     if (result != null) {
                                       controller.getWalletInfo();
-                                       Get.back(result: true);
+                                      Get.back(result: true);
                                     }
                                   });
-                                }else{
-                                    Get.toNamed(AddWalletWithContractPage.route,
+                                } else {
+                                  Get.toNamed(
+                                    AddWalletWithContractPage.route,
                                     arguments: {
-                                      'walletAddress': controller.walletsInfo!.walletAddress!,
-                                      'id': controller.walletsInfo!.id!, // Thêm id vào arguments
-                                    },)?.then((result) {
-                                      if (result != null) {
-                                        controller.getWalletInfo();
-                                         Get.back(result: true);
-                                      }
-                                    });
-                                  }      
+                                      'walletAddress':
+                                          controller
+                                              .walletsInfo!
+                                              .walletAddress!,
+                                      'id':
+                                          controller
+                                              .walletsInfo!
+                                              .id!, // Thêm id vào arguments
+                                    },
+                                  )?.then((result) {
+                                    if (result != null) {
+                                      controller.getWalletInfo();
+                                      Get.back(result: true);
+                                    }
+                                  });
+                                }
                               },
                               child: Text(
-                                tr("Account.wallet.Token.Add"),                                
+                                context.tr("Account.wallet.Token.Add"),
                                 style: const TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
@@ -478,12 +707,11 @@ class _WalletPageState extends State<WalletPage> {
                     ],
                   ),
                 ),
-              )
-              
+              ),
             ),
           ),
         );
       },
     );
-  }  
+  }
 }

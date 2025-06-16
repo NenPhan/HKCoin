@@ -22,7 +22,7 @@ class _HomeProductWidgetState extends State<HomeProductWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          tr("Products.RecentlyAddedProducts"),
+          context.tr("Products.RecentlyAddedProducts"),
           style: textTheme(context).titleSmall,
         ),
         SingleChildScrollView(

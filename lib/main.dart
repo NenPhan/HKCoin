@@ -14,7 +14,7 @@ void main() async {
     appName: "HKCoin",
     flavorName: AppFlavor.DEV,
     secondsTimeout: 30,
-    host: "https://aps.hakacoin.net",
+    host: "https://api.hakacoin.net",
     apiPath: "/odata/v1/",
     socketPath: "/hkc-hub/",
     basicAuthorization:
@@ -27,7 +27,9 @@ void main() async {
     EasyLocalization(
       supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
       startLocale: const Locale("en", "US"),
-      path: "http://aps.hakacoin.net/translations",
+      path: "http://api.hakacoin.net/translations",
+      fallbackLocale: const Locale('en', 'US'),
+      useFallbackTranslations: true,
       assetLoader: const HttpAssetLoader(),
       child: const CustomMaterialApp(),
     ),

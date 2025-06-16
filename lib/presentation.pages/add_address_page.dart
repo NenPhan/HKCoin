@@ -49,7 +49,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             const SizedBox(height: 20),
                             MainTextField(
                               controller: controller.fNameController,
-                              label: tr("Account.Fields.FirstName"),
+                              label: "Account.Fields.FirstName",
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -58,7 +58,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             ),
                             MainTextField(
                               controller: controller.lNameController,
-                              label: tr("Account.Fields.LastName"),
+                              label: "Account.Fields.LastName",
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -69,11 +69,11 @@ class _AddAddressPageState extends State<AddAddressPage> {
                               isRequired: false,
                               controller: controller.emailController,
                               keyboardType: TextInputType.emailAddress,
-                              label: tr("Account.Fields.Email"),
+                              label: "Account.Fields.Email",
                             ),
                             MainTextField(
                               controller: controller.phoneController,
-                              label: tr("Account.Fields.Phone"),
+                              label: "Account.Fields.Phone",
                               keyboardType: TextInputType.phone,
                               isNumberOnly: true,
                               inputFormatters: [
@@ -89,7 +89,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             ),
                             MainTextField(
                               controller: controller.cityController,
-                              label: tr("Account.Fields.City"),
+                              label: "Account.Fields.City",
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -130,7 +130,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                       validator:
                                           (Country? value) =>
                                               value == null
-                                                  ? tr(
+                                                  ? context.tr(
                                                     "Address.Fields.Country.Required",
                                                   )
                                                   : null,
@@ -153,9 +153,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                       itemAsString:
                                           (Province? province) =>
                                               province?.name ?? "",
-                                      labelText: tr(
-                                        "Address.Fields.StateProvince",
-                                      ),
+                                      labelText: "Address.Fields.StateProvince",
                                       errorText: controller.provinceError,
                                       isEnabled: !controller.isLoading.value,
                                       icon: Icons.location_city,
@@ -164,7 +162,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                       validator:
                                           (Province? value) =>
                                               value == null
-                                                  ? tr(
+                                                  ? context.tr(
                                                     "Address.Fields.StateProvince.Required",
                                                   )
                                                   : null,
@@ -175,7 +173,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             ),
                             MainTextField(
                               controller: controller.addressController,
-                              label: tr("Address"),
+                              label: "Address",
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -188,7 +186,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                 onChanged: (value) {
                                   controller.changeIsDefault();
                                 },
-                                child: Text(tr("Address.SetDefaultAddress")),
+                                child: Text(
+                                  context.tr("Address.SetDefaultAddress"),
+                                ),
                               ),
                             ),
                             Obx(

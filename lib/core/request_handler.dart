@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart';
 import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/toast.dart';
@@ -12,7 +13,7 @@ Future<T> handleRemoteRequest<T>(
   Future<T> Function() onRequest, {
   bool shoudleHandleError = true,
 }) async {
-  String defaultErr = 'Identity.Error.DefaultError'.tr();
+  String defaultErr = Get.context?.tr('Identity.Error.DefaultError') ?? "";
   if (shoudleHandleError) {
     try {
       var value = await onRequest();

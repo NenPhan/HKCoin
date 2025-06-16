@@ -103,7 +103,7 @@ class _NewsPageState extends State<NewsPage> {
                         Get.toNamed(NewsCategoryDetailPage.route, arguments: category.id);
                       },
                       child: Text(                       
-                        tr("Common.Cms.ReadMore"), // Replace with your translation key
+                        context.tr("Common.Cms.ReadMore"), // Replace with your translation key
                         style: textTheme(context).bodyMedium?.copyWith(
                             //  color: Colors.blue, // Customize the style as needed
                               fontWeight: FontWeight.w400,
