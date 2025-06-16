@@ -17,6 +17,20 @@
       "type": "dart",
       "flutterMode": "release",
       "program": "lib/main_dev.dart"
+    },
+    {
+      "name": "prod-debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "prod-release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "program": "lib/main.dart"
     }
   ]
 }
