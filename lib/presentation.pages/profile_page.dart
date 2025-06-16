@@ -326,6 +326,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           await Get.updateLocale(locale);
                           await Get.find<LocaleController>().setLanguage(
                             language.id,
+                            locale,
                           );
                           // Restart.restartApp();
                         },

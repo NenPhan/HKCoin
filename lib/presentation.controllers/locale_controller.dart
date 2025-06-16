@@ -45,7 +45,8 @@ class LocaleController extends GetxController {
     }
   }
 
-  Future setLanguage(int? id) async {
+  Future setLanguage(int? id, Locale nLocale) async {
+    locale = nLocale;
     await handleEitherReturn(
       await LocaleRepository().setLanguage(id),
       (r) async {},

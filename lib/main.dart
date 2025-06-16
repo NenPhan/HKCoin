@@ -28,8 +28,6 @@ void main() async {
       supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
       startLocale: const Locale("en", "US"),
       path: "http://api.hakacoin.net/translations",
-      fallbackLocale: const Locale('en', 'US'),
-      useFallbackTranslations: true,
       assetLoader: const HttpAssetLoader(),
       child: const CustomMaterialApp(),
     ),
