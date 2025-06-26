@@ -126,7 +126,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                 ),                                                                                                          
                                 const SizedBox(height: 24),
                                 Container(
-                                  padding: EdgeInsets.all(12),
+                                  padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF1B1B1B),
                                     borderRadius: BorderRadius.circular(8),
@@ -144,7 +144,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                         padding: const EdgeInsets.all(2),
                                       ),    
                                       // Logo bên trái                              
-                                      SizedBox(width: 12),                              
+                                      const SizedBox(width: 12),                              
                                       // Chain và Network ở giữa
                                       Expanded(
                                         child: Column(
@@ -178,9 +178,9 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                 const SizedBox(height: 16),
                                 Row(
                                   children: [
-                                    const Text(
-                                      'Đến',
-                                      style: TextStyle(
+                                    Text(
+                                      tr("Account.wallet.SendPage.To"),
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -195,7 +195,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                 MainTextField(
                                   controller: controller.walletRecipientController,                                                                  
                                   hintText:  tr(
-                                    "Nhập địa chỉ ví",
+                                    "Account.wallet.SendPage.Address",
                                   ),              
                                   isRequired: true,                     
                                   obscureText: true,
@@ -235,9 +235,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                 const SizedBox(height: 16),
                                 MainTextField(
                                   controller: controller.walletAmountController,                                        
-                                  label: tr(
-                                    "Nhập số lượng",
-                                  ),                   
+                                  label: tr("Account.wallet.SendPage.Amount"),                   
                                   isRequired: true,                                                            
                                   obscureText: true,
                                   suffixWidget: Text(
@@ -274,7 +272,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                                 onTap: _showGasFeeInfo,
                                                 child: Row(
                                                   children: [
-                                                    const Text('Phí mạng'),
+                                                    Text(tr("Account.wallet.SendPage.Network.Fee")),
                                                     const SizedBox(width: 4),
                                                     Container(
                                                       padding: const EdgeInsets.all(4),
@@ -295,7 +293,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                           Row(
                                             children: [
                                               Text(
-                                                'Có khả năng trong ${controller.estimatedTime.value}',
+                                                tr("Account.wallet.SendPage.Estimated.Time").replaceAll('{0}', controller.estimatedTime.value),                                                
                                                 style: const TextStyle(
                                                   color: Colors.green,
                                                   fontSize: 12,
@@ -303,7 +301,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                               ),
                                               const Spacer(),
                                               Text(
-                                                'Phí tối đa ${controller.maxGasFee.value}${controller.maxGasFeeChain.value}',
+                                                tr("Account.wallet.SendPage.MaximumFee").replaceAll('{0}', "${controller.maxGasFee.value}").replaceAll('{1}', controller.maxGasFeeChain.value),                                                  
                                                 style: TextStyle(
                                                   color: Colors.grey[400],
                                                   fontSize: 12,
@@ -317,9 +315,9 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                           // Tổng số tiền
                                           Row(
                                             children: [
-                                              const Text(
-                                                'Tổng',
-                                                style: TextStyle(
+                                              Text(
+                                                tr("Account.wallet.SendPage.Total"),                                                
+                                                style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 18
                                                 ),
@@ -375,12 +373,12 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Thông tin phí mạng"),
-        content: const Text("Phí gas là khoản phí cần trả để xử lý giao dịch trên mạng blockchain. Phí này thay đổi tùy thuộc vào tình trạng mạng."),
+        title: Text(tr("Account.wallet.SendPage.AlertDialog.Title")),
+        content: Text(tr("Account.wallet.SendPage.AlertDialog.Content")),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Đóng"),
+            child: Text(tr("Common.Close")),
           ),
         ],
       ),
