@@ -12,6 +12,7 @@ import 'package:hkcoin/widgets/fee_loading_effect.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
+import 'package:hkcoin/widgets/screen_popup_widget.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
 
 class WalletTokenSendingPageParam {
@@ -362,7 +363,53 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
          // if (controller.formKey.currentState!.validate()) {
             // Đảm bảo loading hiển thị ngay lập tức
             controller.isLoadingSubmit.value = true;
-            await Future.delayed(Duration.zero);                      
+            await Future.delayed(Duration.zero);         
+           
+            ScreenPopup(
+              title: "Account.PrivateMessage",
+              headerColor: Colors.grey.shade300,
+              titleColor: Colors.black87,
+              iconColor: Colors.black87,
+              isDismissible: false,
+              heightFactor: .7,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment:MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center, 
+                  children: [
+                    Padding(                    
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        tr("Account.wallet.SendPage.Continute"),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: () {
+                        controller.isLoadingSubmit.value = false;
+                        Navigator.of(context).pop(); // Đóng popup khi nhấn OK
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue, // Màu nền button
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                      ),
+                      child: const Text(
+                        "OK",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )                             
+            ).show(context);        
             //controller.submitForm();
          // }
         },
