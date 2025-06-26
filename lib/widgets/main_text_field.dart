@@ -17,12 +17,14 @@ class MainTextField extends StatefulWidget {
     this.readOnly = false,
     this.keyboardType,
     this.onChanged,
+    this.onEditingComplete,
     this.minLines = 1, // Thêm minLines
     this.maxLines = 1, // Thêm
     this.enableSelectOnMouseDown = false,
     this.isNumberOnly = false,
     this.inputFormatters,
-    this.suffixWidget
+    this.suffixWidget,
+    this.textInputAction
   });
   final TextEditingController? controller;
   final String? label;
@@ -40,6 +42,8 @@ class MainTextField extends StatefulWidget {
   final bool isNumberOnly;
   final List<TextInputFormatter>? inputFormatters;
    final Widget? suffixWidget;
+   final VoidCallback? onEditingComplete;
+   final TextInputAction? textInputAction;
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -81,6 +85,15 @@ class _MainTextFieldState extends State<MainTextField> {
       readOnly: widget.readOnly,
       minLines: widget.minLines, // Truyền minLines
       maxLines: widget.maxLines, //
+      textInputAction: widget.textInputAction ?? TextInputAction.done, // Mặc định là nút Done
+      onEditingComplete: () {
+        // Gọi callback khi người dùng bấm nút Done/Next trên bàn phím
+        widget.onEditingComplete?.call();
+        // Tự động unfocus nếu không có callback được cung cấp
+        if (widget.onEditingComplete == null) {
+          _focusNode.unfocus();
+        }
+      },
       onTap:
           () => {
             if (widget.enableSelectOnMouseDown && widget.controller != null)

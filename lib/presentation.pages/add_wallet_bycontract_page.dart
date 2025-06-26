@@ -227,9 +227,7 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                         controller:
                                             controller.contractSymbolController,
                                         label:
-                                            "Account.wallet.withContract.Symbol",
-
-                                        readOnly: true,
+                                            "Account.wallet.withContract.Symbol",                                        
                                       ),
                                     ],
                                   ),
@@ -251,8 +249,7 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                                 .contractDecimalController,
                                         label: context.tr(
                                           "Account.wallet.withContract.Decimal",
-                                        ),
-                                        readOnly: true,
+                                        ),                                        
                                       ),
                                     ],
                                   ),

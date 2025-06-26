@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,6 +8,7 @@ import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_send_controller.dart';
 import 'package:hkcoin/presentation.pages/qr_scan_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/fee_loading_effect.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
@@ -30,13 +30,17 @@ class WalletTokenSendingPage extends StatefulWidget {
 
 class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
   final WalletTokenSendingController controller = Get.put(WalletTokenSendingController());
-  late BlockchangeWalletTokenInfo wallet;
+  //late BlockchangeWalletTokenInfo wallet;
   @override
   void initState() {
     super.initState();
-    if (Get.arguments is WalletTokenSendingPageParam) {
-      wallet = (Get.arguments as WalletTokenSendingPageParam).wallet;     
-    }
+    // final params = Get.arguments is WalletTokenSendingPageParam 
+    //   ? Get.arguments as WalletTokenSendingPageParam 
+    //   : null;
+    // controller.initialize(params);
+    // if (Get.arguments is WalletTokenSendingPageParam) {
+    //   wallet = (Get.arguments as WalletTokenSendingPageParam).wallet;     
+    // }
   }
 
   @override
@@ -85,7 +89,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                               const Icon(Icons.account_balance_wallet, size: 24),
                                               const SizedBox(width: 8),
                                               Text(
-                                                wallet.walletName!,
+                                                controller.walletsInfo!.walletName!,
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -106,7 +110,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                           ),
                                           child: Center( 
                                             child: Text(
-                                              '${wallet.walletAddress!.substring(0, 5)}...${wallet.walletAddress!.substring(wallet.walletAddress!.length - 4)}',    
+                                              '${controller.walletsInfo!.walletAddress!.substring(0, 5)}...${controller.walletsInfo!.walletAddress!.substring(controller.walletsInfo!.walletAddress!.length - 4)}',    
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey[600],
@@ -130,7 +134,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                   child: Row(
                                     children: [
                                       TokenIconWidget(
-                                        imageUrl: wallet.iconUrl,
+                                        imageUrl: controller.walletsInfo!.iconUrl,
                                         width: 32,
                                         height: 32,                  
                                         hasBorder: false,
@@ -148,7 +152,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              wallet.chain!.name,
+                                              controller.walletsInfo!.chain!.name,
                                               style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -156,7 +160,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
-                                              wallet.ethereumNetwork!.name,
+                                              controller.walletsInfo!.ethereumNetwork!.name,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey[600],
@@ -165,9 +169,9 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                           ],
                                         ),
                                       ),
-                                      FormattedNumber(value: wallet.totalBalance ,decimalDigits:wallet.chain==Chain.BNB? 5:2,
+                                      FormattedNumber(value: controller.walletsInfo!.totalBalance ,decimalDigits:controller.walletsInfo!.chain==Chain.BNB? 5:2,
                                                           style: const TextStyle(fontSize: 20),
-                                                          suffix: wallet.chain!.name,),                               
+                                                          suffix: controller.walletsInfo!.chain!.name,),                               
                                     ],
                                   ),
                                 ),                                                                        
@@ -189,7 +193,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                   ],
                                 ),
                                 MainTextField(
-                                  controller: controller.walletAddressController,                                                                  
+                                  controller: controller.walletRecipientController,                                                                  
                                   hintText:  tr(
                                     "Nhập địa chỉ ví",
                                   ),              
@@ -200,7 +204,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                       final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
                                       final clipboardText = clipboardData?.text?.trim() ?? '';   
                                       if (clipboardText.isNotEmpty) {
-                                        controller.walletAddressController.text = clipboardText;                                
+                                        controller.walletRecipientController.text = clipboardText;                                
                                       }                       
                                     },
                                     child: Text(
@@ -223,8 +227,8 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    tr("Account.Wallet.Received.Alert").replaceAll('{0}', wallet.symbol ?? 'BNB')
-                                    .replaceAll('{1}', wallet.ethereumNetwork!.name),
+                                    tr("Account.Wallet.Received.Alert").replaceAll('{0}', controller.walletsInfo!.symbol ?? 'BNB')
+                                    .replaceAll('{1}', controller.walletsInfo!.ethereumNetwork!.name),
                                     style: const TextStyle(color: Colors.orange),
                                   ),
                                 ),
@@ -237,9 +241,17 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                   isRequired: true,                                                            
                                   obscureText: true,
                                   suffixWidget: Text(
-                                    wallet.chain!.name
+                                    controller.walletsInfo!.chain!.name
                                   ),
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),     
+                                  onChanged: controller.onAmountChanged,                                                                  
+                                  onEditingComplete: () {
+                                    // Khi bấm nút Done trên bàn phím
+                                    if (controller.walletAmountController.text.isNotEmpty) {
+                                      final amount = double.tryParse(controller.walletAmountController.text) ?? 0.0;
+                                      controller.calculateFee(amount);
+                                    }                                    
+                                  },
                                 ),     
                                 const SizedBox(height: 16),
                                 Container(
@@ -249,77 +261,83 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(color: Colors.grey[700]!),
                                   ),
-                                  child: Column(
-                                    children: [
-                                      // Phí mạng
-                                      Row(
+                                  child: Obx(() {
+                                    if (controller.isFeeLoading.value) {
+                                      return const FeeLoadingEffect();
+                                    } else {
+                                      return Column(
                                         children: [
-                                          GestureDetector(
-                                            onTap: _showGasFeeInfo,
-                                            child: Row(
-                                              children: [
-                                                const Text('Phí mạng'),
-                                                const SizedBox(width: 4),
-                                                Container(
-                                                  padding: const EdgeInsets.all(4),
-                                                  decoration: const BoxDecoration(
-                                                    color: Color(0xFF575757),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: const Icon(Icons.info_outline, size: 14),
+                                          // Phí mạng
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: _showGasFeeInfo,
+                                                child: Row(
+                                                  children: [
+                                                    const Text('Phí mạng'),
+                                                    const SizedBox(width: 4),
+                                                    Container(
+                                                      padding: const EdgeInsets.all(4),
+                                                      decoration: const BoxDecoration(
+                                                        color: Color(0xFF575757),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: const Icon(Icons.info_outline, size: 14),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                              const Spacer(),
+                                              Text('${controller.gasFee.value} ${controller.walletsInfo!.chain!.name}'),
+                                            ],
                                           ),
-                                          const Spacer(),
-                                          const Text('200 BNB'),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Có khả năng trong ${controller.estimatedTime.value}',
+                                                style: const TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                'Phí tối đa ${controller.maxGasFee.value}${controller.maxGasFeeChain.value}',
+                                                style: TextStyle(
+                                                  color: Colors.grey[400],
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),        
+                                          const SizedBox(height: 16),                                                                                   
+                                          const Divider(height: 24, thickness: 1), 
+                                          const SizedBox(height: 16),                             
+                                          // Tổng số tiền
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Tổng',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                '${controller.walletAmountController.text}${controller.walletsInfo!.symbol ?? ''} + ${controller.gasFee.value} ${controller.maxGasFeeChain.value}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            'Có khả năng trong <5,222 giây',
-                                            style: TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            'Phí tối đa 0.0006BNB',
-                                            style: TextStyle(
-                                              color: Colors.grey[400],
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),        
-                                      const SizedBox(height: 16),                                                                                   
-                                      const Divider(height: 24, thickness: 1), 
-                                      const SizedBox(height: 16),                             
-                                      // Tổng số tiền
-                                      const Row(
-                                        children: [
-                                          Text(
-                                            'Tổng',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                            '200HKC + 0.00006 BNB',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                      );
+                                    }
+                                  }),
                                 ),
                               ]                                                                
                           )
@@ -357,12 +375,12 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Thông tin phí mạng"),
-        content: Text("Phí gas là khoản phí cần trả để xử lý giao dịch trên mạng blockchain. Phí này thay đổi tùy thuộc vào tình trạng mạng."),
+        title: const Text("Thông tin phí mạng"),
+        content: const Text("Phí gas là khoản phí cần trả để xử lý giao dịch trên mạng blockchain. Phí này thay đổi tùy thuộc vào tình trạng mạng."),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Đóng"),
+            child: const Text("Đóng"),
           ),
         ],
       ),
@@ -375,7 +393,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
         builder: (_) => QRScanPage(
           showDialogOnScan: false,                  
           onScanResult: (result) {
-            controller.walletAddressController.text = result;
+            controller.walletRecipientController.text = result;
             //controller.updateContractInfomation();     
             controller.update([
               'add-wallet-contract-page',
