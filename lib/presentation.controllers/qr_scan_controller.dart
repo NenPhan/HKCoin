@@ -25,6 +25,7 @@ class QRScannerController {
   ValueNotifier<bool> isProcessing = ValueNotifier(false);
   ValueNotifier<bool> isFlashOn = ValueNotifier(false);
   BuildContext? _context;
+  bool _isDisposed = false;
 
   Future<void> initializeCamera(BuildContext context) async {
     try {
@@ -44,6 +45,7 @@ class QRScannerController {
 
   Future<void> _initializeCameraController() async {
     try {
+      if (_isDisposed) return;
       _cameraController?.dispose();
       _cameraController = CameraController(
         _cameras[_currentCameraIndex],
@@ -63,9 +65,12 @@ class QRScannerController {
           (image) => _processCameraImage(image, context: _context!),
         );
       }
+      if (!_isDisposed) isCameraInitialized.value = true;
     } catch (e) {
-      isCameraInitialized.value = false;
-      scanResult.value = 'Camera setup error: $e';
+      if (!_isDisposed) {
+        isCameraInitialized.value = false;
+        scanResult.value = 'Camera setup error: $e';
+      }
     }
   }
 
@@ -94,9 +99,10 @@ class QRScannerController {
     CameraImage image, {
     required BuildContext context,
   }) async {
-    if (_isProcessing) return; // Throttle frame processing
+    if (_isProcessing  || _isDisposed) return; // Throttle frame processing
     _isProcessing = true;
-    isProcessing.value = true;
+    if (!_isDisposed) isProcessing.value = true;
+    //isProcessing.value = true;
 
     try {
       final inputImage = await compute(
@@ -115,11 +121,13 @@ class QRScannerController {
         }
       }
     } catch (e) {
-      _scanResult = 'Error scanning QR code: $e';
-      scanResult.value = _scanResult;
+      if (!_isDisposed) {
+        _scanResult = 'Error scanning QR code: $e';
+        scanResult.value = _scanResult;
+      }     
     } finally {
       _isProcessing = false;
-      isProcessing.value = false;
+      if (!_isDisposed) isProcessing.value = false;
     }
   }
 
@@ -308,6 +316,8 @@ class QRScannerController {
   }
 
   void dispose() {
+     if (_isDisposed) return;
+    _isDisposed = true;
     stopScanning();
     _cameraController?.dispose();
     _barcodeScanner.close();

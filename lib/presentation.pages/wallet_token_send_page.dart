@@ -287,52 +287,91 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                                 ),
                                               ),
                                               const Spacer(),
-                                              Text('${controller.gasFee.value} ${controller.walletsInfo!.chain!.name}'),
+                                              Text('${controller.walletAmountController.text} ${controller.walletsInfo!.chain!.name}'),
                                             ],
                                           ),
                                           const SizedBox(height: 4),
                                           Row(
                                             children: [
-                                              Text(
-                                                tr("Account.wallet.SendPage.Estimated.Time").replaceAll('{0}', controller.estimatedTime.value),                                                
-                                                style: const TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 12,
+                                              Flexible(
+                                                child: Text(
+                                                  tr("Account.wallet.SendPage.Estimated.Time").replaceAll('{0}', controller.estimatedTime.value),
+                                                  style: const TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: 12,
+                                                  ),
+                                                  maxLines: 2, // Cho phép tối đa 2 dòng
+                                                  overflow: TextOverflow.ellipsis, // Hiển thị dấu ba chấm (...) nếu văn bản quá dài
+                                                  textAlign: TextAlign.right, // Căn chỉnh văn bản sang phải
                                                 ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                tr("Account.wallet.SendPage.MaximumFee").replaceAll('{0}', "${controller.maxGasFee.value}").replaceAll('{1}', controller.maxGasFeeChain.value),                                                  
-                                                style: TextStyle(
-                                                  color: Colors.grey[400],
-                                                  fontSize: 12,
+                                              ),         
+                                              const Spacer(),                                                                                 
+                                              Flexible(
+                                                child: Text(
+                                                  tr("Account.wallet.SendPage.MaximumFee")
+                                                      .replaceAll('{0}', controller.maxGasFee.value.toStringAsFixed(8))
+                                                      .replaceAll('{1}', controller.maxGasFeeChain.value),
+                                                  style: TextStyle(
+                                                    color: Colors.grey[400],
+                                                    fontSize: 12,
+                                                  ),
+                                                  maxLines: null, // Cho phép tối đa 2 dòng
+                                                 // overflow: TextOverflow.ellipsis, // Hiển thị dấu ba chấm (...) nếu văn bản quá dài
+                                                  textAlign: TextAlign.right, // Căn chỉnh văn bản sang phải
                                                 ),
                                               ),
                                             ],
-                                          ),        
-                                          const SizedBox(height: 16),                                                                                   
+                                          ),     
+                                          const SizedBox(height: 5),                                                                                   
                                           const Divider(height: 24, thickness: 1), 
-                                          const SizedBox(height: 16),                             
+                                          const SizedBox(height: 5),                             
                                           // Tổng số tiền
                                           Row(
                                             children: [
                                               Text(
-                                                tr("Account.wallet.SendPage.Total"),                                                
+                                                tr("Account.wallet.SendPage.Total"),
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 18
+                                                  fontSize: 18,
                                                 ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                '${controller.walletAmountController.text}${controller.walletsInfo!.symbol ?? ''} + ${controller.gasFee.value} ${controller.maxGasFeeChain.value}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18
+                                              ),                                              
+                                              Flexible(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.end, // Căn chỉnh sang phải
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.end, // Căn chỉnh số lượng sang phải
+                                                      children: [
+                                                        Flexible(
+                                                          child: Text(
+                                                            '${controller.walletAmountController.text}${controller.walletsInfo!.symbol ?? ''}',
+                                                            style: const TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              fontSize: 18,
+                                                            ),
+                                                            textAlign: TextAlign.right, // Căn chỉnh sang phải
+                                                            maxLines: 1, // Giới hạn ở 1 dòng
+                                                            overflow: TextOverflow.ellipsis, // Dấu ba chấm nếu quá dài
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      '+ ${controller.gasFee.value.toStringAsFixed(8)} ${controller.maxGasFeeChain.value}',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.normal,
+                                                        fontSize: 12,
+                                                        color: Colors.grey[400], // Màu nhạt hơn để phân biệt
+                                                      ),
+                                                      textAlign: TextAlign.right, // Căn chỉnh sang phải
+                                                      overflow: TextOverflow.ellipsis, 
+                                                      maxLines: 1, // Cho phép ngắt dòng nếu quá dài
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
-                                          ),
+                                          ),                                          
                                         ],
                                       );
                                     }
@@ -360,59 +399,171 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
         width: double.infinity,
         text: "Account.Wallet.Send",
         onTap: () async {
+          if (!controller.formKey.currentState!.validate()) {
+            return;
+          }
          // if (controller.formKey.currentState!.validate()) {
             // Đảm bảo loading hiển thị ngay lập tức
             controller.isLoadingSubmit.value = true;
+            final shouldContinue = await _showConfirmationPopup(context, controller);
+            if (!shouldContinue) {
+              controller.isLoadingSubmit.value = false;
+              return;
+            }
             await Future.delayed(Duration.zero);         
-           
-            ScreenPopup(
-              title: "Account.PrivateMessage",
-              headerColor: Colors.grey.shade300,
-              titleColor: Colors.black87,
-              iconColor: Colors.black87,
-              isDismissible: false,
-              heightFactor: .7,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment:MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center, 
-                  children: [
-                    Padding(                    
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
-                        tr("Account.wallet.SendPage.Continute"),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed: () {
-                        controller.isLoadingSubmit.value = false;
-                        Navigator.of(context).pop(); // Đóng popup khi nhấn OK
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue, // Màu nền button
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                      ),
-                      child: const Text(
-                        "OK",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )                             
-            ).show(context);        
+              // Thực hiện giao dịch
+            final result = await _performTransaction(controller);
+            
+            // Xử lý kết quả
+            // ignore: use_build_context_synchronously
+            _handleTransactionResult(context, result);
+            
+            controller.isLoadingSubmit.value = false;                 
             //controller.submitForm();
          // }
         },
+      ),
+    );
+  }
+  Future<bool> _showConfirmationPopup(BuildContext context, WalletTokenSendingController controller) async {
+  return await showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => AlertDialog(
+      title: Text(tr("Account.PrivateMessage")),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(tr("Account.wallet.SendPage.Continute")),
+          const SizedBox(height: 20),
+          _buildTransactionSummary(controller),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(tr("Common.Cancel")),
+        ),
+        ElevatedButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text(tr("Common.Confirm")),
+        ),
+      ],
+    ),
+  ) ?? false;
+}
+
+Widget _buildTransactionSummary(WalletTokenSendingController controller) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: const Color(0xFF1B1B1B),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      children: [
+        _buildSummaryRow(
+          tr("Account.wallet.SendPage.Amount"),
+          '${controller.walletAmountController.text} ${controller.walletsInfo!.symbol}'
+        ),
+        const SizedBox(height: 8),
+        _buildSummaryRow(
+          tr("Account.wallet.SendPage.Network.Fee"),
+          '${controller.gasFee.value.toStringAsFixed(8)} ${controller.maxGasFeeChain.value}'
+        ),
+        const Divider(height: 16),
+        _buildSummaryRow(
+          tr("Account.wallet.SendPage.Total"),
+          '${double.parse(controller.walletAmountController.text)} ${controller.walletsInfo!.symbol}',
+          isBold: true
+        ),
+         _buildSummaryRow(
+          tr("Account.wallet.SendPage.Network.Fee"),
+          '${controller.gasFee.value.toStringAsFixed(8)} ${controller.maxGasFeeChain.value}'
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildSummaryRow(String label, String value, {bool isBold = false}) {
+  return Row(
+    children: [
+      Text(label, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+      const Spacer(),
+      Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+    ],
+  );
+}
+
+Future<Map<String, dynamic>> _performTransaction(WalletTokenSendingController controller) async {
+  try {
+    final amount = double.parse(controller.walletAmountController.text);
+    final recipient = controller.walletRecipientController.text;
+    
+    return await controller.sendBNBAndToken(recipient, amount);
+  } catch (e) {
+    return {
+      'success': false,
+      'error': e.toString()
+    };
+  }
+}
+
+void _handleTransactionResult(BuildContext context, Map<String, dynamic> result) {
+  if (result['success']) {
+    Get.back(); // Quay lại màn hình trước đó
+    Get.back();
+    Get.snackbar(
+      tr("Common.Success"),
+      tr("Account.wallet.SendPage.TransactionSuccess"),
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+    
+    // Hiển thị thông tin chi tiết giao dịch nếu cần
+    _showTransactionDetails(context, result['txHash']);
+  } else {
+    Get.snackbar(
+      tr("Common.Error"),
+      result['error'] ?? tr("Account.wallet.SendPage.TransactionFailed"),
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+  }
+}
+
+void _showTransactionDetails(BuildContext context, String txHash) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(tr("Account.wallet.SendPage.TransactionDetails")),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(tr("Account.wallet.SendPage.TransactionHash")),
+            const SizedBox(height: 8),
+            SelectableText(
+              txHash,
+              style: const TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Mở trình duyệt để xem chi tiết giao dịch trên blockchain explorer
+                // _openBlockchainExplorer(txHash);
+                Navigator.of(context).pop();
+              },
+              child: Text(tr("Account.wallet.SendPage.ViewOnExplorer")),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(tr("Common.Close")),
+          ),
+        ],
       ),
     );
   }

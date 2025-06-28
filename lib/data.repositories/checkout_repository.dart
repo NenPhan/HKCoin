@@ -108,7 +108,7 @@ class CheckoutRepository {
   Future<Either<Failure, CheckoutCompleteData>> checkoutComplete(int id) {
     return handleRepositoryCall(
       onRemote: () async {
-        var result = await CheckoutDatasource().checkoutComplete(id);
+        var result = await CheckoutDatasource().checkoutComplete(id);        
         return Right(result);
       },
     );

@@ -165,8 +165,7 @@ class BlockchangeWalletController extends GetxController {
           }
         }
       } catch (e) {
-        debugPrint('Lỗi khi lấy số dư BNB: $e');
-        //Get.snackbar('Error', 'Lỗi khi lấy số dư BNB: $e');
+        debugPrint('Lỗi khi lấy số dư BNB blc_controller: $e');        
       }
     }
     wallets.totalBalance = totalBalance;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -150,7 +152,7 @@ class WalletDetailController extends GetxController {
          if(wallet.chain==Chain.BNB){
             var bnb = await web3Client.getBalance(EthereumAddress.fromHex(wallet.walletAddress));
             wallet.totalBalance = fromWeiToBNB(bnb.getInWei.toDouble());     
-            wallet.totalBalanceUSD = wallet.totalBalance!*665; 
+            wallet.totalBalanceUSD = wallet.totalBalance!* await fetchBnbPrice(); 
             walletInfos.add(wallet);
             totalBalance+=wallet.totalBalanceUSD!;  
          }else if(wallet.chain!=Chain.BNB){
@@ -166,7 +168,7 @@ class WalletDetailController extends GetxController {
             }                                   
           }                 
         } catch (e) {
-          debugPrint('Lỗi khi lấy số dư BNB: $e');
+          debugPrint('Lỗi khi lấy số dư BNB wallet detail: $e');
           //Get.snackbar('Error', 'Lỗi khi lấy số dư BNB: $e');
         }       
      }           
@@ -176,6 +178,26 @@ class WalletDetailController extends GetxController {
     //wallet.unit = unit;
     web3Client.dispose();
   }
+  Future<double> fetchBnbPrice() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
+        ),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['binancecoin']['usd'].toDouble();
+      } else {
+        print('Lỗi lấy tỷ giá BNB: ${response.statusCode}');
+        return 600.0; // Giá trị mặc định
+      }
+    } catch (e) {
+      print('Lỗi lấy tỷ giá BNB: $e');
+      return 600.0; // Giá trị mặc định
+    }
+  }
+
   Future fetchWalletsBalance(List<BlockchangeWallet> ws) async {
   final networkStore = await Storage().getNetWork() ?? selectedNetwork.value;
   if (networkStore == null) {

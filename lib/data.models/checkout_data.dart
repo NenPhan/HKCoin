@@ -191,6 +191,7 @@ class OrderComplate {
   DateTime? createdOn;
   String? orderWalletTotalStr;
   double? orderWalletTotal;
+  String? coinExtension;
   OrderComplate({
     this.orderGuid,
     this.orderNumber,
@@ -199,6 +200,7 @@ class OrderComplate {
     this.createdOn,
     this.orderWalletTotalStr,
     this.orderWalletTotal,
+    this.coinExtension
   });
   factory OrderComplate.fromJson(Map<String, dynamic> json) => OrderComplate(
     orderGuid: json["OrderGuid"],
@@ -207,6 +209,7 @@ class OrderComplate {
     orderStatus: json["OrderStatus"],
     orderWalletTotalStr: json["OrderWalletTotalStr"],
     orderWalletTotal: json["OrderWalletTotal"],
+    coinExtension: json["CoinExtension"],
     createdOn:
         json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]).convertToUserTime(),
   );

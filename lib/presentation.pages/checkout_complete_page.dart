@@ -13,6 +13,7 @@ import 'package:hkcoin/presentation.controllers/checkout_complete_controller.dar
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
+import 'package:hkcoin/widgets/qrcode_widget.dart';
 import 'package:html/parser.dart';
 
 class CheckoutCompletePage extends StatefulWidget {
@@ -103,6 +104,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                           ),
                           SizedBox(height: scrSize(context).height * 0.01),
                           _buildPaymentInfo(controller.data),
+                          
                           MainButton(
                             text: "Account.Login.BackHome",
                             onTap: () {
@@ -165,34 +167,60 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
           ),
           _buildAlert(data?.notifiesAlert ?? ""),
           if (data?.infoPayment?.qRCodePayment != null)
+            
             Center(
-              child: SvgPicture.string(
-                data!.infoPayment!.qRCodePayment!,
-                width: scrSize(context).width * 0.6,
+              child:QRCodeWidget(
+                data: data!.infoPayment!.walletAddress!,
+                size: scrSize(context).width * 0.6,
+                backgroundColor: Colors.white,
+                showShare: true,
+                showSaveStore: true,                                    
               ),
+              // child: SvgPicture.string(
+              //   data!.infoPayment!.qRCodePayment!,
+              //   width: scrSize(context).width * 0.6,
+              // ),
             ),
           Html(
             data: context
                 .tr("Checkout.Billing.Information.WalletAddress")
                 .replaceAll("{0}", data?.infoPayment?.walletAddress ?? ""),
           ),
-          MainButton(
-            width: scrSize(context).width * 0.25,
-            icon: const Icon(Icons.copy, color: Colors.white),
-            text: "Common.Copy",
-            onTap: () {
-              try {
-                if (data?.infoPayment?.walletAddress != null) {
-                  Clipboard.setData(
-                    ClipboardData(text: data!.infoPayment!.walletAddress!),
-                  );
-                }
-                Toast.showSuccessToast("Common.CopyToClipboard.Succeeded");
-              } catch (e) {
-                Toast.showErrorToast("Common.CopyToClipboard.Failded");
-              }
-            },
-          ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MainButton(
+                  width: scrSize(context).width * 0.25,
+                  icon: const Icon(Icons.copy, color: Colors.white),
+                  text: "Common.Copy",      
+                  backgroundColor: const Color(0xFF504F4F),            
+                  onTap: () {
+                    try {
+                      if (data?.infoPayment?.walletAddress != null) {
+                        Clipboard.setData(
+                          ClipboardData(text: data!.infoPayment!.walletAddress!),
+                        );
+                      }
+                      Toast.showSuccessToast("Common.CopyToClipboard.Succeeded");
+                    } catch (e) {
+                      Toast.showErrorToast("Common.CopyToClipboard.Failded");
+                    }
+                  },
+                ),
+                const SizedBox(width: 10), 
+                MainButton(                  
+                  visible: !data!.order.coinExtension!.contains("HTX"),
+                  icon: const Icon(Icons.copy, color: Colors.white),
+                  text: "Checkout.Payment.Wallet".replaceAll('{0}', data.order.coinExtension??""),
+                  backgroundColor: Colors.lightBlue,
+                  onTap: () {
+                    
+                  },
+                ),
+              ],
+            ),
+          )          
         ],
       ),
     );
