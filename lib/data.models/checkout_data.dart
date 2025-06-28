@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/time_converter.dart';
 import 'package:hkcoin/data.models/address.dart';
 
@@ -192,6 +193,9 @@ class OrderComplate {
   String? orderWalletTotalStr;
   double? orderWalletTotal;
   String? coinExtension;
+  int? paymentStatusId;
+  int? orderStatusId;
+  OrderStatus? status;
   OrderComplate({
     this.orderGuid,
     this.orderNumber,
@@ -200,13 +204,19 @@ class OrderComplate {
     this.createdOn,
     this.orderWalletTotalStr,
     this.orderWalletTotal,
-    this.coinExtension
+    this.coinExtension,
+    this.orderStatusId,
+    this.paymentStatusId,
+    this.status
   });
   factory OrderComplate.fromJson(Map<String, dynamic> json) => OrderComplate(
     orderGuid: json["OrderGuid"],
     orderNumber: json["OrderNumber"],
     orderTotal: json["OrderTotal"],
     orderStatus: json["OrderStatus"],
+    orderStatusId: json["OrderStatusId"],
+    paymentStatusId: json["PaymentStatusId"],
+    status: (json["OrderStatusId"] as int).toOrderStatus(),
     orderWalletTotalStr: json["OrderWalletTotalStr"],
     orderWalletTotal: json["OrderWalletTotal"],
     coinExtension: json["CoinExtension"],

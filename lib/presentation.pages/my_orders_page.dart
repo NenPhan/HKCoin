@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/my_orders_controller.dart';
+import 'package:hkcoin/presentation.pages/checkout_complete_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/pagination_widget.dart';
@@ -42,61 +43,69 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                             (index) {
                               var order =
                                   controller.orderPagination!.orders![index];
-                              return Container(
-                                padding: EdgeInsets.all(
-                                  scrSize(context).width * 0.03,
-                                ),
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: scrSize(context).width * 0.03,
-                                  vertical: scrSize(context).width * 0.01,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[900],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      "#${order.productName ?? ""}",
-                                      style: textTheme(context).titleMedium
-                                          ?.copyWith(color: Colors.deepOrange),
-                                    ),
-                                    Text(
-                                      order.orderNumber ?? "",
-                                      style: textTheme(context).titleMedium
-                                          ?.copyWith(color: Colors.white),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      order.orderStatus.toString(),
-                                      style: textTheme(context).bodyLarge
-                                          ?.copyWith(color: Colors.white),
-                                    ),
-                                    Text(
-                                      order.createdOn == null
-                                          ? ""
-                                          : dateFormat(order.createdOn!),
-                                      style: textTheme(context).bodyMedium
-                                          ?.copyWith(color: Colors.white),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Container(
-                                      padding: EdgeInsets.all(
-                                        scrSize(context).width * 0.03,
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(
+                                    CheckoutCompletePage.route,
+                                    arguments: order.id,
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(
+                                    scrSize(context).width * 0.03,
+                                  ),
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: scrSize(context).width * 0.03,
+                                    vertical: scrSize(context).width * 0.01,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[900],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        "#${order.productName ?? ""}",
+                                        style: textTheme(context).titleMedium
+                                            ?.copyWith(color: Colors.deepOrange),
                                       ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(10),
+                                      Text(
+                                        order.orderNumber ?? "",
+                                        style: textTheme(context).titleMedium
+                                            ?.copyWith(color: Colors.white),
                                       ),
-                                      child: Center(
-                                        child: Text(order.orderTotal ?? ""),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        order.orderStatus.toString(),
+                                        style: textTheme(context).bodyLarge
+                                            ?.copyWith(color: Colors.white),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        order.createdOn == null
+                                            ? ""
+                                            : dateFormat(order.createdOn!),
+                                        style: textTheme(context).bodyMedium
+                                            ?.copyWith(color: Colors.white),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Container(
+                                        padding: EdgeInsets.all(
+                                          scrSize(context).width * 0.03,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(order.orderTotal ?? ""),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              );
+                              );                              
                             },
                           ),
                         const SizedBox(height: 20),

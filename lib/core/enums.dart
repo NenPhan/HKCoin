@@ -7,6 +7,16 @@ enum CreateWalletType { None, Mnemonic, PrivateKey }
 enum EthereumNetwork { Default, BEP20, TRON, ERC20 }
 
 enum Chain { None, HKC, USDT, HTX, BNB }
+enum OrderStatus {
+  pending(10),
+  processing(20),
+  complete(30),
+  cancelled(40),
+  withdrawal(50);
+  final int value;
+  const OrderStatus(this.value);
+}
+
 
 extension ChainExtension on Chain {
   String get name {
@@ -68,6 +78,41 @@ extension StringToChain on String {
         return Chain.BNB;
       default:
         return Chain.None; // Hoặc throw Exception nếu muốn bắt lỗi
+    }
+  }
+}
+extension OrderStatusExtension on OrderStatus {
+  String get displayName {
+    switch (this) {
+      case OrderStatus.pending:
+        return 'Pending';
+      case OrderStatus.processing:
+        return 'Processing';
+      case OrderStatus.complete:
+        return 'Complete';
+      case OrderStatus.cancelled:
+        return 'Cancelled';
+      case OrderStatus.withdrawal:
+        return 'Withdrawal';
+    }
+  } 
+}
+
+extension IntToOrderStatus on int {
+  OrderStatus toOrderStatus() {
+    switch (this) {
+      case 10:
+        return OrderStatus.pending;
+      case 20:
+        return OrderStatus.processing;
+      case 30:
+        return OrderStatus.complete;
+      case 40:
+        return OrderStatus.cancelled;
+      case 50:
+        return OrderStatus.withdrawal;
+      default:
+        throw ArgumentError('Invalid OrderStatus value: $this');
     }
   }
 }

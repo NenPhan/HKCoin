@@ -31,6 +31,7 @@ import 'package:hkcoin/presentation.pages/wallet_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_add_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_detail_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_payment_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_received_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_send_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawal_investment_page.dart';
@@ -132,6 +133,10 @@ class AppGetRoutes {
     GetPage(
       name: WalletTokenSendingPage.route,
       page: () => const WalletTokenSendingPage(),
+    ),
+     GetPage(
+      name: WalletPaymmentOrderPage.route,
+      page: () => const WalletPaymmentOrderPage(),
     ),
   ];
 }

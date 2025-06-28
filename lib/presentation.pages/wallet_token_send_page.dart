@@ -12,7 +12,6 @@ import 'package:hkcoin/widgets/fee_loading_effect.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
-import 'package:hkcoin/widgets/screen_popup_widget.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
 
 class WalletTokenSendingPageParam {

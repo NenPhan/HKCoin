@@ -5,12 +5,14 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
+import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/presentation.controllers/checkout_complete_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
+import 'package:hkcoin/presentation.pages/wallet_token_payment_page.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
@@ -79,19 +81,9 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                 _buildTextInfoWidget(
                                   title: "Order.OrderTotal",
                                   content:
-                                      (controller
-                                                      .data
-                                                      ?.order
-                                                      .orderWalletTotal ??
-                                                  0) >
-                                              0
-                                          ? controller
-                                                  .data
-                                                  ?.order
-                                                  .orderWalletTotalStr ??
-                                              ""
-                                          : controller.data?.order.orderTotal ??
-                                              "",
+                                      (controller.data?.order.orderWalletTotal ??0) >0
+                                          ? controller.data?.order.orderWalletTotalStr ?? ""
+                                          : controller.data?.order.orderTotal ?? "",
                                   contentStyle: textTheme(
                                     context,
                                   ).bodyMedium?.copyWith(
@@ -210,12 +202,15 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 ),
                 const SizedBox(width: 10), 
                 MainButton(                  
-                  visible: !data!.order.coinExtension!.contains("HTX"),
-                  icon: const Icon(Icons.copy, color: Colors.white),
-                  text: "Checkout.Payment.Wallet".replaceAll('{0}', data.order.coinExtension??""),
+                  visible: !data!.order.coinExtension!.contains("HTX") && data.order.status !=OrderStatus.complete,
+                  icon: const Icon(Icons.payment, color: Colors.white),
+                  text: tr("Checkout.Payment.Wallet").replaceAll('{0}', data.order.coinExtension??""),
                   backgroundColor: Colors.lightBlue,
                   onTap: () {
-                    
+                    Get.toNamed(
+                      WalletPaymmentOrderPage.route,
+                      arguments: WalletPaymmentOrderParam(order: controller.data!),
+                    );
                   },
                 ),
               ],
