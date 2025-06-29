@@ -77,5 +77,5 @@ class WalletRepository {
         return Right(result);
       },
     );
-  }  
+  }    
 }

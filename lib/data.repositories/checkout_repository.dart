@@ -7,6 +7,7 @@ import 'package:hkcoin/data.models/cart.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/data.models/order_total.dart';
 import 'package:hkcoin/data.models/params/add_address_param.dart';
+import 'package:hkcoin/data.models/params/update_order_status_param.dart';
 
 class CheckoutRepository {
   Future<Either<Failure, Cart>> getCart() {
@@ -122,4 +123,12 @@ class CheckoutRepository {
       },
     );
   }
+  Future<Either<Failure, UpdateOrderStatusParam>> updateOrderStatus(UpdateOrderStatusParam order) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await CheckoutDatasource().updateOrderStatus(order);       
+        return Right(result);
+      },
+    );
+  }  
 }

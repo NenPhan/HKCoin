@@ -184,7 +184,7 @@ class CheckoutCompleteData {
       );
 }
 
-class OrderComplate {
+class OrderComplate {  
   String? orderGuid;
   String? orderNumber;
   String? orderTotal;
@@ -192,14 +192,16 @@ class OrderComplate {
   DateTime? createdOn;
   String? orderWalletTotalStr;
   double? orderWalletTotal;
+  double? orderSubtotalInclTax;
   String? coinExtension;
   int? paymentStatusId;
   int? orderStatusId;
   OrderStatus? status;
-  OrderComplate({
+  OrderComplate({    
     this.orderGuid,
     this.orderNumber,
     this.orderTotal,
+    this.orderSubtotalInclTax,
     this.orderStatus,
     this.createdOn,
     this.orderWalletTotalStr,
@@ -219,6 +221,7 @@ class OrderComplate {
     status: (json["OrderStatusId"] as int).toOrderStatus(),
     orderWalletTotalStr: json["OrderWalletTotalStr"],
     orderWalletTotal: json["OrderWalletTotal"],
+    orderSubtotalInclTax: json["OrderSubtotalInclTax"],
     coinExtension: json["CoinExtension"],
     createdOn:
         json["CreatedOn"] == null ? null : DateTime.parse(json["CreatedOn"]).convertToUserTime(),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
+import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_send_controller.dart';
 import 'package:hkcoin/presentation.pages/qr_scan_page.dart';
@@ -240,7 +241,12 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
                                   obscureText: true,
                                   suffixWidget: Text(
                                     controller.walletsInfo!.chain!.name
-                                  ),
+                                  ),                 
+                                  validator:
+                                  (value) => requiredValidator(
+                                    value,
+                                    "Account.wallet.SendPage.Amount.Required",
+                                  ),                 
                                   keyboardType: const TextInputType.numberWithOptions(decimal: true),     
                                   onChanged: controller.onAmountChanged,                                                                  
                                   onEditingComplete: () {
@@ -398,12 +404,24 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
         width: double.infinity,
         text: "Account.Wallet.Send",
         onTap: () async {
-          if (!controller.formKey.currentState!.validate()) {
-            return;
-          }
-         // if (controller.formKey.currentState!.validate()) {
             // Đảm bảo loading hiển thị ngay lập tức
             controller.isLoadingSubmit.value = true;
+          if (!controller.formKey.currentState!.validate()) {        
+            controller.isLoadingSubmit.value = false;    
+            return;
+          }
+          final validationResult = await controller.validateBalances();
+          if (!validationResult['success']) {
+            Get.snackbar(
+              tr("Common.Error"),
+              validationResult['message'],
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );        
+            controller.isLoadingSubmit.value = false;    
+            return;
+          }     
+            // ignore: use_build_context_synchronously
             final shouldContinue = await _showConfirmationPopup(context, controller);
             if (!shouldContinue) {
               controller.isLoadingSubmit.value = false;
@@ -411,15 +429,10 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
             }
             await Future.delayed(Duration.zero);         
               // Thực hiện giao dịch
-            final result = await _performTransaction(controller);
-            
-            // Xử lý kết quả
+            final result = await _performTransaction(controller);                        
             // ignore: use_build_context_synchronously
-            _handleTransactionResult(context, result);
-            
-            controller.isLoadingSubmit.value = false;                 
-            //controller.submitForm();
-         // }
+            _handleTransactionResult(context, result);            
+            controller.isLoadingSubmit.value = false;                                      
         },
       ),
     );
@@ -429,7 +442,7 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
     context: context,
     barrierDismissible: false,
     builder: (context) => AlertDialog(
-      title: Text(tr("Account.PrivateMessage")),
+      title: Text(tr("Checkout.ConfirmOrder")),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -524,7 +537,7 @@ void _handleTransactionResult(BuildContext context, Map<String, dynamic> result)
     _showTransactionDetails(context, result['txHash']);
   } else {
     Get.snackbar(
-      tr("Common.Error"),
+      tr("Admin.Common.Errors"),
       result['error'] ?? tr("Account.wallet.SendPage.TransactionFailed"),
       backgroundColor: Colors.red,
       colorText: Colors.white,

@@ -17,7 +17,7 @@ class CheckoutCompleteController extends GetxController {
     isLoading.value = true;
     await handleEither(await CheckoutRepository().checkoutComplete(id), (r) {
       data = r;
-    });
+    });    
     isLoading.value = false;
   }
 }

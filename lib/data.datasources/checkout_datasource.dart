@@ -10,6 +10,7 @@ import 'package:hkcoin/data.models/cart.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
 import 'package:hkcoin/data.models/order_total.dart';
 import 'package:hkcoin/data.models/params/add_address_param.dart';
+import 'package:hkcoin/data.models/params/update_order_status_param.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class CheckoutDatasource {
@@ -234,6 +235,23 @@ class CheckoutDatasource {
       );
 
       return OrderTotal.fromJson(response["Data"]);
+    });
+  }
+  Future<UpdateOrderStatusParam> updateOrderStatus(UpdateOrderStatusParam param) async {
+     return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.updateOrderStatus,
+          needAccessToken: false,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+          body: param.toJson(),
+        ),
+        contentType: "application/json",
+      );
+      return UpdateOrderStatusParam.fromJson(response["Data"]);      
     });
   }
 }
