@@ -10,6 +10,7 @@ import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
+import 'package:hkcoin/presentation.pages/not_found_page.dart';
 
 class DioClient {
   DioClient({
@@ -123,6 +124,9 @@ extension ResponseExtension on Response {
     // Điều hướng đến màn hình login
     Get.offAllNamed(LoginPage.route);
   }
+  Future<void> _redirectToNotFound() async {
+    Get.offAllNamed(NotFoundPage.route);
+  }
 
   // handle return data from server side to client
   Map<String, dynamic> handleError(List<int> allowedStatusCodes) {
@@ -132,6 +136,9 @@ extension ResponseExtension on Response {
       Map<String, dynamic> json;
       if (statusCode == 401) {
         _performLogout();
+      }else if (statusCode == 404) {
+        _redirectToNotFound();
+        throw ServerException(message: 'Page Not Found');
       }
       if (allowedStatusCodes.contains(statusCode)) {
         if (data == "") return {};
