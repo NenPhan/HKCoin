@@ -148,12 +148,13 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 14,
                         ),
                       ),
+                      const SizedBox(width: 5),
                       InkWell(
                         onTap: () {
                           _launchUrl(context);
                         },
                         child: Text(
-                          context.tr(" Click ngay"),
+                          context.tr("Account.Login.ForgotPassword.Click"),
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.none,
