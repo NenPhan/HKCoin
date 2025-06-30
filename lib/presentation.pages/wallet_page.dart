@@ -7,9 +7,11 @@ import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:hkcoin/presentation.pages/add_wallet_bycontract_page.dart';
 import 'package:hkcoin/presentation.pages/add_wallet_page.dart';
+import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_detail_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_detail_page.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
+import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/screen_popup_widget.dart';
 
 class WalletPage extends StatefulWidget {
@@ -35,6 +37,10 @@ class _WalletPageState extends State<WalletPage> {
       id: "wallet-info-page",
       builder: (controller) {
         return Scaffold(
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _buildSubmitButton(context, controller),
+          ), 
           body: RefreshIndicator(
             onRefresh: _onRefresh,
             child: SafeArea(
@@ -714,5 +720,17 @@ class _WalletPageState extends State<WalletPage> {
         );
       },
     );
+  }
+  Widget _buildSubmitButton(BuildContext context, BlockchangeWalletController controller) {
+    return MainButton(      
+        width: double.infinity,
+        text: "HomePage",
+        onTap: () async {
+          Get.offNamedUntil(
+              HomePage.route,
+              (route) => false,
+            );
+        },
+      );    
   }
 }
