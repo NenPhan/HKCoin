@@ -659,6 +659,7 @@ class _WalletPageState extends State<WalletPage> {
                                 fontSize: 14,
                               ),
                             ),
+                            const SizedBox(width: 5),
                             InkWell(
                               onTap: () {
                                 if (controller.walletsInfo == null) {
