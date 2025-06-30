@@ -8,6 +8,7 @@ import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +20,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final LoginController controller = Get.put(LoginController());
+   final String url = 'https://hakacoin.net/lay-lai-mat-khau/';   
+
+  Future<void> _launchUrl(BuildContext context) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot open browser')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,6 +135,36 @@ class _LoginPageState extends State<LoginPage> {
                     style: textTheme(context).titleSmall,
                   ),
                 ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        context.tr("Account.Login.ForgotPassword"),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _launchUrl(context);
+                        },
+                        child: Text(
+                          context.tr(" Click ngay"),
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.none,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),                
               ],
             ),
           ),
