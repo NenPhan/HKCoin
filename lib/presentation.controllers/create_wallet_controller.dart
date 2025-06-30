@@ -46,11 +46,11 @@ class CreateWalletController extends GetxController {
     }
     try{
       String mnemonic = bip39.generateMnemonic();    
-    //String seed = bip39.mnemonicToSeedHex(mnemonic);
-    //EthPrivateKey credentials = EthPrivateKey.fromHex(seed);
-    //EthereumAddress address = await credentials.extractAddress();
+    String seed = bip39.mnemonicToSeedHex(mnemonic);
+    EthPrivateKey credentials = EthPrivateKey.fromHex(seed);
+    EthereumAddress address = await credentials.extractAddress();
    // print('Address: ${address.hex}');
-     final wallets = await _generateWalletsSafe(mnemonic);     
+     final wallets = await _generateWalletsSafe(address.hex);     
    // print('Address: ${wallets.first.address}');
       await handleEitherReturn(
         await WalletRepository().createWallet(
