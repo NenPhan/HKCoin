@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class TokenIconWidget extends StatelessWidget {
   final String? imageUrl; // URL hình ảnh token
+  final ImageProvider? imageProvider; // ImageProvider cho tài nguyên cục bộ
   final double width; // Chiều rộng
   final double height; // Chiều cao
   final Color backgroundColor; // Màu nền
@@ -16,6 +17,7 @@ class TokenIconWidget extends StatelessWidget {
   const TokenIconWidget({
     super.key,
     this.imageUrl,
+    this.imageProvider,
     this.width = 100,
     this.height = 100,
     this.backgroundColor = Colors.transparent,
@@ -25,7 +27,7 @@ class TokenIconWidget extends StatelessWidget {
     this.iconColor,
     this.placeholder,
     this.errorWidget,
-    this.padding = EdgeInsets.zero
+    this.padding = EdgeInsets.zero,
   });
 
   @override
@@ -44,10 +46,10 @@ class TokenIconWidget extends StatelessWidget {
             : null,
       ),
       child: ClipOval(
-        child: imageUrl != null
-          ? Padding(
-            padding: padding,
-              child: ColorFiltered(
+        child: Padding(
+          padding: padding,
+          child: imageUrl != null
+              ? ColorFiltered(
                   colorFilter: iconColor != null
                       ? ColorFilter.mode(
                           iconColor!,
@@ -61,7 +63,7 @@ class TokenIconWidget extends StatelessWidget {
                     imageUrl!,
                     fit: BoxFit.cover,
                     width: width,
-                    height: height,                  
+                    height: height,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return placeholder ??
@@ -83,14 +85,40 @@ class TokenIconWidget extends StatelessWidget {
                           );
                     },
                   ),
-                ),
-            )            
-            : errorWidget ??
-                Icon(
-                  Icons.token,
-                  size: width * 0.6,
-                  color: iconColor ?? Colors.grey,
-                ),
+                )
+              : imageProvider != null
+                  ? ColorFiltered(
+                      colorFilter: iconColor != null
+                          ? ColorFilter.mode(
+                              iconColor!,
+                              BlendMode.srcIn,
+                            )
+                          : const ColorFilter.mode(
+                              Colors.transparent,
+                              BlendMode.srcOver,
+                            ),
+                      child: Image(
+                        image: imageProvider!,
+                        fit: BoxFit.cover,
+                        width: width,
+                        height: height,
+                        errorBuilder: (context, error, stackTrace) {
+                          return errorWidget ??
+                              Icon(
+                                Icons.token,
+                                size: width * 0.6,
+                                color: iconColor ?? Colors.grey,
+                              );
+                        },
+                      ),
+                    )
+                  : errorWidget ??
+                      Icon(
+                        Icons.token,
+                        size: width * 0.6,
+                        color: iconColor ?? Colors.grey,
+                      ),
+        ),
       ),
     );
   }

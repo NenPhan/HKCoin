@@ -162,7 +162,8 @@ class _NewsCategoryDetailPageState extends State<NewsCategoryDetailPage> {
         return const Center(child: Text('Common.Empty'));
       }      
       return Column(
-        children: [
+        children: [          
+          const SizedBox(height: 5),
           _FeaturedNewsItem(news: newsController.news.first),   
           const SizedBox(height: 20),
           ListView.separated(

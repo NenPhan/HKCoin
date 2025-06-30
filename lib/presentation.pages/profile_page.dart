@@ -9,6 +9,7 @@ import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
+import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 import 'package:hkcoin/presentation.controllers/profile_controller.dart';
 import 'package:hkcoin/presentation.pages/about_us_page.dart';
@@ -23,6 +24,7 @@ import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
+import 'package:hkcoin/widgets/token_icon_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -178,6 +180,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                         child: QRCodeWidget(
                                           data: qrData, // Dữ liệu QR code
                                           size: 250, // Kích thước
+                                          logoWidget: TokenIconWidget(
+                                            imageProvider:  Assets.images.hkcIcon.image(height: 45).image,
+                                            width: 24,
+                                            height: 24,
+                                            hasBorder: false,
+                                            backgroundColor: Colors.transparent,
+                                            placeholder:
+                                                const CircularProgressIndicator(),
+                                            errorWidget: const Icon(
+                                              Icons.token,
+                                              size: 24,
+                                            ),
+                                            padding: const EdgeInsets.all(2),
+                                          ),
                                           backgroundColor:
                                               Colors.white, // Màu nền
                                           fileName:

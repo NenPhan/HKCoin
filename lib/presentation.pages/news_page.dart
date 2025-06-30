@@ -35,7 +35,8 @@ class _NewsPageState extends State<NewsPage> {
                         horizontal: scrSize(context).width * 0.03,
                       ),
                       child: Column(
-                        children: [     
+                        children: [                            
+                          const SizedBox(height: 20),   
                           if (controller.news.isNotEmpty)                            
                             _FeaturedNewsItem(news: controller.news.first),                          
                           const SizedBox(height: 20),

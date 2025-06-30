@@ -10,12 +10,14 @@ import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
+import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/checkout_complete_controller.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_payment_page.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
+import 'package:hkcoin/widgets/token_icon_widget.dart';
 import 'package:html/parser.dart';
 
 class CheckoutCompletePage extends StatefulWidget {
@@ -165,6 +167,20 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 data: data!.infoPayment!.walletAddress!,
                 size: scrSize(context).width * 0.6,
                 backgroundColor: Colors.white,
+                logoWidget: TokenIconWidget(
+                  imageProvider:  Assets.images.hkcIcon.image(height: 45).image,
+                  width: 24,
+                  height: 24,
+                  hasBorder: false,
+                  backgroundColor: Colors.transparent,
+                  placeholder:
+                      const CircularProgressIndicator(),
+                  errorWidget: const Icon(
+                    Icons.token,
+                    size: 24,
+                  ),
+                  padding: const EdgeInsets.all(2),
+                ),
                 showShare: true,
                 showSaveStore: true,                                    
               ),
