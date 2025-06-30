@@ -46,9 +46,18 @@ class CreateWalletController extends GetxController {
     }
     try{
       String mnemonic = bip39.generateMnemonic();    
-    String seed = bip39.mnemonicToSeedHex(mnemonic);
-    EthPrivateKey credentials = EthPrivateKey.fromHex(seed);
-    EthereumAddress address = await credentials.extractAddress();
+     // String seed = bip39.mnemonicToSeedHex(mnemonic);
+      final seed = bip39.mnemonicToSeed(mnemonic);
+      //EthPrivateKey credentials = EthPrivateKey.fromHex(seed);
+      final root = bip32.BIP32.fromSeed(seed);
+      const ethPath = "m/44'/60'/0'/0/0";
+    
+      final key = root.derivePath(ethPath);
+      final privateKeyHex = HEX.encode(key.privateKey!);
+      final publicKeyHex = HEX.encode(key.publicKey);
+      final credentials = EthPrivateKey.fromHex(privateKeyHex);
+      final address = await credentials.extractAddress();
+              
    // print('Address: ${address.hex}');
      final wallets = await _generateWalletsSafe(address.hex);     
    // print('Address: ${wallets.first.address}');
@@ -56,6 +65,8 @@ class CreateWalletController extends GetxController {
         await WalletRepository().createWallet(
           BlockchangeWallet(
             mnemonicOrPrivateKey: encryptText(mnemonic),
+            privateKey: encryptText(privateKeyHex),
+            publicKey: encryptText(publicKeyHex),
             createWalletType: CreateWalletType.Mnemonic.index,
             walletAddress: wallets
           ),

@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
     final Uri uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       // ignore: use_build_context_synchronously
+      await launchUrl(uri, mode: LaunchMode.inAppWebView);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cannot open browser')),
       );
@@ -150,8 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(width: 5),
                       InkWell(
-                        onTap: () {
-                          _launchUrl(context);
+                        onTap: () async {
+                          await _launchUrl(context);
                         },
                         child: Text(
                           context.tr("Account.Login.ForgotPassword.Click"),
