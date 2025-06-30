@@ -53,11 +53,11 @@ class _ProfilePageState extends State<ProfilePage> {
           "icon": Icons.person,
           "page": CustomerInfoPage.route,
         },
-        {
-          "name": "Account.WalletToken",
-          "icon": Icons.wallet,
-          "page": WalletTokenPage.route,
-        },
+        // {
+        //   "name": "Account.WalletToken",
+        //   "icon": Icons.wallet,
+        //   "page": WalletTokenPage.route,
+        // },
         {
           "name": "Account.CustomerOrders",
           "icon": Icons.description,

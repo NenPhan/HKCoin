@@ -48,7 +48,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BaseAppBar(),
+              const BaseAppBar(title: "Products.RecentlyAddedProducts"),
               Hero(
                 tag: "product${product.id.toString()}",
                 child: Image.network(
