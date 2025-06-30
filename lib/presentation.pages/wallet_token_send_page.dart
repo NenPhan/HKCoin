@@ -14,6 +14,7 @@ import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WalletTokenSendingPageParam {
   final BlockchangeWalletTokenInfo wallet;
@@ -561,10 +562,8 @@ void _showTransactionDetails(BuildContext context, String txHash) {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                // Mở trình duyệt để xem chi tiết giao dịch trên blockchain explorer
-                // _openBlockchainExplorer(txHash);
-                Navigator.of(context).pop();
+              onPressed: () {                
+                _openBlockchainExplorer(context, txHash);                
               },
               child: Text(tr("Account.wallet.SendPage.ViewOnExplorer")),
             ),
@@ -611,5 +610,15 @@ void _showTransactionDetails(BuildContext context, String txHash) {
         ),
       ),
     );
+  }
+  Future<void> _openBlockchainExplorer(BuildContext context,String txHash) async {
+    final String url = 'https://bscscan.com/tx/$txHash';
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot open browser')),
+      );
+    }
   }
 }

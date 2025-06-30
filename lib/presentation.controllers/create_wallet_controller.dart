@@ -276,7 +276,7 @@ class CreateWalletController extends GetxController {
   static Future<List<WalletAddress>> _createBep20WalletsIsolate(String walletAddress) async {
     return [
       await _generateWalletIsolate(walletAddress, Chain.HKC,"HKC",18, EthereumNetwork.BEP20, "0x377482392014118EBe37662f022939E0b5E5479a"),
-      await _generateWalletIsolate(walletAddress, Chain.BNB, "BNB", 18, EthereumNetwork.BEP20, "0x55d398326f99059fF775485246999027B3197955"),
+      await _generateWalletIsolate(walletAddress, Chain.BNB, "BNB", 18, EthereumNetwork.BEP20, "0x0000000000000000000000000000000000000000"),
       await _generateWalletIsolate(walletAddress, Chain.USDT, "USDT", 18, EthereumNetwork.BEP20, "0x55d398326f99059fF775485246999027B3197955"),
     ];
   }
