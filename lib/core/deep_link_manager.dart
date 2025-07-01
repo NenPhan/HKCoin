@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:app_links/app_links.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/presentation.pages/checkout_complete_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 
 class DeeplinkManager {
@@ -45,6 +46,8 @@ class DeeplinkManager {
       case "https":
         if (uri.path.contains("register")) {
           destinationPath = "register";
+        }else if(uri.path.contains("ipay")){
+          destinationPath = "ipay";
         }
         query = uri.query;
         break;
@@ -69,6 +72,11 @@ class DeeplinkManager {
     switch (destinationPath) {
       case "register":
         Get.toNamed(RegisterPage.route, arguments: toQueryMap(query));
+        break;
+      case "ipay":      
+       var queryMap = toQueryMap(query);       
+        final orderguid = queryMap['orderguid'] ?? ''; 
+        Get.toNamed(CheckoutCompletePage.route, arguments: orderguid);
         break;
       default:
     }

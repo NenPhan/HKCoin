@@ -1,11 +1,12 @@
-// ignore_for_file: unused_element
-
-import 'dart:io';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import 'package:hkcoin/presentation.pages/checkout_complete_page.dart';
+import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,6 +25,7 @@ class QRScannerController {
   ValueNotifier<String> scanResult = ValueNotifier('');
   ValueNotifier<bool> isProcessing = ValueNotifier(false);
   ValueNotifier<bool> isFlashOn = ValueNotifier(false);
+  ValueNotifier<double> aspectRatio = ValueNotifier(1.0);
   BuildContext? _context;
   bool _isDisposed = false;
 
@@ -49,13 +51,13 @@ class QRScannerController {
       _cameraController?.dispose();
       _cameraController = CameraController(
         _cameras[_currentCameraIndex],
-        ResolutionPreset
-            .medium, // Use medium resolution to reduce processing load
+        ResolutionPreset.medium,
         enableAudio: false,
-        imageFormatGroup: ImageFormatGroup.yuv420, // Ensure consistent format
+        imageFormatGroup: ImageFormatGroup.yuv420,
       );
 
       await _cameraController!.initialize();
+      aspectRatio.value = _cameraController!.value.aspectRatio;
       isCameraInitialized.value = true;
       await _cameraController!.setFlashMode(
         _isFlashOn ? FlashMode.torch : FlashMode.off,
@@ -99,19 +101,15 @@ class QRScannerController {
     CameraImage image, {
     required BuildContext context,
   }) async {
-    if (_isProcessing  || _isDisposed) return; // Throttle frame processing
+    if (_isProcessing || _isDisposed) return;
     _isProcessing = true;
-    if (!_isDisposed) isProcessing.value = true;
-    //isProcessing.value = true;
+    isProcessing.value = true;
 
     try {
-      final inputImage = await compute(
-        _convertCameraImage,
-        image,
-      ); // Offload to isolate
+      final inputImage = await _convertCameraImage(image);
       final barcodes = await _barcodeScanner
           .processImage(inputImage)
-          .timeout(const Duration(seconds: 5), onTimeout: () => []);
+          .timeout(const Duration(seconds: 2), onTimeout: () => []);
 
       if (barcodes.isNotEmpty) {
         _scanResult = barcodes.first.displayValue ?? 'No data';
@@ -131,38 +129,35 @@ class QRScannerController {
     }
   }
 
-  static InputImage _convertCameraImage(CameraImage image) {
-    if (Platform.isAndroid) {
-      final WriteBuffer allBytes = WriteBuffer();
-      for (Plane plane in image.planes) {
-        allBytes.putUint8List(plane.bytes);
-      }
-      final bytes = allBytes.done().buffer.asUint8List();
-      return InputImage.fromBytes(
-        bytes: bytes,
-        metadata: InputImageMetadata(
-          size: Size(image.width.toDouble(), image.height.toDouble()),
-          rotation:
-              InputImageRotation
-                  .rotation0deg, // Simplified for isolate compatibility
-          format: InputImageFormat.nv21,
-          bytesPerRow: image.planes[0].bytesPerRow,
-        ),
-      );
-    } else if (Platform.isIOS) {
-      final bytes = image.planes[0].bytes;
-      return InputImage.fromBytes(
-        bytes: bytes,
-        metadata: InputImageMetadata(
-          size: Size(image.width.toDouble(), image.height.toDouble()),
-          rotation: InputImageRotation.rotation0deg,
-          format: InputImageFormat.yuv420,
-          bytesPerRow: image.planes[0].bytesPerRow,
-        ),
-      );
-    }
-    throw Exception('Unsupported platform');
+  Future<InputImage> _convertCameraImage(CameraImage image) async {
+  final WriteBuffer allBytes = WriteBuffer();
+  for (Plane plane in image.planes) {
+    allBytes.putUint8List(plane.bytes);
   }
+  final bytes = allBytes.done().buffer.asUint8List();
+
+  final Size imageSize = Size(
+    image.width.toDouble(),
+    image.height.toDouble(),
+  );
+
+  final imageRotation =
+      InputImageRotationValue.fromRawValue(
+              _cameras[_currentCameraIndex].sensorOrientation) ??
+          InputImageRotation.rotation0deg;
+
+  final inputImageData = InputImageMetadata(
+    size: imageSize,
+    rotation: imageRotation,
+    format: InputImageFormat.nv21, // Hoặc InputImageFormat.yuv420 tùy thiết bị
+    bytesPerRow: image.planes[0].bytesPerRow,
+  );
+
+  return InputImage.fromBytes(
+    bytes: bytes,
+    metadata: inputImageData,
+  );
+}
 
   Future<void> pickImageFromGallery(BuildContext context) async {
     try {
@@ -198,12 +193,16 @@ class QRScannerController {
 
   Future<void> handleScannedResult(BuildContext context, String result) async {
     try {
-      // if (_isRegisterRefCodeUrl(result)) {
-      //   await _handleRegisterRefCode(context, result);
-      // } else if (_isValidUrl(result)) {
-      //   await _handleExternalUrl(context, result);
-      // } else
-      if (showDialogOnScan) {
+      if (_isDeeplinkUrl(result)) {
+        final uri = Uri.parse(result);
+        await checkDeeplink(uri);
+        return;
+      }
+      else if (_isValidUrl(result)) {
+        await _handleExternalUrl(context, result);
+        return;
+      } 
+      else if (showDialogOnScan) {
         _showResultDialog(context, result);
       }
     } catch (e) {
@@ -211,34 +210,76 @@ class QRScannerController {
     }
   }
 
-  bool _isRegisterRefCodeUrl(String url) {
+  bool _isDeeplinkUrl(String url) {
     try {
       final uri = Uri.parse(url);
-      return uri.queryParameters.containsKey('refcode') ||
-          uri.path.contains('register');
+      return ((uri.path.contains('register') && uri.queryParameters.containsKey('refcode')) || 
+              (uri.path.contains('ipay') && uri.queryParameters.containsKey('orderguid')));
     } catch (e) {
       return false;
     }
   }
 
-  Future<void> _handleRegisterRefCode(BuildContext context, String url) async {
-    try {
-      // final uri = Uri.parse(url);
-      // final refCode = uri.queryParameters['refcode'] ?? '';
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).popUntil((route) => route.isFirst);
-      // Uncomment and adjust based on your app's navigation
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => RegisterPage(refCode: refCode),
-      //   ),
-      // );
-    } catch (e) {
-      _showResultDialog(context, 'Error handling refcode: $e');
+  Future<void> checkDeeplink(Uri uri) async {
+    String? destinationPath;
+    var query = '';
+
+    switch (uri.scheme) {
+      case "https":
+      case "http":
+        if (uri.path.contains("register")) {
+          destinationPath = "register";
+        } else if (uri.path.contains("ipay")) {
+          destinationPath = "ipay";
+        }
+        query = uri.query;
+        break;
+
+      case "vn.app.hkc":
+        destinationPath = uri.host + uri.path;
+        query = uri.query;
+      default:
+        break;
     }
+
+    if (destinationPath != null) {      
+      try {
+        // if (_context != null) {
+        //   Navigator.of(_context!).pop();          
+        // } else {          
+        //   Get.back(); // Fallback: Sử dụng Get.back() nếu _context không khả dụng
+        // }
+        stopScanning();
+        //dispose();
+        await handleLink(destinationPath, query);
+        //dispose();
+      } catch (e) {}
+    }
+  }
+
+  Future<void> handleLink(String destinationPath, String query) async {
+    switch (destinationPath) {
+      case "register":
+        Get.toNamed(RegisterPage.route, arguments: _toQueryMap(query));
+        break;
+      case "ipay":      
+        var queryMap = _toQueryMap(query);       
+        final orderguid = queryMap['orderguid'] ?? '';   
+        Get.toNamed(CheckoutCompletePage.route, arguments: orderguid);
+        break;
+      default:
+    }
+  }
+
+  Map<String, dynamic> _toQueryMap(String query) {
+    Map<String, dynamic> map = {};
+    List<String> items = query.split("&");
+    for (var i = 0; i < items.length; i++) {
+      String key = items[i].split("=").first;
+      String value = items[i].split("=").last;
+      map.addEntries({key: value}.entries);
+    }
+    return map;
   }
 
   Future<void> _handleExternalUrl(BuildContext context, String url) async {
@@ -269,28 +310,29 @@ class QRScannerController {
       stopScanning();
       showDialog(
         context: context,
-        builder:
-            (context) => AlertDialog(
-              title: const Text('Scan Result'),
-              content: SelectableText(result),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: result));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied to clipboard')),
-                    );
-                    Navigator.pop(context);
-                    startScanning(context: context);
-                  },
-                  child: const Text('Copy'),
-                ),
-              ],
+        builder: (context) => AlertDialog(
+          title: const Text('Scan Result'),
+          content: SingleChildScrollView(
+            child: SelectableText(result),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
             ),
+            TextButton(
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: result));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Copied to clipboard')),
+                );
+                Navigator.pop(context);
+                startScanning(context: context);
+              },
+              child: const Text('Copy'),
+            ),
+          ],
+        ),
       );
     } catch (ex) {}
   }
@@ -312,19 +354,28 @@ class QRScannerController {
         _cameraController!.value.isInitialized &&
         _cameraController!.value.isStreamingImages) {
       _cameraController!.stopImageStream();
+      _cameraController!.dispose();
     }
   }
 
   void dispose() {
-     if (_isDisposed) return;
+    if (_isDisposed) return;
     _isDisposed = true;
+    if (_cameraController != null) {
+      if (_cameraController!.value.isStreamingImages) {
+        _cameraController!.stopImageStream();
+      }
+      _cameraController!.dispose();
+      _cameraController = null;
+    }
     stopScanning();
-    _cameraController?.dispose();
+    //_cameraController?.dispose();
     _barcodeScanner.close();
     isCameraInitialized.dispose();
     scanResult.dispose();
     isProcessing.dispose();
     isFlashOn.dispose();
+    aspectRatio.dispose();
     _context = null;
     debugPrint('QRScannerController disposed');
   }

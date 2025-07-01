@@ -98,16 +98,66 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                           ),
                           SizedBox(height: scrSize(context).height * 0.01),
                           _buildPaymentInfo(controller.data),
-                          
-                          MainButton(
-                            text: "Account.Login.BackHome",
-                            onTap: () {
-                              Get.offNamedUntil(
-                                HomePage.route,
-                                (route) => false,
-                              );
-                            },
-                          ),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MainButton(
+                                  text: "Account.Login.BackHome",
+                                  onTap: () {
+                                    Get.offNamedUntil(
+                                      HomePage.route,
+                                      (route) => false,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 10), 
+                                MainButton(                  
+                                  visible: !controller.data!.order.coinExtension!.contains("HTX") && controller.data!.order.status !=OrderStatus.complete,
+                                  icon: const Icon(Icons.payment, color: Colors.white),
+                                  text: tr("Checkout.Payment.IPay"),
+                                  backgroundColor: Colors.lightGreen,
+                                  onTap: () {
+                                     final String qrData ="https://hakacoin.net/ipay/?orderguid=${controller.data!.order.orderGuid}";
+                                      xPopUpDialog(
+                                        context,
+                                        title: context.tr(
+                                          "Account.CustomerInfo.Popup.QRCode.Title",
+                                        ),
+                                        description: context.tr(
+                                          "Checkout.Payment.Popup.QRCode.Description",
+                                        ).replaceAll('{0}', controller.data!.order.orderNumber!),
+                                        child: QRCodeWidget(
+                                          data: qrData, // Dữ liệu QR code
+                                          size: 250, // Kích thước
+                                          logoWidget: TokenIconWidget(
+                                            imageProvider:  Assets.images.hkcIcon.image(height: 45).image,
+                                            width: 24,
+                                            height: 24,
+                                            hasBorder: false,
+                                            backgroundColor: Colors.transparent,
+                                            placeholder:
+                                                const CircularProgressIndicator(),
+                                            errorWidget: const Icon(
+                                              Icons.token,
+                                              size: 24,
+                                            ),
+                                            padding: const EdgeInsets.all(2),
+                                          ),
+                                          backgroundColor:
+                                              Colors.white, // Màu nền
+                                          fileName:
+                                              'affiliateLink_ipay.png', // Tùy chọn tên file khi lưu
+                                        ),
+                                        centerTitle: true, // Căn giữa tiêu đề
+                                        centerDescription:
+                                            true, // Căn giữa mô tả
+                                      );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),                          
                         ],
                       ),
                     ),

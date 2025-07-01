@@ -8,14 +8,14 @@ class CheckoutCompleteController extends GetxController {
   RxBool isLoading = false.obs;
 
   @override
-  onInit() {
+  onInit() {    
     getCheckoutCompleteData(Get.arguments);
     super.onInit();
   }
 
-  getCheckoutCompleteData(int id) async {
+  getCheckoutCompleteData(String orderguid) async {
     isLoading.value = true;
-    await handleEither(await CheckoutRepository().checkoutComplete(id), (r) {
+    await handleEither(await CheckoutRepository().checkoutComplete(orderguid), (r) {
       data = r;
     });    
     isLoading.value = false;

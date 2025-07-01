@@ -44,11 +44,11 @@ class CheckoutController extends GetxController {
     await getOrderTotal();
   }
 
-  Future<int?> checkoutComplete() async {
+  Future<String?> checkoutComplete() async {
     if (data != null) {
       isCheckingOut = true;
       update(["checkout-button"]);
-      return await handleEitherReturn<int?, Failure, int?>(
+      return await handleEitherReturn<String?, Failure, String?>(
         await CheckoutRepository().checkout(
           data?.existingAddresses?.id,
           data?.paymentMethod?.paymentMethods

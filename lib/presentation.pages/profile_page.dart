@@ -19,7 +19,6 @@ import 'package:hkcoin/presentation.pages/customer_info_page.dart';
 import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/presentation.pages/my_orders_page.dart';
 import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
-import 'package:hkcoin/presentation.pages/wallet_token_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';

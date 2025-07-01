@@ -180,7 +180,7 @@ class CheckoutDatasource {
     });
   }
 
-  Future<int?> checkout(int? addressId, String? paymentMethodName) async {
+  Future<String?> checkout(int? addressId, String? paymentMethodName) async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
@@ -198,15 +198,15 @@ class CheckoutDatasource {
         ),
         contentType: "application/json",
       );
-      if (response["Data"]["Id"] is int) {
-        return response["Data"]["Id"];
-      } else {
-        return null;
-      }
+      //if (response["Data"]["OrderGuid"]) {
+        return response["Data"]["OrderGuid"];
+     // } else {
+      //  return null;
+     // }
     });
   }
 
-  Future<CheckoutCompleteData> checkoutComplete(int id) async {
+  Future<CheckoutCompleteData> checkoutComplete(String orderguid) async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
@@ -216,7 +216,7 @@ class CheckoutDatasource {
           headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
           },
-          body: {"Id": id},
+          body: {"orderGuid": orderguid},
         ),
         contentType: "application/json",
       );

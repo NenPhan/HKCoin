@@ -313,7 +313,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               isLoading: controller.isCheckingOut,
                               text: "Checkout",
                               onTap: () async {
-                                int? id = await controller.checkoutComplete();
+                                var id = await controller.checkoutComplete();
                                 if (id != null) {
                                   Get.find<CartController>().getCartData();
                                   Get.toNamed(
