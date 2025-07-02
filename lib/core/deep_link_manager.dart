@@ -75,8 +75,8 @@ class DeeplinkManager {
         break;
       case "ipay":      
        var queryMap = toQueryMap(query);       
-        final orderguid = queryMap['orderguid'] ?? ''; 
-        Get.toNamed(CheckoutCompletePage.route, arguments: orderguid);
+        final orderid = queryMap['orderid'] ?? ''; 
+        Get.toNamed(CheckoutCompletePage.route, arguments: orderid);
         break;
       default:
     }

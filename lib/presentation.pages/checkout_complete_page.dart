@@ -118,7 +118,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                   text: tr("Checkout.Payment.IPay"),
                                   backgroundColor: Colors.lightGreen,
                                   onTap: () {
-                                     final String qrData ="https://hakacoin.net/ipay/?orderguid=${controller.data!.order.orderGuid}";
+                                     final String qrData ="https://hakacoin.net/ipay/?orderid=${controller.data!.order.id}";
                                       xPopUpDialog(
                                         context,
                                         title: context.tr(
@@ -268,7 +268,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 ),
                 const SizedBox(width: 10), 
                 MainButton(                  
-                  visible: !data!.order.coinExtension!.contains("HTX") && data.order.status !=OrderStatus.complete,
+                  visible: !data!.order.coinExtension!.contains("HTX") && data.order.status! !=OrderStatus.complete,
                   icon: const Icon(Icons.payment, color: Colors.white),
                   text: tr("Checkout.Payment.Wallet").replaceAll('{0}', data.order.coinExtension??""),
                   backgroundColor: Colors.lightBlue,

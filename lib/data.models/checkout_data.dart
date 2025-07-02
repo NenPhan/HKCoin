@@ -185,6 +185,7 @@ class CheckoutCompleteData {
 }
 
 class OrderComplate {  
+  int? id;
   String? orderGuid;
   String? orderNumber;
   String? orderTotal;
@@ -198,6 +199,7 @@ class OrderComplate {
   int? orderStatusId;
   OrderStatus? status;
   OrderComplate({    
+    this.id,
     this.orderGuid,
     this.orderNumber,
     this.orderTotal,
@@ -212,6 +214,7 @@ class OrderComplate {
     this.status
   });
   factory OrderComplate.fromJson(Map<String, dynamic> json) => OrderComplate(
+    id: json["Id"],
     orderGuid: json["OrderGuid"],
     orderNumber: json["OrderNumber"],
     orderTotal: json["OrderTotal"],

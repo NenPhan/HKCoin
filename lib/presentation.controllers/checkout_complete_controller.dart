@@ -9,13 +9,25 @@ class CheckoutCompleteController extends GetxController {
 
   @override
   onInit() {    
-    getCheckoutCompleteData(Get.arguments);
+    if (Get.arguments is int) {
+      getCheckoutCompleteData(Get.arguments as int);
+    } 
+    else if (Get.arguments is String) {
+      try {
+        final intValue = int.parse(Get.arguments as String);
+        getCheckoutCompleteData(intValue);
+      } catch (e) {
+        isLoading.value = false;
+      }
+    } else {
+      isLoading.value = false;      
+    }    
     super.onInit();
   }
 
-  getCheckoutCompleteData(String orderguid) async {
+  getCheckoutCompleteData(int id) async {
     isLoading.value = true;
-    await handleEither(await CheckoutRepository().checkoutComplete(orderguid), (r) {
+    await handleEither(await CheckoutRepository().checkoutComplete(id), (r) {
       data = r;
     });    
     isLoading.value = false;

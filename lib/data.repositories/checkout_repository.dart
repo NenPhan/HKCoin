@@ -91,25 +91,25 @@ class CheckoutRepository {
     );
   }
 
-  Future<Either<Failure, String?>> checkout(
+  Future<Either<Failure, int?>> checkout(
     int? addressId,
     String? paymentMethodName,
   ) {
     return handleRepositoryCall(
       onRemote: () async {
-        var orderGuid = await CheckoutDatasource().checkout(
+        int? id = await CheckoutDatasource().checkout(
           addressId,
           paymentMethodName,
         );
-        return Right(orderGuid);
+        return Right(id);
       },
     );
   }
 
-  Future<Either<Failure, CheckoutCompleteData>> checkoutComplete(String orderguid) {
+  Future<Either<Failure, CheckoutCompleteData>> checkoutComplete(int id) {
     return handleRepositoryCall(
       onRemote: () async {
-        var result = await CheckoutDatasource().checkoutComplete(orderguid);        
+        var result = await CheckoutDatasource().checkoutComplete(id);        
         return Right(result);
       },
     );

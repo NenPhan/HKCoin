@@ -214,7 +214,7 @@ class QRScannerController {
     try {
       final uri = Uri.parse(url);
       return ((uri.path.contains('register') && uri.queryParameters.containsKey('refcode')) || 
-              (uri.path.contains('ipay') && uri.queryParameters.containsKey('orderguid')));
+              (uri.path.contains('ipay') && uri.queryParameters.containsKey('orderid')));
     } catch (e) {
       return false;
     }
@@ -264,8 +264,8 @@ class QRScannerController {
         break;
       case "ipay":      
         var queryMap = _toQueryMap(query);       
-        final orderguid = queryMap['orderguid'] ?? '';   
-        Get.toNamed(CheckoutCompletePage.route, arguments: orderguid);
+        final orderid = queryMap['orderid'] ?? '';   
+        Get.toNamed(CheckoutCompletePage.route, arguments: orderid);
         break;
       default:
     }

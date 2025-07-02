@@ -47,7 +47,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                                 onTap: () {
                                   Get.toNamed(
                                     CheckoutCompletePage.route,
-                                    arguments: order.orderGuid,
+                                    arguments: order.id,
                                   );
                                 },
                                 child: Container(
