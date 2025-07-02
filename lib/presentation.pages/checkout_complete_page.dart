@@ -113,7 +113,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                 ),
                                 const SizedBox(width: 10), 
                                 MainButton(                  
-                                  visible: !controller.data!.order.coinExtension!.contains("HTX") && controller.data!.order.status !=OrderStatus.complete,
+                                  visible: !controller.data!.order.coinExtension!.contains("HTX") && (controller.data!.order.status !=OrderStatus.complete && controller.data!.order.status !=OrderStatus.cancelled),
                                   icon: const Icon(Icons.payment, color: Colors.white),
                                   text: tr("Checkout.Payment.IPay"),
                                   backgroundColor: Colors.lightGreen,
@@ -210,8 +210,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
             child: Text(context.tr("Account.Order.Fields.BillingAddress")),
           ),
           _buildAlert(data?.notifiesAlert ?? ""),
-          if (data?.infoPayment?.qRCodePayment != null)
-            
+          if (data?.infoPayment?.qRCodePayment != null)            
             Center(
               child:QRCodeWidget(
                 data: data!.infoPayment!.walletAddress!,
@@ -268,7 +267,7 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 ),
                 const SizedBox(width: 10), 
                 MainButton(                  
-                  visible: !data!.order.coinExtension!.contains("HTX") && data.order.status! !=OrderStatus.complete,
+                  visible: !data!.order.coinExtension!.contains("HTX") && (controller.data!.order.status !=OrderStatus.complete && controller.data!.order.status !=OrderStatus.cancelled),
                   icon: const Icon(Icons.payment, color: Colors.white),
                   text: tr("Checkout.Payment.Wallet").replaceAll('{0}', data.order.coinExtension??""),
                   backgroundColor: Colors.lightBlue,
