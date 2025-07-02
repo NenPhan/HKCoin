@@ -61,42 +61,60 @@ class _PrivateMessagePageState extends State<PrivateMessagePage>
     return Scaffold(
       body: SafeArea(
         child: Column(
-          children: [
-            const BaseAppBar(isBackEnabled: true),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: GetBuilder<PrivateMessageController>(
-                id: "private-message-list",
-                builder: (controller) {
-                  final unreadCount =
+          children: [           
+            GetBuilder<PrivateMessageController>(
+              id: "private-message-list",
+              builder: (controller) {
+                final unreadCount =
                       controller
                           .newMessagesPagination
                           ?.privateMessages
                           ?.length ??
                       0;
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.tr("Account.PrivateMessage"),
-                        style: textTheme(
-                          context,
-                        ).titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(width: 5),
-                      CountBadge(
-                        key: UniqueKey(),
-                        color: Colors.amber[900] ?? Colors.amber,
-                        count: unreadCount,
-                      ),
-                    ],
-                  );
-                },
-              ),
+                      return BaseAppBar(
+                        title: "Account.PrivateMessage",
+                        actionWidget: CountBadge(
+                          key: UniqueKey(),
+                          color: Colors.amber[900] ?? Colors.amber,
+                          count: unreadCount,
+                        ),
+                      );
+              },
             ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: 16.0,
+            //     vertical: 8.0,
+            //   ),
+            //   child: GetBuilder<PrivateMessageController>(
+            //     id: "private-message-list",
+            //     builder: (controller) {
+            //       final unreadCount =
+            //           controller
+            //               .newMessagesPagination
+            //               ?.privateMessages
+            //               ?.length ??
+            //           0;
+            //       return Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         children: [
+            //           Text(
+            //             context.tr("Account.PrivateMessage"),
+            //             style: textTheme(
+            //               context,
+            //             ).titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            //           ),
+            //           const SizedBox(width: 5),
+            //           CountBadge(
+            //             key: UniqueKey(),
+            //             color: Colors.amber[900] ?? Colors.amber,
+            //             count: unreadCount,
+            //           ),
+            //         ],
+            //       );
+            //     },
+            //   ),
+            // ),
             TabBar(
               controller: _tabController,
               tabs: [

@@ -43,17 +43,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           else
-            const SizedBox(),
-
-          // Xử lý hiển thị title theo centerTitle
-          if (!centerTitle) ...[
-            Text(
-              context.tr(title ?? ""),
-              style: textTheme(context).titleMedium,
-            ),
-            if (actionWidget != null) actionWidget!,
-          ],
-
+            const SizedBox(),                  
           // Spacer sẽ khác nhau tùy theo centerTitle
           if (centerTitle) ...[
             Expanded(
@@ -64,8 +54,16 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-          ] else
-            const Spacer(),
+          ] else ...[
+          if (title != null) 
+              Text(
+                context.tr(title!),
+                style: textTheme(context).titleMedium,
+              ),
+            if (actionWidget != null)              
+              actionWidget!,
+            const Expanded(child: SizedBox()),     
+          ],
 
           // Logo bên phải
           Hero(

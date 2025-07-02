@@ -12,6 +12,7 @@ class CountBadge extends StatelessWidget {
     this.borderColor,
     this.borderWidth = 0,
     this.showZero = false,
+    this.padding = const EdgeInsets.only(left: 5),
   });
 
   final int count;
@@ -23,6 +24,7 @@ class CountBadge extends StatelessWidget {
   final Color? borderColor;
   final double borderWidth;
   final bool showZero;
+  final EdgeInsets padding; // Tham số padding mới
 
   @override
   Widget build(BuildContext context) {
@@ -32,45 +34,47 @@ class CountBadge extends StatelessWidget {
     // Format the count display
     final displayText = count > maxCount ? '$maxCount+' : count.toString();
     final fontSize = count > maxCount ? size * 0.4 : size * 0.5;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: size,
-        height: size,
-        constraints: BoxConstraints(
-          minWidth: size,
-          minHeight: size,
-        ),
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: borderColor != null
-              ? Border.all(
-                  color: borderColor!,
-                  width: borderWidth,
-                )
-              : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 2,
-              offset: const Offset(0, 1),
+    return Padding(
+      padding: padding,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: size,
+          height: size,
+          constraints: BoxConstraints(
+            minWidth: size,
+            minHeight: size,
+          ),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: borderColor != null
+                ? Border.all(
+                    color: borderColor!,
+                    width: borderWidth,
+                  )
+                : null,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 2,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              displayText,
+              style: TextStyle(
+                color: textColor,
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            displayText,
-            style: TextStyle(
-              color: textColor,
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
           ),
         ),
       ),
-    );
+    );    
   }
 }

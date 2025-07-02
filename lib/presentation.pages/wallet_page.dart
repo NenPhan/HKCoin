@@ -10,6 +10,7 @@ import 'package:hkcoin/presentation.pages/add_wallet_page.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_detail_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_detail_page.dart';
+import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/screen_popup_widget.dart';
@@ -36,11 +37,7 @@ class _WalletPageState extends State<WalletPage> {
     return GetBuilder<BlockchangeWalletController>(
       id: "wallet-info-page",
       builder: (controller) {
-        return Scaffold(
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _buildSubmitButton(context, controller),
-          ), 
+        return Scaffold(         
           body: RefreshIndicator(
             onRefresh: _onRefresh,
             child: SafeArea(
@@ -52,443 +49,442 @@ class _WalletPageState extends State<WalletPage> {
                   ),
                   child: Column(
                     children: [
-                      // Header Row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            //Quản lý network
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.settings),
-                                onPressed: () {
-                                  ScreenPopup(
-                                    title: "Account.wallet.Network.Selected",
-                                    isDismissible: false,
-                                    backgroundColor: const Color(0xFF1B1B1B),
-                                    heightFactor: .75,
-                                    //onShow: () =>controller.getNetworks(),
-                                    child: Obx(
-                                      () => Column(
-                                        children: [
-                                          const SizedBox(height: 10),
-                                          TextField(
-                                            controller:
-                                                controller.searchController,
-                                            decoration: const InputDecoration(
-                                              hintText:
-                                                  'Account.wallet.Network.Filter',
-                                              prefixIcon: Icon(Icons.search),
-                                              border: OutlineInputBorder(),
-                                              filled: true,
-                                              fillColor: Colors.white10,
-                                            ),
-                                            onChanged: (value) {
-                                              //controller.filterNetworks(value);
+                     BaseAppBar(isBackEnabled: false,
+                      actionWidget:Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width* 0.7,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.settings),
+                              onPressed: () {
+                                ScreenPopup(
+                                  title: "Account.wallet.Network.Selected",
+                                  isDismissible: false,
+                                  backgroundColor: const Color(0xFF1B1B1B),
+                                  heightFactor: .75,
+                                  //onShow: () =>controller.getNetworks(),
+                                  child: Obx(
+                                    () => Column(
+                                      children: [
+                                        const SizedBox(height: 10),
+                                        TextField(
+                                          controller:
+                                              controller.searchController,
+                                          decoration: const InputDecoration(
+                                            hintText:
+                                                'Account.wallet.Network.Filter',
+                                            prefixIcon: Icon(Icons.search),
+                                            border: OutlineInputBorder(),
+                                            filled: true,
+                                            fillColor: Colors.white10,
+                                          ),
+                                          onChanged: (value) {
+                                            //controller.filterNetworks(value);
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        SizedBox(
+                                          height:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.height *
+                                              0.55,
+                                          child: ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            itemCount:
+                                                controller
+                                                    .listNetwork
+                                                    .length, // Fix null list
+                                            itemBuilder: (ctx, index) {
+                                              final network =
+                                                  controller
+                                                      .listNetwork[index];
+                                              final isSelected =
+                                                  controller
+                                                      .selectedNetwork
+                                                      .value
+                                                      ?.id ==
+                                                  network
+                                                      .id; // Fix null selected
+                                              return Card(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 4,
+                                                      vertical: 4,
+                                                    ),
+                                                color:
+                                                    isSelected
+                                                        ? const Color(
+                                                          0xFF353434,
+                                                        )
+                                                        : null,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        4,
+                                                      ),
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    if (isSelected)
+                                                      Positioned(
+                                                        left: 0,
+                                                        top: 0,
+                                                        bottom: 0,
+                                                        child: Container(
+                                                          width: 4,
+                                                          height: 15,
+                                                          decoration: const BoxDecoration(
+                                                            color:
+                                                                Colors.blue,
+                                                            borderRadius:
+                                                                BorderRadius.only(
+                                                                  topLeft:
+                                                                      Radius.circular(
+                                                                        4,
+                                                                      ),
+                                                                  bottomLeft:
+                                                                      Radius.circular(
+                                                                        4,
+                                                                      ),
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ListTile(
+                                                      contentPadding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 4,
+                                                          ),
+                                                      leading: const Icon(
+                                                        Icons.wifi,
+                                                        color: Colors.white70,
+                                                        size: 24,
+                                                      ),
+                                                      title: Text(
+                                                        network.name ??
+                                                            "Unnamed Wallet",
+                                                        style:
+                                                            const TextStyle(
+                                                              color:
+                                                                  Colors
+                                                                      .white,
+                                                            ),
+                                                      ),
+                                                      trailing: const Icon(
+                                                        Icons.more_vert,
+                                                        color: Colors.white70,
+                                                      ),
+                                                      onTap: () {
+                                                        controller
+                                                            .selectNetwork(
+                                                              network,
+                                                            );
+                                                        Navigator.pop(
+                                                          context,
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
                                             },
                                           ),
-                                          const SizedBox(height: 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ).show(context);
+                              },
+                            ),                            
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    ScreenPopup(
+                                      title:
+                                          "Account.wallet.List", //Quản lý ví
+                                      isDismissible: false,
+                                      backgroundColor: const Color(
+                                        0xFF1B1B1B,
+                                      ),
+                                      heightFactor: .65,
+                                      onShow: () => controller.getWallets(),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
                                           SizedBox(
                                             height:
                                                 MediaQuery.of(
                                                   context,
                                                 ).size.height *
-                                                0.55,
-                                            child: ListView.builder(
-                                              padding: EdgeInsets.zero,
-                                              itemCount:
-                                                  controller
-                                                      .listNetwork
-                                                      .length, // Fix null list
-                                              itemBuilder: (ctx, index) {
-                                                final network =
+                                                0.4,
+                                            child: GetBuilder<
+                                              BlockchangeWalletController
+                                            >(
+                                              id: "blockchange-wallets",
+                                              builder: (controller) {
+                                                if (controller
+                                                        .isLoadingWallets
+                                                        .value ||
                                                     controller
-                                                        .listNetwork[index];
-                                                final isSelected =
-                                                    controller
-                                                        .selectedNetwork
-                                                        .value
-                                                        ?.id ==
-                                                    network
-                                                        .id; // Fix null selected
-                                                return Card(
-                                                  margin:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 4,
-                                                        vertical: 4,
-                                                      ),
-                                                  color:
-                                                      isSelected
-                                                          ? const Color(
-                                                            0xFF353434,
-                                                          )
-                                                          : null,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          4,
-                                                        ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      if (isSelected)
-                                                        Positioned(
-                                                          left: 0,
-                                                          top: 0,
-                                                          bottom: 0,
-                                                          child: Container(
-                                                            width: 4,
-                                                            height: 15,
-                                                            decoration: const BoxDecoration(
-                                                              color:
-                                                                  Colors.blue,
-                                                              borderRadius:
-                                                                  BorderRadius.only(
-                                                                    topLeft:
-                                                                        Radius.circular(
-                                                                          4,
-                                                                        ),
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                          4,
-                                                                        ),
-                                                                  ),
-                                                            ),
+                                                        .wallets
+                                                        .isEmpty) {
+                                                  return const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  );
+                                                }
+
+                                                return ListView.builder(
+                                                  padding: EdgeInsets.zero,
+                                                  itemCount:
+                                                      controller
+                                                          .wallets
+                                                          .length,
+                                                  itemBuilder: (
+                                                    ctx,
+                                                    index,
+                                                  ) {
+                                                    final wallet =
+                                                        controller
+                                                            .wallets[index];
+                                                    return ListTile(
+                                                      contentPadding:
+                                                          const EdgeInsets.only(
+                                                            left: 15,
                                                           ),
-                                                        ),
-                                                      ListTile(
-                                                        contentPadding:
-                                                            const EdgeInsets.symmetric(
-                                                              horizontal: 8,
-                                                              vertical: 4,
+                                                      minVerticalPadding: 0,
+                                                      onTap: () {
+                                                        if (!wallet
+                                                            .selected!) {
+                                                          controller
+                                                              .selectWallet(
+                                                                wallet,
+                                                              );
+                                                          Get.back(
+                                                            result: true,
+                                                          );
+                                                        }
+                                                      },
+                                                      title: Text(
+                                                        wallet.name ??
+                                                            "Unnamed Wallet",
+                                                      ),
+                                                      subtitle: FormattedNumber(
+                                                        value:
+                                                            wallet
+                                                                .balance ??
+                                                            0,
+                                                        decimalDigits: 2,
+                                                        style:
+                                                            const TextStyle(
+                                                              fontSize: 18,
                                                             ),
-                                                        leading: const Icon(
-                                                          Icons.wifi,
-                                                          color: Colors.white70,
-                                                          size: 24,
-                                                        ),
-                                                        title: Text(
-                                                          network.name ??
-                                                              "Unnamed Wallet",
-                                                          style:
-                                                              const TextStyle(
+                                                        prefix: r"$",
+                                                      ),
+                                                      trailing: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize
+                                                                .min,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .stretch,
+                                                        children: [
+                                                          if (wallet
+                                                                  .selected ??
+                                                              false)
+                                                            const CircleAvatar(
+                                                              radius: 10,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .blue,
+                                                              child: Icon(
+                                                                Icons.check,
+                                                                size: 12,
                                                                 color:
                                                                     Colors
                                                                         .white,
                                                               ),
-                                                        ),
-                                                        trailing: const Icon(
-                                                          Icons.more_vert,
-                                                          color: Colors.white70,
-                                                        ),
-                                                        onTap: () {
-                                                          controller
-                                                              .selectNetwork(
-                                                                network,
+                                                            ),
+                                                          const SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          InkWell(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  20,
+                                                                ),
+                                                            onTap: () {
+                                                              Get.toNamed(
+                                                                WalletDetailPage
+                                                                    .route,
+                                                                arguments:
+                                                                    wallet
+                                                                        .id,
                                                               );
-                                                          Navigator.pop(
-                                                            context,
-                                                          );
-                                                        },
+                                                            },
+                                                            child: const Padding(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    8.0,
+                                                                  ),
+                                                              child: Icon(
+                                                                Icons
+                                                                    .more_vert,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
+                                                    );
+                                                  },
                                                 );
                                               },
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ).show(context);
-                                },
-                              ),
-                            ],
-                          ),
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        ScreenPopup(
-                                          title:
-                                              "Account.wallet.List", //Quản lý ví
-                                          isDismissible: false,
-                                          backgroundColor: const Color(
-                                            0xFF1B1B1B,
-                                          ),
-                                          heightFactor: .65,
-                                          onShow: () => controller.getWallets(),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    MediaQuery.of(
-                                                      context,
-                                                    ).size.height *
-                                                    0.4,
-                                                child: GetBuilder<
-                                                  BlockchangeWalletController
-                                                >(
-                                                  id: "blockchange-wallets",
-                                                  builder: (controller) {
-                                                    if (controller
-                                                            .isLoadingWallets
-                                                            .value ||
+                                          SafeArea(
+                                            top: false,
+                                            bottom: false,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 8,
+                                                  ),
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton.icon(
+                                                  style: ElevatedButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 12,
+                                                        ),
+                                                    minimumSize:
+                                                        const Size.fromHeight(
+                                                          50,
+                                                        ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Get.toNamed(
+                                                      AddWalletPage.route,
+                                                    )?.then((result) {
+                                                      if (result != null) {
                                                         controller
-                                                            .wallets
-                                                            .isEmpty) {
-                                                      return const Center(
-                                                        child:
-                                                            CircularProgressIndicator(),
-                                                      );
-                                                    }
-
-                                                    return ListView.builder(
-                                                      padding: EdgeInsets.zero,
-                                                      itemCount:
-                                                          controller
-                                                              .wallets
-                                                              .length,
-                                                      itemBuilder: (
-                                                        ctx,
-                                                        index,
-                                                      ) {
-                                                        final wallet =
-                                                            controller
-                                                                .wallets[index];
-                                                        return ListTile(
-                                                          contentPadding:
-                                                              const EdgeInsets.only(
-                                                                left: 15,
-                                                              ),
-                                                          minVerticalPadding: 0,
-                                                          onTap: () {
-                                                            if (!wallet
-                                                                .selected!) {
-                                                              controller
-                                                                  .selectWallet(
-                                                                    wallet,
-                                                                  );
-                                                              Get.back(
-                                                                result: true,
-                                                              );
-                                                            }
-                                                          },
-                                                          title: Text(
-                                                            wallet.name ??
-                                                                "Unnamed Wallet",
-                                                          ),
-                                                          subtitle: FormattedNumber(
-                                                            value:
-                                                                wallet
-                                                                    .balance ??
-                                                                0,
-                                                            decimalDigits: 2,
-                                                            style:
-                                                                const TextStyle(
-                                                                  fontSize: 18,
-                                                                ),
-                                                            prefix: r"$",
-                                                          ),
-                                                          trailing: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .stretch,
-                                                            children: [
-                                                              if (wallet
-                                                                      .selected ??
-                                                                  false)
-                                                                const CircleAvatar(
-                                                                  radius: 10,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .blue,
-                                                                  child: Icon(
-                                                                    Icons.check,
-                                                                    size: 12,
-                                                                    color:
-                                                                        Colors
-                                                                            .white,
-                                                                  ),
-                                                                ),
-                                                              const SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              InkWell(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      20,
-                                                                    ),
-                                                                onTap: () {
-                                                                  Get.toNamed(
-                                                                    WalletDetailPage
-                                                                        .route,
-                                                                    arguments:
-                                                                        wallet
-                                                                            .id,
-                                                                  );
-                                                                },
-                                                                child: const Padding(
-                                                                  padding:
-                                                                      EdgeInsets.all(
-                                                                        8.0,
-                                                                      ),
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .more_vert,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                            .getWalletInfo();
+                                                        Get.back(
+                                                          result: true,
                                                         );
-                                                      },
-                                                    );
+                                                      }
+                                                    });
                                                   },
-                                                ),
-                                              ),
-                                              SafeArea(
-                                                top: false,
-                                                bottom: false,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 16,
-                                                        vertical: 8,
-                                                      ),
-                                                  child: SizedBox(
-                                                    width: double.infinity,
-                                                    child: ElevatedButton.icon(
-                                                      style: ElevatedButton.styleFrom(
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              vertical: 12,
-                                                            ),
-                                                        minimumSize:
-                                                            const Size.fromHeight(
-                                                              50,
-                                                            ),
-                                                      ),
-                                                      onPressed: () {
-                                                        Get.toNamed(
-                                                          AddWalletPage.route,
-                                                        )?.then((result) {
-                                                          if (result != null) {
-                                                            controller
-                                                                .getWalletInfo();
-                                                            Get.back(
-                                                              result: true,
-                                                            );
-                                                          }
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.save,
-                                                        size: 18,
-                                                      ),
-                                                      label: Text(
-                                                        context.tr(
-                                                          "Account.wallet.Addnew",
-                                                        ),
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
+                                                  icon: const Icon(
+                                                    Icons.save,
+                                                    size: 18,
+                                                  ),
+                                                  label: Text(
+                                                    context.tr(
+                                                      "Account.wallet.Addnew",
+                                                    ),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ).show(context);
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            controller.walletsInfo?.name ??
-                                                context.tr(
-                                                  "Account.wallet.Addnew",
-                                                ),
-                                            style: textTheme(
-                                              context,
-                                            ).titleMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
                                             ),
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_drop_down,
-                                            size: 20,
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.copy,
-                                              size: 16,
-                                            ),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () {
-                                              if (controller
-                                                      .walletsInfo
-                                                      ?.walletAddress !=
-                                                  null) {
-                                                Clipboard.setData(
-                                                  ClipboardData(
-                                                    text:
-                                                        controller
-                                                            .walletsInfo!
-                                                            .walletAddress!,
-                                                  ),
-                                                );
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      context.tr(
-                                                        "Common.CopyToClipboard",
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                    ).show(context);
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        controller.walletsInfo?.name ??
+                                            context.tr(
+                                              "Account.wallet.Addnew",
+                                            ),
+                                        style: textTheme(
+                                          context,
+                                        ).titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 20,
+                                      ),                                      
+                                    ],
+                                  ),                                        
                                 ),
-                                Text(
-                                  controller.walletsInfo?.walletAddressFormat ??
-                                      "",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ),
+                          ],                                          
+                        ),  
+                      ),                                                                                                             
+                     ),
+                      // Header Row
+                      const SizedBox(height: 10,),     
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [        
+                          Flexible(
+                            child: Text(
+                              controller.walletsInfo?.walletAddressFormat ?? "",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                              overflow: TextOverflow.ellipsis, // Cắt ngắn văn bản nếu quá dài
+                              maxLines: 1, // Giới hạn chỉ 1 dòng
                             ),
                           ),
+                          const SizedBox(width: 8),   
                           IconButton(
-                            icon: const Icon(Icons.qr_code_scanner),
+                            icon: const Icon(
+                              Icons.copy,
+                              size: 16,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
                             onPressed: () {
-                              // Handle QR scan
+                              if (controller
+                                      .walletsInfo
+                                      ?.walletAddress !=
+                                  null) {
+                                Clipboard.setData(
+                                  ClipboardData(
+                                    text:
+                                        controller
+                                            .walletsInfo!
+                                            .walletAddress!,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      context.tr(
+                                        "Common.CopyToClipboard",
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
-                          ),
+                          ),                          
                         ],
                       ),
                       const SizedBox(height: 40),
