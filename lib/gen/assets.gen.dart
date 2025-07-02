@@ -22,12 +22,20 @@ class $AssetsIconsGen {
   AssetGenImage get hkcLogoIcon =>
       const AssetGenImage('assets/icons/hkc_logo_icon.png');
 
+  /// File path: assets/icons/hkc_logo_icon_small.png
+  AssetGenImage get hkcLogoIconSmall =>
+      const AssetGenImage('assets/icons/hkc_logo_icon_small.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [globe, hkcLogoIcon];
+  List<AssetGenImage> get values => [globe, hkcLogoIcon, hkcLogoIconSmall];
 }
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
+
+  /// File path: assets/images/hkc-icon.png
+  AssetGenImage get hkcIcon =>
+      const AssetGenImage('assets/images/hkc-icon.png');
 
   /// File path: assets/images/hkc_banner.jpg
   AssetGenImage get hkcBanner =>
@@ -41,7 +49,7 @@ class $AssetsImagesGen {
   SvgGenImage get qrcode => const SvgGenImage('assets/images/qrcode.svg');
 
   /// List of all assets
-  List<dynamic> get values => [hkcBanner, hkcLogo, qrcode];
+  List<dynamic> get values => [hkcIcon, hkcBanner, hkcLogo, qrcode];
 }
 
 class $AssetsTranslationsGen {
