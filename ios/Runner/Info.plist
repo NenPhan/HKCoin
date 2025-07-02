@@ -36,7 +36,7 @@
 				<string>register</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>vn.app.hkc</string>
+					<string>vn.app.hkcoin</string>
 				</array>
 			</dict>
 		</array>

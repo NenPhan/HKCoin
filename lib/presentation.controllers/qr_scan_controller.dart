@@ -235,7 +235,7 @@ class QRScannerController {
         query = uri.query;
         break;
 
-      case "vn.app.hkc":
+      case "vn.app.hkcoin":
         destinationPath = uri.host + uri.path;
         query = uri.query;
       default:
