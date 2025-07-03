@@ -241,11 +241,11 @@ class _WalletDetailPageState extends State<WalletDetailPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                               ),
-                                              child: const Row(
+                                              child: Row(
                                                 children: [
-                                                  Text('Không sao lưu'),
-                                                  SizedBox(width: 4),
-                                                  Icon(
+                                                  Text(controller.isBackup.value?tr("Account.Wallet.Detail.HasBackup"):tr("Account.Wallet.Detail.noBackup")),
+                                                  const SizedBox(width: 4),
+                                                  const Icon(
                                                     Icons.arrow_forward_ios,
                                                     size: 16,
                                                   ),

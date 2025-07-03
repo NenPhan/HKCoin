@@ -72,8 +72,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                                     ConfirmDialog.show(
                                       context: context,
                                       title: 'Common.Confirm',
-                                      content:
-                                          'Bạn có muốn tiếp tục hành động này không?',
+                                      content:tr("Confirm.CreadWallet"),
                                       okText: 'Common.OK',
                                       cancelText: 'Common.Cancel',
                                       onOkPressed: () async {

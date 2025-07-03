@@ -11,7 +11,8 @@ import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
-import 'package:flutter/services.dart'; // For clipboard
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // For clipboard
 
 class ExportPrivateKeyPageParam {
   final BlockchangeWalletInfo wallet;
@@ -33,7 +34,7 @@ class _WalletExportPrivateKeyPageState
   late BlockchangeWalletInfo wallet;
   late TextEditingController privateKeyController = TextEditingController();
   bool _showQrCode = false; // State to toggle QR code visibility
-
+  bool _isActive = false;
   @override
   void initState() {
     super.initState();
@@ -48,9 +49,25 @@ class _WalletExportPrivateKeyPageState
           );
         }
       }
+      _loadState();
     }
   }
-
+  Future<void> _loadState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isActive = prefs.getBool('isBackupKey') ?? false; // Mặc định là false
+    });
+  }
+  Future<void> _saveState(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isBackupKey', value);
+  }
+  void _toggleState() {
+    setState(() {
+      _isActive = !_isActive;
+      _saveState(_isActive); // Lưu trạng thái mới
+    });
+  }
   @override
   void dispose() {
     privateKeyController.dispose();
@@ -185,6 +202,7 @@ class _WalletExportPrivateKeyPageState
       width: double.infinity,
       text: "Common.Ok",
       onTap: () {
+        _toggleState();
         Get.back();
       },
     );

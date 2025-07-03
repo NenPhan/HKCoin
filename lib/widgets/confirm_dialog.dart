@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/widgets/loading_widget.dart';
 
 // Controller to manage loading state
 class ConfirmDialogController extends GetxController {
@@ -99,14 +100,7 @@ class ConfirmDialog extends StatelessWidget {
             ),
             child:
                 dialogController.isLoading.value
-                    ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
+                    ? const LoadingWidget()
                     : Text(
                       context.tr(okText),
                       style: const TextStyle(color: Colors.white, fontSize: 16),

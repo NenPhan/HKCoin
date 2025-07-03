@@ -12,6 +12,7 @@ import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/data.repositories/wallet_repository.dart';
 import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 class WalletDetailController extends GetxController {
@@ -27,10 +28,17 @@ class WalletDetailController extends GetxController {
    BlockchangeWalletInfo? walletsInfo;
    final TextEditingController searchController = TextEditingController();   
    final RxBool isLoadingSubmit = false.obs;
+  final RxBool isBackup = false.obs;
   @override
   void onInit() {        
     getWalletInfo(Get.arguments);
+    _loadState();
     super.onInit();
+  }
+  Future<void> _loadState() async {
+    final prefs = await SharedPreferences.getInstance();    
+      isBackup.value = prefs.getBool('isBackupKey') ?? false; // Mặc định là false
+    
   }
   Future getNetworks() async {        
     await handleEitherReturn(await WalletRepository().getNetworks(), (

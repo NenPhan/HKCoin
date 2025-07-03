@@ -105,7 +105,7 @@ class BlockchangeWalletController extends GetxController {
   Future getWallets() async {
     isLoadingWallets.value = true;
     update(["blockchange-wallets"]);
-    await handleEither(await WalletRepository().getWallets(), (r) async {
+    await handleEither(await WalletRepository().getWallets(), (r) async {     
       //wallets.value = r;
       await fetchWalletsBalance(r);
     });
@@ -208,6 +208,11 @@ class BlockchangeWalletController extends GetxController {
       w.balance = walletTotalBalance;
       wallets.add(w);
     }
+    wallets.sort((a, b) {
+      if (a.selected == true && b.selected != true) return -1; // a comes first
+      if (a.selected != true && b.selected == true) return 1;  // b comes first
+      return 0; // Maintain original order for equal selected status
+    });
     wallets.refresh(); // Cập nhật UI nếu dùng GetX
     update(["blockchange-wallets"]);
     web3Client.dispose();
