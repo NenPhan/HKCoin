@@ -19,6 +19,7 @@ import 'package:hkcoin/presentation.pages/news_category_detail_page.dart';
 import 'package:hkcoin/presentation.pages/news_details_page.dart';
 import 'package:hkcoin/presentation.pages/news_page.dart';
 import 'package:hkcoin/presentation.pages/not_found_page.dart';
+import 'package:hkcoin/presentation.pages/password_recovery_page.dart';
 import 'package:hkcoin/presentation.pages/private_mesage_detail_page.dart';
 import 'package:hkcoin/presentation.pages/private_message_page.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
@@ -139,6 +140,10 @@ class AppGetRoutes {
      GetPage(
       name: WalletPaymmentOrderPage.route,
       page: () => const WalletPaymmentOrderPage(),
+    ),
+     GetPage(
+      name: PasswordRecoveryPage.route,
+      page: () => const PasswordRecoveryPage(),
     ),
   ];
 }

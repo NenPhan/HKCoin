@@ -1,12 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/register_controller.dart';
+import 'package:hkcoin/presentation.pages/login_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -26,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const BaseAppBar(enableHomeButton: false),
+            const BaseAppBar(title:"Account.Register", enableHomeButton: false),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -125,22 +129,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       // Next button
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            registerController.register();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber[900],
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            tr('Account.Register'),
-                            style: textTheme(context).titleSmall,
-                          ),
-                        ),
+                        child: Obx(
+                          () => MainButton(
+                            isLoading: registerController.isLoadingSubmit.value,
+                            width: double.infinity,
+                            text: "Common.Submit",
+                            onTap: () async {                                                
+                              var result = await registerController.register();  
+                              if(result['success']==true)  
+                               _showResult(context, result);                                                                        
+                            },
+                          )
+                        )                           
                       ),
                     ],
                   ),
@@ -149,6 +149,34 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+  void _showResult(BuildContext context, Map<String, dynamic> result) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(tr("Account.Register")),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [                                    
+            const SizedBox(height: 8),
+            SelectableText(
+              result['message'],
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.left,
+            ),         
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {       
+              Navigator.of(context).pop();        
+              Get.back();
+            },
+            child: Text(tr("Common.Close")),
+          ),
+        ],
       ),
     );
   }

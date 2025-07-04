@@ -5,6 +5,7 @@ enum HttpMethod { GET, POST, PUT, DELETE, PATCH }
 enum CreateWalletType { None, Mnemonic, PrivateKey }
 
 enum EthereumNetwork { Default, BEP20, TRON, ERC20 }
+enum PasswordRecoveryResultState{Success,Error}
 
 enum Chain { None, HKC, USDT, HTX, BNB }
 enum OrderStatus {
@@ -111,6 +112,40 @@ extension IntToOrderStatus on int {
         return OrderStatus.cancelled;
       case 50:
         return OrderStatus.withdrawal;
+      default:
+        throw ArgumentError('Invalid OrderStatus value: $this');
+    }
+  }
+}
+extension StringToPasswordRecoveryResultState on String {
+  PasswordRecoveryResultState toPasswordRecoveryResultState() {
+    switch (toLowerCase()) {
+      case 'success':
+        return PasswordRecoveryResultState.Success;
+      case 'error':
+        return PasswordRecoveryResultState.Error;     
+      default:
+        return PasswordRecoveryResultState.Success; // Hoặc throw Exception nếu muốn bắt lỗi
+    }
+  }
+}
+extension StringToPasswordRecoveryResultStateExtension on PasswordRecoveryResultState {
+  String get name {
+    switch (this) {
+      case PasswordRecoveryResultState.Success:
+        return 'Success';
+      case PasswordRecoveryResultState.Error:
+        return 'Error';    
+    }
+  }
+}
+extension BooleanToOrderStatus on int {
+  PasswordRecoveryResultState toValuePasswordRecoveryResultState() {
+    switch (this) {
+      case 0:
+        return PasswordRecoveryResultState.Success;
+      case 1:
+        return PasswordRecoveryResultState.Error;
       default:
         throw ArgumentError('Invalid OrderStatus value: $this');
     }

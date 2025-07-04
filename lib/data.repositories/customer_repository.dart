@@ -7,6 +7,7 @@ import 'package:hkcoin/data.models/add_wallet_token.dart';
 import 'package:hkcoin/data.models/customer_downlines.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
+import 'package:hkcoin/data.models/recovery_password.dart';
 import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_histories.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
@@ -41,15 +42,22 @@ class CustomerRepository {
     );
   }
 
-  Future<Either<Failure, void>> register(RegisterForm form) {
+  Future<Either<Failure, RegisterForm>> register(RegisterForm form) {
     return handleRepositoryCall(
       onRemote: () async {
-        await CustomerDatasource().register(form);
-        return const Right(null);
+        var result =await CustomerDatasource().register(form);
+        return Right(result);
       },
     );
   }
-
+  Future<Either<Failure, RecoveryPassword>> recoveryPassword(RecoveryPassword form) {
+    return handleRepositoryCall(
+      onRemote: () async {
+        var result = await CustomerDatasource().recoveryPassword(form);
+        return Right(result);
+      },
+    );
+  }
   Future<Either<Failure, CustomerInfo>> getCustomerInfo() {
     return handleRepositoryCall(
       onRemote: () async {

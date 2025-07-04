@@ -13,8 +13,8 @@ class RegisterForm {
     String lastName;
     String email;
     String phone;
-    String password;
-    String referralCode;
+    String? password;
+    String? referralCode;
 
     RegisterForm({
         required this.firstName,

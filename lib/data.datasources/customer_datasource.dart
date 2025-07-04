@@ -12,6 +12,7 @@ import 'package:hkcoin/data.models/add_wallet_token.dart';
 import 'package:hkcoin/data.models/customer_downlines.dart';
 import 'package:hkcoin/data.models/params/change_password_param.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
+import 'package:hkcoin/data.models/recovery_password.dart';
 import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.models/wallet_histories.dart';
 import 'package:hkcoin/data.models/wallet_info.dart';
@@ -52,15 +53,35 @@ class CustomerDatasource {
     });
   }
 
-  Future register(RegisterForm form) async {
-    await handleRemoteRequest(() async {
+  Future<RegisterForm> register(RegisterForm form) async {
+    return await handleRemoteRequest(() async {
       var body = form.toJson();
 
-      await dioClient.call(
+      var response = await dioClient.call(
         DioParams(HttpMethod.POST, endpoint: Endpoints.register, body: body),
         contentType: "application/json",
       );
+      return RegisterForm.fromJson(response["Data"]);
     });
+  }
+  Future<RecoveryPassword> recoveryPassword(RecoveryPassword form) async {
+     return await handleRemoteRequest(() async {
+      var body = form.toJson();
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.recoveryPassword,
+          needAccessToken: false,
+          body: body,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          },
+        ),
+        contentType: "application/json",
+      );
+
+      return RecoveryPassword.fromJson(response["Data"]);
+    });   
   }
 
   Future<CustomerInfo> getCustomerInfo() async {
