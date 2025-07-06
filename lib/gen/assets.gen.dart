@@ -22,12 +22,12 @@ class $AssetsIconsGen {
   AssetGenImage get hkcLogoIcon =>
       const AssetGenImage('assets/icons/hkc_logo_icon.png');
 
-  /// File path: assets/icons/hkc_logo_icon_small.png
-  AssetGenImage get hkcLogoIconSmall =>
-      const AssetGenImage('assets/icons/hkc_logo_icon_small.png');
+  /// File path: assets/icons/hkc_logo_icon_splash.png
+  AssetGenImage get hkcLogoIconSplash =>
+      const AssetGenImage('assets/icons/hkc_logo_icon_splash.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [globe, hkcLogoIcon, hkcLogoIconSmall];
+  List<AssetGenImage> get values => [globe, hkcLogoIcon, hkcLogoIconSplash];
 }
 
 class $AssetsImagesGen {
