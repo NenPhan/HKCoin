@@ -9,17 +9,15 @@ class QRScannerWidget extends StatefulWidget {
   final QRScannerController controller;
   final Function(String)? onScanResult;
 
-  const QRScannerWidget({
-    Key? key,
-    required this.controller,
-    this.onScanResult,
-  }) : super(key: key);
+  const QRScannerWidget({Key? key, required this.controller, this.onScanResult})
+    : super(key: key);
 
   @override
   _QRScannerWidgetState createState() => _QRScannerWidgetState();
 }
 
-class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProviderStateMixin,WidgetsBindingObserver {
+class _QRScannerWidgetState extends State<QRScannerWidget>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -41,6 +39,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -52,12 +51,11 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
       widget.controller.startScanning(context: context);
     }
   }
+
   @override
-  void dispose() {    
+  void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
-    widget.controller.stopScanning();
-    widget.controller.dispose();
     super.dispose();
   }
 
@@ -86,10 +84,12 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
           ),
         ],
       ),
-      body:GestureDetector(
+      body: GestureDetector(
         onTap: () {
           if (!widget.controller.isProcessing.value) {
-            widget.controller.startScanning(context: context); // Khởi động lại quét khi bấm
+            widget.controller.startScanning(
+              context: context,
+            ); // Khởi động lại quét khi bấm
           }
         },
         child: Stack(
@@ -97,7 +97,8 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
             ValueListenableBuilder<bool>(
               valueListenable: widget.controller.isCameraInitialized,
               builder: (context, initialized, child) {
-                if (!initialized || widget.controller.cameraController == null) {
+                if (!initialized ||
+                    widget.controller.cameraController == null) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 return SizedBox(
@@ -153,10 +154,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
                           top: 250 * _animation.value,
                           left: 0,
                           right: 0,
-                          child: Container(
-                            height: 2,
-                            color: Colors.amber[900],
-                          ),
+                          child: Container(height: 2, color: Colors.amber[900]),
                         );
                       },
                     ),
@@ -174,7 +172,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
                   if (result.isNotEmpty && widget.onScanResult != null) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       widget.onScanResult!(result);
-                      widget.controller.handleScannedResult(context, result);
+                      // widget.controller.handleScannedResult(context, result);
                     });
                   }
                   return Container(
@@ -194,7 +192,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> with SingleTickerProv
             ),
           ],
         ),
-      ),             
+      ),
     );
   }
 

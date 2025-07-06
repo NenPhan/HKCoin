@@ -122,7 +122,7 @@ class QRScannerController {
       if (!_isDisposed) {
         _scanResult = 'Error scanning QR code: $e';
         scanResult.value = _scanResult;
-      }     
+      }
     } finally {
       _isProcessing = false;
       if (!_isDisposed) isProcessing.value = false;
@@ -130,34 +130,33 @@ class QRScannerController {
   }
 
   Future<InputImage> _convertCameraImage(CameraImage image) async {
-  final WriteBuffer allBytes = WriteBuffer();
-  for (Plane plane in image.planes) {
-    allBytes.putUint8List(plane.bytes);
+    final WriteBuffer allBytes = WriteBuffer();
+    for (Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+
+    final Size imageSize = Size(
+      image.width.toDouble(),
+      image.height.toDouble(),
+    );
+
+    final imageRotation =
+        InputImageRotationValue.fromRawValue(
+          _cameras[_currentCameraIndex].sensorOrientation,
+        ) ??
+        InputImageRotation.rotation0deg;
+
+    final inputImageData = InputImageMetadata(
+      size: imageSize,
+      rotation: imageRotation,
+      format:
+          InputImageFormat.nv21, // Hoặc InputImageFormat.yuv420 tùy thiết bị
+      bytesPerRow: image.planes[0].bytesPerRow,
+    );
+
+    return InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
   }
-  final bytes = allBytes.done().buffer.asUint8List();
-
-  final Size imageSize = Size(
-    image.width.toDouble(),
-    image.height.toDouble(),
-  );
-
-  final imageRotation =
-      InputImageRotationValue.fromRawValue(
-              _cameras[_currentCameraIndex].sensorOrientation) ??
-          InputImageRotation.rotation0deg;
-
-  final inputImageData = InputImageMetadata(
-    size: imageSize,
-    rotation: imageRotation,
-    format: InputImageFormat.nv21, // Hoặc InputImageFormat.yuv420 tùy thiết bị
-    bytesPerRow: image.planes[0].bytesPerRow,
-  );
-
-  return InputImage.fromBytes(
-    bytes: bytes,
-    metadata: inputImageData,
-  );
-}
 
   Future<void> pickImageFromGallery(BuildContext context) async {
     try {
@@ -197,12 +196,10 @@ class QRScannerController {
         final uri = Uri.parse(result);
         await checkDeeplink(uri);
         return;
-      }
-      else if (_isValidUrl(result)) {
+      } else if (_isValidUrl(result)) {
         await _handleExternalUrl(context, result);
         return;
-      } 
-      else if (showDialogOnScan) {
+      } else if (showDialogOnScan) {
         _showResultDialog(context, result);
       }
     } catch (e) {
@@ -213,8 +210,10 @@ class QRScannerController {
   bool _isDeeplinkUrl(String url) {
     try {
       final uri = Uri.parse(url);
-      return ((uri.path.contains('register') && uri.queryParameters.containsKey('refcode')) || 
-              (uri.path.contains('ipay') && uri.queryParameters.containsKey('orderid')));
+      return ((uri.path.contains('register') &&
+              uri.queryParameters.containsKey('refcode')) ||
+          (uri.path.contains('ipay') &&
+              uri.queryParameters.containsKey('orderid')));
     } catch (e) {
       return false;
     }
@@ -242,14 +241,14 @@ class QRScannerController {
         break;
     }
 
-    if (destinationPath != null) {      
+    if (destinationPath != null) {
       try {
         // if (_context != null) {
-        //   Navigator.of(_context!).pop();          
-        // } else {          
+        //   Navigator.of(_context!).pop();
+        // } else {
         //   Get.back(); // Fallback: Sử dụng Get.back() nếu _context không khả dụng
         // }
-        stopScanning();
+        await stopScanning();
         //dispose();
         await handleLink(destinationPath, query);
         //dispose();
@@ -262,9 +261,9 @@ class QRScannerController {
       case "register":
         Get.toNamed(RegisterPage.route, arguments: _toQueryMap(query));
         break;
-      case "ipay":      
-        var queryMap = _toQueryMap(query);       
-        final orderid = queryMap['orderid'] ?? '';   
+      case "ipay":
+        var queryMap = _toQueryMap(query);
+        final orderid = queryMap['orderid'] ?? '';
         Get.toNamed(CheckoutCompletePage.route, arguments: orderid);
         break;
       default:
@@ -305,36 +304,37 @@ class QRScannerController {
     }
   }
 
-  void _showResultDialog(BuildContext context, String result) {
+  void _showResultDialog(BuildContext context, String result) async {
     try {
-      stopScanning();
-      showDialog(
+      await stopScanning();
+      await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Scan Result'),
-          content: SingleChildScrollView(
-            child: SelectableText(result),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+        builder:
+            (context) => AlertDialog(
+              title: const Text('Scan Result'),
+              content: SingleChildScrollView(child: SelectableText(result)),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: result));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Copied to clipboard')),
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Copy'),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: result));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Copied to clipboard')),
-                );
-                Navigator.pop(context);
-                startScanning(context: context);
-              },
-              child: const Text('Copy'),
-            ),
-          ],
-        ),
       );
-    } catch (ex) {}
+      startScanning(context: context);
+    } catch (ex) {
+      print(ex);
+    }
   }
 
   void startScanning({required BuildContext context}) {
@@ -349,16 +349,16 @@ class QRScannerController {
     }
   }
 
-  void stopScanning() {
+  Future stopScanning() async {
     if (_cameraController != null &&
         _cameraController!.value.isInitialized &&
         _cameraController!.value.isStreamingImages) {
-      _cameraController!.stopImageStream();
-      _cameraController!.dispose();
+      await _cameraController!.stopImageStream();
+      // await _cameraController!.dispose();
     }
   }
 
-  void dispose() {
+  void dispose() async {
     if (_isDisposed) return;
     _isDisposed = true;
     if (_cameraController != null) {
@@ -368,7 +368,7 @@ class QRScannerController {
       _cameraController!.dispose();
       _cameraController = null;
     }
-    stopScanning();
+    await stopScanning();
     //_cameraController?.dispose();
     _barcodeScanner.close();
     isCameraInitialized.dispose();
