@@ -53,7 +53,7 @@ class RegisterController extends GetxController {
         (error) => {'success': false, 'message': error.toString()},
         (response) => {
           'success': true,
-          'message': tr("Account.Register.Result.Standard").replaceAll('{0}',emailController.text).replaceAll('{1}', "https://hakacoin.net/vi/customer/info/"),          
+          'message':response.message ?? tr("Account.Register.Result.Standard").replaceAll('{0}',emailController.text).replaceAll('{1}', "https://hakacoin.net/vi/customer/info/"),          
         },
       );                
     }catch(e){

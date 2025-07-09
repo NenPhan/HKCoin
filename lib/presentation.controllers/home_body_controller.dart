@@ -42,12 +42,8 @@ class HomeBodyController extends GetxController {
       if (Platform.isAndroid) {
         checkUpdate();
       }
-    });    
-    // if(Platform.isAndroid)
-    // {
-    //   checkUpdate();
-    // }
-    handleNotiOpenApp();
+      handleNotiOpenApp();
+    });      
     super.onInit();
   }
 

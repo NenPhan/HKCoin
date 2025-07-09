@@ -152,10 +152,7 @@ class WalletDetailController extends GetxController {
     final web3Client = Web3Client(networkStore.rpcUrl!, http.Client());
     double totalBalance = 0.0;
     double totalBalanceUSD = 0.0;       
-     for (var wallet in walletsInfo!.walletAddressModel!) {      
-        //final credentials = EthPrivateKey.fromHex(decryptText(wallet.privateKey!,""));
-        //final address = await credentials.extractAddress();        
-        // Lấy số dư từ BNB (Binance Smart Chain)
+     for (var wallet in walletsInfo!.walletAddressModel!) {     
         try {                            
          if(wallet.chain==Chain.BNB){
             var bnb = await web3Client.getBalance(EthereumAddress.fromHex(wallet.walletAddress));
@@ -172,12 +169,12 @@ class WalletDetailController extends GetxController {
             wallet.totalBalance = result['balance'].toDouble();      
             walletInfos.add(wallet);
             if(wallet.chain==Chain.USDT){
-              totalBalance+=wallet.totalBalance!;
+              wallet.totalBalanceUSD = wallet.totalBalance!* await fetchUsdtPrice(); 
+              totalBalance+=wallet.totalBalanceUSD!;                
             }                                   
           }                 
         } catch (e) {
-          debugPrint('Lỗi khi lấy số dư BNB wallet detail: $e');
-          //Get.snackbar('Error', 'Lỗi khi lấy số dư BNB: $e');
+          debugPrint('Lỗi khi lấy số dư BNB wallet detail: $e');          
         }       
      }           
     wallets.totalBalance = totalBalance;
@@ -185,6 +182,25 @@ class WalletDetailController extends GetxController {
     wallets.balanceUSD = totalBalanceUSD;
     //wallet.unit = unit;
     web3Client.dispose();
+  }
+  Future<double> fetchUsdtPrice() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd',
+        ),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['tether']['usd'].toDouble();
+      } else {
+        print('Lỗi lấy tỷ giá USDT: ${response.statusCode}');
+        return 1.0; // Giá trị mặc định (USDT thường ~1 USD)
+      }
+    } catch (e) {
+      print('Lỗi lấy tỷ giá USDT: $e');
+      return 1.0; // Giá trị mặc định
+    }
   }
   Future<double> fetchBnbPrice() async {
     try {

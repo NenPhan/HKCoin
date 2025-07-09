@@ -20,20 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final LoginController controller = Get.put(LoginController());
-   final String url = 'https://hakacoin.net/lay-lai-mat-khau/';   
-
-  Future<void> _launchUrl(BuildContext context) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      // ignore: use_build_context_synchronously
-      await launchUrl(uri, mode: LaunchMode.inAppWebView);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cannot open browser')),
-      );
-    }
-  }
-
+  final LoginController controller = Get.put(LoginController());   
   @override
   Widget build(BuildContext context) {
     return Scaffold(

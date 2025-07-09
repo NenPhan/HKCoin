@@ -1,0 +1,441 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/core/presentation/storage.dart';
+import 'package:hkcoin/data.models/blockchain_transaction%20.dart';
+import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
+import 'package:hkcoin/data.models/network.dart';
+import 'package:http/http.dart' as http;
+import 'package:web3dart/web3dart.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+class BlockchainService {
+  // Network configuration
+  late Network _network;
+  late Web3Client _web3Client;
+  late WebSocketChannel _wsChannel;
+  late http.Client _httpClient;
+
+  // Stream controllers
+  final _balanceController = StreamController<BigInt>.broadcast();
+  final _tokenBalanceControllers = <String, StreamController<BigInt>>{};
+  final _transactionController = StreamController<BlockChainTransaction>.broadcast();
+
+  // Connection management
+  bool _isDisposed = false;
+  int _reconnectAttempts = 0;
+  final int _maxReconnectAttempts = 5;  
+
+  // Tracked addresses and tokens
+  final Set<EthereumAddress> _trackedAddresses = {};
+  final Map<String, EthereumAddress> _trackedTokens = {};
+  int _currentWsUrlIndex = 0;
+  final Map<String, int> _tokenDecimals = {};
+
+  // BlockchainService() {
+  //  // _initialize();
+  // }
+  Future<bool> _checkNetwork() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
+  }
+  Future<void> initializeWithNetwork(Network network) async {
+    _network = network;
+    _httpClient = http.Client();
+    _web3Client = Web3Client(network.rpcUrl!, _httpClient);
+    
+    // Nếu WebSocket URL khác với trước đó, cần kết nối lại
+    //if (network.wsUrl != _currentWsUrl) {
+      await _connectWebSocket();
+    //}
+  }
+  Future<void> _initialize() async {
+    if (!await _checkNetwork()) {      
+      Get.snackbar('Lỗi mạng', 'Vui lòng kiểm tra kết nối internet');
+      return;
+    }
+    try {
+      // Initialize network configuration
+      final networkStore = await Storage().getNetWork();
+      if (networkStore == null) {
+        throw Exception('No network configuration found');
+      }
+      _network = networkStore;
+
+      // Initialize clients
+      _httpClient = http.Client();
+      _web3Client = Web3Client(_network.rpcUrl ?? 'https://bsc-dataseed.binance.org/', _httpClient);     
+      // Connect WebSocket
+      await _connectWebSocket();
+    } catch (e) {
+      Get.snackbar('Initialization Error', 'Failed to initialize BlockchainService: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> _connectWebSocket() async {
+    if (!await _checkNetwork()) {      
+      return;
+    }
+
+    final wsUrls = [
+      'wss://go.getblock.us/83a3f76dee6b4ef889fc38a7d22215dd',
+      'wss://bsc-ws-node.nariox.org'
+      'wss://bsc-dataseed2.binance.org',
+      'wss://bsc-dataseed1.binance.org',
+      'wss://bsc-dataseed3.binance.org',
+      'wss://bsc-mainnet.infura.io/ws/v3/ca7e108ea96b4557883fe45c5970911f',
+    ];
+
+    // Lấy URL hiện tại dựa trên chỉ số
+    final url = wsUrls[_currentWsUrlIndex];
+    
+    try {
+      _wsChannel = WebSocketChannel.connect(
+        Uri.parse(url),          
+      );      
+      _reconnectAttempts = 0;
+
+      _wsChannel.stream.listen(
+        _handleWebSocketMessage,
+        onError: (error, stackTrace) {
+          debugPrint('Lỗi WebSocket: $error\nStackTrace: $stackTrace');
+        },
+        onDone: () {
+          if (!_isDisposed) {
+            debugPrint('Kết nối WebSocket bị đóng, mã đóng: ${_wsChannel.closeCode}, lý do: ${_wsChannel.closeReason}');
+            // Tăng chỉ số URL cho lần kết nối tiếp theo
+            _currentWsUrlIndex = (_currentWsUrlIndex + 1) % wsUrls.length;
+            _reconnectWebSocket();
+          }
+        },
+      );
+
+      await _resubscribeToTrackedItems();
+    } catch (e, stackTrace) {
+      debugPrint('Không thể kết nối với $url: $e\nStackTrace: $stackTrace');
+      // Tăng chỉ số URL cho lần thử tiếp theo
+      _currentWsUrlIndex = (_currentWsUrlIndex + 1) % wsUrls.length;
+      if (_currentWsUrlIndex == 0) {
+        // Đã thử tất cả các URL
+        Get.snackbar('Lỗi kết nối', 'Không thể kết nối với bất kỳ node WebSocket nào');
+      }
+      _reconnectWebSocket();
+    }
+  }
+
+  void _reconnectWebSocket() {
+    if (_isDisposed || _reconnectAttempts >= _maxReconnectAttempts) {
+      return;
+    }
+
+    _reconnectAttempts++;
+    print('Thử kết nối lại lần $_reconnectAttempts...');
+
+    // Sử dụng delay tăng dần
+    final delay = Duration(seconds: min(_reconnectAttempts * 2, 30));
+    Future.delayed(delay, _connectWebSocket);
+  }
+
+ Future<void> _resubscribeToTrackedItems() async {  
+    if (_wsChannel == null || _wsChannel.closeCode != null) {      
+      _reconnectWebSocket();
+      return;
+    }    
+    print("_trackedAddresses: $_trackedAddresses");
+    print("_trackedTokens: $_trackedTokens");
+    try {
+      if (_trackedAddresses.isNotEmpty) {
+        final subscribeRequest = jsonEncode({
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "eth_subscribe",
+          "params": ["newHeads"]
+        });        
+        _wsChannel.sink.add(subscribeRequest);
+      }      
+      for (final contractAddress in _trackedTokens.keys) {
+        final address = _trackedTokens[contractAddress]!;
+        print("address: ${address.hex}");
+        final subscribeTokenRequest = jsonEncode({
+          "jsonrpc": "2.0",
+          "id": 2,
+          "method": "eth_subscribe",
+          "params": [
+            "logs",
+            {
+              "address": contractAddress.toLowerCase(),
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                address.hex
+              ]
+            }
+          ]
+        });        
+        _wsChannel.sink.add(subscribeTokenRequest);
+      }
+    } catch (e, stackTrace) {
+      print('Lỗi khi gửi yêu cầu WebSocket: $e\nStackTrace: $stackTrace');
+      _reconnectWebSocket();
+    }
+  }
+  void _handleWebSocketMessage(dynamic message) {    
+    print("_handleWebSocketMessage: $message");
+    try {
+      if (message is! String) {
+        debugPrint('Dữ liệu WebSocket không phải chuỗi: $message');
+        return;
+      }
+
+      final json = jsonDecode(message);      
+      if (json['method'] != 'eth_subscription') return;
+
+      final params = json['params'];
+      if (params == null) {
+        debugPrint('Không tìm thấy params trong tin nhắn WebSocket');
+        return;
+      }
+
+      if (params['subscription'] == 'newHeads') {
+        print('Xử lý thông báo khối mới');
+        _handleNewBlock();
+      } else if (params['subscription'] == 'logs') {
+        print('Xử lý sự kiện chuyển token: ${params['result']}');
+        _handleTokenTransfer(params['result']);
+      }
+    } catch (e) {
+      debugPrint('Lỗi xử lý tin nhắn WebSocket: $e');
+    }
+  }
+
+  void _handleNewBlock() async {
+    for (final address in _trackedAddresses) {
+      try {
+        final balance = await getBNBBalance(address);
+        _balanceController.add(balance);
+      } catch (e) {
+        print('Error updating balance for $address: $e');
+      }
+    }
+  }
+
+  void _handleTokenTransfer(Map<String, dynamic> event) async {
+    try {
+      final contractAddress = event['address'];
+      if (_trackedTokens.containsKey(contractAddress)) {
+        final balance = await getTokenBalance(
+          contractAddress: contractAddress,
+          walletAddress: _trackedTokens[contractAddress]!,
+        );
+        _tokenBalanceControllers[contractAddress]?.add(BigInt.from(balance));
+      }
+    } catch (e) {
+      debugPrint('Error handling token transfer: $e');
+    }
+  }
+
+  // Balance operations
+  Future<BigInt> getBNBBalance(EthereumAddress address) async {    
+    try {
+      final balance = await _web3Client.getBalance(address);
+      return balance.getInWei;
+    } catch (e) {
+      throw Exception('Failed to get BNB balance: $e');
+    }
+  }
+
+  Future<double> getTokenBalance({
+    required String contractAddress,
+    required EthereumAddress walletAddress,
+  }) async {
+    print("contractAddress: $contractAddress");
+    try {
+      const tokenAbi = '''
+      [
+        {
+          "constant": true,
+          "inputs": [{"name": "owner", "type": "address"}],
+          "name": "balanceOf",
+          "outputs": [{"name": "balance", "type": "uint256"}],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "decimals",
+          "outputs": [{"name": "", "type": "uint8"}],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]''';
+
+      final contract = DeployedContract(
+        ContractAbi.fromJson(tokenAbi, 'BEP20'),
+        EthereumAddress.fromHex(contractAddress),
+      );
+       await _fetchTokenDecimals(contractAddress);
+      final balance = await _web3Client.call(
+        contract: contract,
+        function: contract.function('balanceOf'),
+        params: [walletAddress],
+      );
+      final rawBalance = balance[0] as BigInt;
+       final balanceValue =
+          rawBalance / BigInt.from(10).pow(_tokenDecimals[contractAddress]!);
+      return balanceValue;
+    } catch (e) {
+      throw Exception('Failed to get token balance: $e');
+    }
+  }
+
+  // Real-time monitoring
+  Stream<BigInt> watchBalance(EthereumAddress address) {
+    if (!_trackedAddresses.contains(address)) {
+      _trackedAddresses.add(address);
+      
+      // Subscribe to new blocks if this is the first address
+      if (_trackedAddresses.length == 1) {
+        _wsChannel.sink.add(jsonEncode({
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "eth_subscribe",
+          "params": ["newHeads"]
+        }));
+      }
+    }
+
+    return _balanceController.stream;
+  }
+
+  Stream<BigInt> watchTokenBalance({
+    required EthereumAddress walletAddress,
+    required String contractAddress,
+  }) {
+    if (!_trackedTokens.containsKey(contractAddress)) {
+      _trackedTokens[contractAddress] = walletAddress;
+      _tokenBalanceControllers[contractAddress] = StreamController<BigInt>.broadcast();
+      
+      _wsChannel.sink.add(jsonEncode({
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "eth_subscribe",
+        "params": [
+          "logs",
+          {
+            "address": contractAddress,
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              walletAddress.hex
+            ]
+          }
+        ]
+      }));
+    }
+
+    return _tokenBalanceControllers[contractAddress]!.stream;
+  }
+
+  Stream<BlockChainTransaction> watchTransactions(EthereumAddress address) {
+    _wsChannel.sink.add(jsonEncode({
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "eth_subscribe",
+      "params": ["logs", {"address": address.hex}]
+    }));
+
+    return _transactionController.stream;
+  }
+
+  // Transaction history
+  Future<List<BlockChainTransaction>> getTransactionHistory({
+    required EthereumAddress address,
+    required BlockchangeWalletTokenInfo wallet,
+    int page = 1,
+    int offset = 10,
+  }) async {
+    try {
+      var url ='https://api.bscscan.com/api?module=account&action=tokentx&apikey=Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4'
+          '&contractAddress=${wallet.contractAddress}'
+          '&address=${address.hex}&sort=desc&page=$page&offset=$offset';
+      if(wallet.chain==Chain.BNB){
+          url = 'https://api.bscscan.com/api?module=account&action=txlist&apikey=Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4'
+          '&address=${address.hex}&sort=desc&page=$page&offset=$offset';      
+      }
+
+      final response = await _httpClient.get(Uri.parse(url));  
+             
+      final data = jsonDecode(response.body);
+      if (data['status'] == '1') {
+        return (data['result'] as List)
+            .where((tx) => BigInt.parse(tx['value'] ?? '0') > BigInt.zero)
+            .map((tx) => BlockChainTransaction.fromJson(tx))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      throw Exception('Failed to get transaction history: $e');
+    }
+  }
+  Future<void> _fetchTokenDecimals(String contractAddress) async {
+  try {
+    const tokenAbi = '''
+      [
+        {
+          "constant": true,
+          "inputs": [{"name": "owner", "type": "address"}],
+          "name": "balanceOf",
+          "outputs": [{"name": "balance", "type": "uint256"}],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "decimals",
+          "outputs": [{"name": "", "type": "uint8"}],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]''';
+    final contract = DeployedContract(
+      ContractAbi.fromJson(tokenAbi, 'BEP20'),
+      EthereumAddress.fromHex(contractAddress),
+    );
+    
+    final decimals = await _web3Client.call(
+      contract: contract,
+      function: contract.function('decimals'),
+      params: [],
+    );
+    _tokenDecimals[contractAddress] = (decimals[0] as BigInt).toInt();
+  } catch (e) {
+    print('Lỗi khi lấy decimals: $e');
+    _tokenDecimals[contractAddress] = 18; // Fallback
+  }
+}
+  // Cleanup
+  void dispose() {
+    _isDisposed = true;
+    
+    // Close stream controllers
+    _balanceController.close();
+    _transactionController.close();
+    for (final controller in _tokenBalanceControllers.values) {
+      controller.close();
+    }
+    
+    // Close network connections
+    _wsChannel.sink.close();
+    _web3Client.dispose();
+    _httpClient.close();
+  }
+}

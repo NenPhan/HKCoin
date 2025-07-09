@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
+import 'package:hkcoin/core/services/blockchain_service_refactor.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/wallet.dart';
@@ -22,10 +23,24 @@ class BlockchangeWalletController extends GetxController {
   final RxBool isLoadingWallets = false.obs;
   BlockchangeWalletInfo? walletsInfo;
   final TextEditingController searchController = TextEditingController();
+  final wsUrls = [
+      'wss://go.getblock.us/83a3f76dee6b4ef889fc38a7d22215dd',
+      'wss://bsc-rpc.publicnode.com',
+      'wss://bsc-testnet-rpc.publicnode.com',
+      'wss://bsc-ws-node.nariox.org:443',
+      'wss://bsc-dataseed1.binance.org:443',
+      'wss://bsc-dataseed2.binance.org:443',
+      'wss://bsc-dataseed3.binance.org:443',
+    ];
+  final bscScanApiKey="Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4";
+  late final BlockchainService _blockchainService;
+  late bool hasRunService = false;
+  final RxMap<String, BigInt> tokenBalances = <String, BigInt>{}.obs;
   @override
   void onInit() {
-    getNetworks();
+    getNetworks();    
     getWalletInfo();
+    
     super.onInit();
   }
 
@@ -76,7 +91,17 @@ class BlockchangeWalletController extends GetxController {
       ); // Lọc mạng theo tên
     }
   }
-
+  Future<void> _initTracking(Web3Client web3Client) async {
+    if(!hasRunService){
+      _blockchainService = BlockchainService(
+        wsUrls: wsUrls,
+        bscScanApiKey: bscScanApiKey,
+        web3Client: web3Client
+      );
+      await _blockchainService.init();
+      hasRunService=true;
+    }           
+  }
   Future<void> selectNetwork(Network network) async {
     selectedNetwork.value = network; // Cập nhật mạng được chọn
     await Storage().saveNetWork(network); // Lưu mạng đã chọn
@@ -117,9 +142,12 @@ class BlockchangeWalletController extends GetxController {
   Future getWalletInfo() async {
     isLoading.value = true;
     update(["wallet-info-page"]);
+    
+    final web3Client = Web3Client(selectedNetwork.value?.rpcUrl??"https://bsc-dataseed.binance.org/", http.Client());           
+    _initTracking(web3Client);   
     await handleEither(await WalletRepository().getWalletInfo(), (r) {
       if (r != null) {
-        walletsInfo = r;
+        walletsInfo = r;   
         fetchWalletBalance(walletsInfo!);
       }
     });
@@ -128,21 +156,13 @@ class BlockchangeWalletController extends GetxController {
     update(["wallet-info-page"]);
   }
 
-  Future fetchWalletBalance(BlockchangeWalletInfo wallets) async {
-    final networkStore = await Storage().getNetWork() ?? selectedNetwork.value;
-    if (networkStore == null) {
-      Get.snackbar('Error', 'No network selected');
-      return;
-    }
+  Future fetchWalletBalance(BlockchangeWalletInfo wallets) async {   
     walletInfos.clear();
     wallets.walletAddressFormat = _formatAddress(wallets.walletAddress);
-    final web3Client = Web3Client(networkStore.rpcUrl!, http.Client());
+    final web3Client = Web3Client(selectedNetwork.value?.rpcUrl??"https://bsc-dataseed.binance.org/", http.Client());
     double totalBalance = 0.0;
     double totalBalanceUSD = 0.0;
-    for (var wallet in walletsInfo!.walletAddressModel!) {
-      //final credentials = EthPrivateKey.fromHex(decryptText(wallet.privateKey!,""));
-      //final address = await credentials.extractAddress();
-      // Lấy số dư từ BNB (Binance Smart Chain)
+    for (var wallet in walletsInfo!.walletAddressModel!) {             
       try {
         if (wallet.chain == Chain.BNB) {
           var bnb = await web3Client.getBalance(
@@ -152,7 +172,8 @@ class BlockchangeWalletController extends GetxController {
           wallet.totalBalanceUSD = wallet.totalBalance! * await fetchBnbPrice();
           walletInfos.add(wallet);
           totalBalance += wallet.totalBalanceUSD!;
-        } else if (wallet.chain != Chain.BNB) {
+        } else if (wallet.chain != Chain.BNB) {            
+          _blockchainService.trackToken(EthereumAddress.fromHex(wallet.contractAddress), EthereumAddress.fromHex(wallet.walletAddress));                   
           final result = await getTokenBalance(
             wallet.walletAddress,
             wallet.contractAddress,
@@ -161,7 +182,8 @@ class BlockchangeWalletController extends GetxController {
           wallet.totalBalance = result['balance'].toDouble();
           walletInfos.add(wallet);
           if (wallet.chain == Chain.USDT) {
-            totalBalance += wallet.totalBalance!;
+            wallet.totalBalanceUSD = wallet.totalBalance! * await fetchUsdtPrice();
+            totalBalance += wallet.totalBalanceUSD!;
           }
         }
       } catch (e) {
@@ -171,10 +193,32 @@ class BlockchangeWalletController extends GetxController {
     wallets.totalBalance = totalBalance;
     update(["wallet-info-page"]);
     wallets.balanceUSD = totalBalanceUSD;
-    //wallet.unit = unit;
+     _blockchainService.watchTokenTransfers().listen((tx) async {
+       final to = tx.to.hex.toLowerCase();         
+        final watchedAddresses = walletsInfo!.walletAddressModel!
+        .map((w) => w.walletAddress.toLowerCase())
+        .toSet();         
+       if (watchedAddresses.contains(to)) {
+          final wallet = walletInfos.firstWhereOrNull(
+            (w) => w.walletAddress.toLowerCase() == to,
+          );
+          if (wallet != null && wallet.chain != Chain.BNB) {
+            final updated = await getTokenBalance(
+              wallet.walletAddress,
+              wallet.contractAddress,
+              web3Client,
+            );
+            wallet.totalBalance = updated['balance'].toDouble();
+            if (wallet.chain == Chain.USDT) {
+              totalBalance += wallet.totalBalance!;
+              wallets.totalBalance =totalBalance;
+            }
+            update(["wallet-info-page"]);
+          }
+      }
+    });    
     web3Client.dispose();
-  }
-
+  }  
   Future fetchWalletsBalance(List<BlockchangeWallet> ws) async {
     final networkStore = await Storage().getNetWork() ?? selectedNetwork.value;
     if (networkStore == null) {
@@ -237,10 +281,29 @@ class BlockchangeWalletController extends GetxController {
       return 600.0; // Giá trị mặc định
     }
   }
-
+  Future<double> fetchUsdtPrice() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd',
+        ),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);         
+        return data['tether']['usd'].toDouble();
+      } else {        
+        return 1.0; // Giá trị mặc định (USDT thường ~1 USD)
+      }
+    } catch (e) {      
+      return 1.0; // Giá trị mặc định
+    }
+  }
   @override
   void onClose() {
     super.onClose();
+    for (var wallet in walletsInfo!.walletAddressModel!) {
+      _blockchainService.stopTrackingBalance(EthereumAddress.fromHex(wallet.walletAddress));
+    }
   }
 
   String _formatAddress(String? address) {

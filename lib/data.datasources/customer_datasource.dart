@@ -58,7 +58,10 @@ class CustomerDatasource {
       var body = form.toJson();
 
       var response = await dioClient.call(
-        DioParams(HttpMethod.POST, endpoint: Endpoints.register, body: body),
+        DioParams(HttpMethod.POST, endpoint: Endpoints.register, body: body,
+          headers: {
+            "Accept-Language": Get.find<LocaleController>().localeIsoCode,
+          }),
         contentType: "application/json",
       );
       return RegisterForm.fromJson(response["Data"]);

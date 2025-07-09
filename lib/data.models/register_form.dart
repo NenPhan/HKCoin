@@ -15,14 +15,16 @@ class RegisterForm {
     String phone;
     String? password;
     String? referralCode;
+    String? message;
 
     RegisterForm({
         required this.firstName,
         required this.lastName,
         required this.email,
         required this.phone,
-        required this.password,
-        required this.referralCode,
+        this.password,
+        this.referralCode,
+        this.message
     });
 
     factory RegisterForm.fromJson(Map<String, dynamic> json) => RegisterForm(
@@ -32,6 +34,7 @@ class RegisterForm {
         phone: json["Phone"],
         password: json["Password"],
         referralCode: json["ReferralCode"],
+        message: json["Message"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -41,5 +44,6 @@ class RegisterForm {
         "Phone": phone,
         "Password": password,
         "ReferralCode": referralCode,
+        "Message": message,
     };
 }

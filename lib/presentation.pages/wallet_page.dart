@@ -293,7 +293,7 @@ class _WalletPageState extends State<WalletPage> {
                       // Balance
                       FormattedNumber(
                         value: controller.walletsInfo?.totalBalance ?? 0,
-                        decimalDigits: 2,
+                        decimalDigits: 3,
                         style: const TextStyle(fontSize: 22),
                         prefix: r"$",
                       ),
@@ -424,7 +424,7 @@ class _WalletPageState extends State<WalletPage> {
                                               decimalDigits:
                                                   wallet.chain == Chain.BNB
                                                       ? 5
-                                                      : 2,
+                                                      : 3,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                               ),
@@ -433,7 +433,7 @@ class _WalletPageState extends State<WalletPage> {
                                             const SizedBox(height: 4),
                                             FormattedNumber(
                                               value: wallet.totalBalanceUSD,
-                                              decimalDigits: 2,
+                                              decimalDigits: 3,
                                               style: const TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey,
