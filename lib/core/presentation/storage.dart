@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyStorage {
@@ -10,6 +11,7 @@ class KeyStorage {
   final customerKey = "/customer_key";
   final notiKey = "/noti_key";
   final networkKey = "/network_key";
+  final tokenSettingKey = "/token_setting_key";
 }
 
 class Storage {
@@ -43,6 +45,8 @@ class Storage {
   Future<void> dispose() async {
     await preferences?.remove(_key.tokenKey);
     await preferences?.remove(_key.customerKey);
+    await preferences?.remove(_key.networkKey);
+    await preferences?.remove(_key.tokenSettingKey);
   }
 }
 
@@ -101,5 +105,20 @@ extension NetworkStorage on Storage {
 
   Future deleteNetWork() async {
     await preferences!.remove(_key.networkKey);
+  }
+}
+extension TokenSettingStorage on Storage {
+  Future<void> saveTokenSetting(TokenSetting tokenSetting) async {    
+    await preferences!.setString(_key.tokenSettingKey, jsonEncode(tokenSetting.toJson()));
+  }
+
+  Future<TokenSetting?> getTokenSetting() async {
+    var savedString = preferences!.getString(_key.tokenSettingKey);     
+    if (savedString == null) return null;
+    return TokenSetting.fromJson(jsonDecode(savedString));    
+  }
+
+  Future deleteNetWork() async {
+    await preferences!.remove(_key.tokenSettingKey);
   }
 }

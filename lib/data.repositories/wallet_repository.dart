@@ -6,6 +6,7 @@ import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/customer_wallet_token.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 
 class WalletRepository {
@@ -13,6 +14,13 @@ class WalletRepository {
     return handleRepositoryCall(
       onRemote: () async {
         return Right(await WalletDatasource().getNetworks());
+      },
+    );
+  }
+  Future<Either<Failure, TokenSetting>> getTokenSettings() {
+    return handleRepositoryCall(
+      onRemote: () async {
+        return Right(await WalletDatasource().getTokenSettings());
       },
     );
   }

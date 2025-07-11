@@ -9,6 +9,7 @@ import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/customer_wallet_token.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
@@ -30,7 +31,17 @@ class WalletDatasource {
           .toList();
     });
   }
-
+  Future<TokenSetting> getTokenSettings() async {
+    return await handleRemoteRequest(() async {
+      var response = await dioClient.call(
+        DioParams(
+          HttpMethod.GET,
+          endpoint: Endpoints.getTokenSetting,         
+        ),
+      );
+      return TokenSetting.fromJson(response["Data"]);    
+    });
+  }
   Future<BlockchangeWallet> createWallet(BlockchangeWallet wallet) async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(

@@ -56,7 +56,6 @@ class HomeBodyController extends GetxController {
 
   void updateDeviceToken() async {
     var messaging = FirebaseMessaging.instance;
-
     var token = await messaging.getToken();
 
     handleEitherReturn(

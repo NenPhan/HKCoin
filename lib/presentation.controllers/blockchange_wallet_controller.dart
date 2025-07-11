@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -8,6 +9,7 @@ import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/services/blockchain_service_refactor.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/data.repositories/wallet_repository.dart';
 import 'package:intl/intl.dart';
@@ -23,27 +25,59 @@ class BlockchangeWalletController extends GetxController {
   final RxBool isLoadingWallets = false.obs;
   BlockchangeWalletInfo? walletsInfo;
   final TextEditingController searchController = TextEditingController();
-  final wsUrls = [
-      'wss://go.getblock.us/83a3f76dee6b4ef889fc38a7d22215dd',
-      'wss://bsc-rpc.publicnode.com',
-      'wss://bsc-testnet-rpc.publicnode.com',
-      'wss://bsc-ws-node.nariox.org:443',
-      'wss://bsc-dataseed1.binance.org:443',
-      'wss://bsc-dataseed2.binance.org:443',
-      'wss://bsc-dataseed3.binance.org:443',
-    ];
-  final bscScanApiKey="Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4";
+  // final wsUrls = [
+  //     'wss://go.getblock.us/83a3f76dee6b4ef889fc38a7d22215dd',
+  //     'wss://bsc-rpc.publicnode.com',
+  //     'wss://bsc-testnet-rpc.publicnode.com',
+  //     'wss://bsc-ws-node.nariox.org:443',
+  //     'wss://bsc-dataseed1.binance.org:443',
+  //     'wss://bsc-dataseed2.binance.org:443',
+  //     'wss://bsc-dataseed3.binance.org:443',
+  //   ];
+  //final bscScanApiKey="Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4";
   late final BlockchainService _blockchainService;
   late bool hasRunService = false;
   final RxMap<String, BigInt> tokenBalances = <String, BigInt>{}.obs;
+  TokenSetting? tokenSettings;
   @override
-  void onInit() {
-    getNetworks();    
-    getWalletInfo();
-    
+  Future<void> onInit() async {
+    await getTokenConfigs();
+    await getNetworks();    
+    await getWalletInfo();    
     super.onInit();
   }
+Future<void> getTokenConfigs() async {
+  await handleEitherReturn(
+    await WalletRepository().getTokenSettings(),
+    (r) async {
+      try {        
+        debugPrint(r.bscScanApiKey);
+        final storedSettings = await Storage().getTokenSetting();
+        // Chỉ cập nhật nếu giá trị mới khác giá trị hiện tại hoặc stored
+        if (storedSettings == null || !_areSettingsEqual(storedSettings, r)) {
+          tokenSettings = r;
+          await Storage().saveTokenSetting(r);
+        } else {
+          // Nếu dữ liệu giống nhau, vẫn sử dụng dữ liệu từ Storage
+          tokenSettings = storedSettings;
+        }
+      } catch (e) {
+        debugPrint("getTokenConfigs $e");
+        rethrow;
+      }
+    },
+  );  
+}
 
+// Hàm so sánh 2 TokenSetting
+bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
+  return a.bscScanApiKey == b.bscScanApiKey &&
+      a.contractAddressSend == b.contractAddressSend &&
+      a.minBNB == b.minBNB &&
+      listEquals(a.wsUrls, b.wsUrls) &&
+      listEquals(a.tokens?.map((t) => t.toJson()).toList(), 
+                b.tokens?.map((t) => t.toJson()).toList());
+} 
   Future getNetworks() async {
     await handleEitherReturn(await WalletRepository().getNetworks(), (r) async {
       final uniqueNetworks = {for (var e in r) e.id: e}.values.toList();
@@ -94,8 +128,8 @@ class BlockchangeWalletController extends GetxController {
   Future<void> _initTracking(Web3Client web3Client) async {
     if(!hasRunService){
       _blockchainService = BlockchainService(
-        wsUrls: wsUrls,
-        bscScanApiKey: bscScanApiKey,
+        wsUrls: tokenSettings!.wsUrls,
+        bscScanApiKey: tokenSettings!.bscScanApiKey,
         web3Client: web3Client
       );
       await _blockchainService.init();
@@ -304,6 +338,7 @@ class BlockchangeWalletController extends GetxController {
     for (var wallet in walletsInfo!.walletAddressModel!) {
       _blockchainService.stopTrackingBalance(EthereumAddress.fromHex(wallet.walletAddress));
     }
+    _blockchainService.dispose();
   }
 
   String _formatAddress(String? address) {

@@ -50,6 +50,9 @@ class _WalletTokenSendingPageState extends State<WalletTokenSendingPage> {
     return GetBuilder<WalletTokenSendingController>(
       id: "wallet-token-sending-page",
       builder: (controller) {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return Scaffold(         
            bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(16.0),

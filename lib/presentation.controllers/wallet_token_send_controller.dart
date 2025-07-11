@@ -9,7 +9,9 @@ import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/utils/encryptor.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:hkcoin/data.models/wallet.dart';
+import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_send_page.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +37,7 @@ class WalletTokenSendingController extends GetxController {
   final RxBool isFeeLoading = false.obs;
   Timer? _debounceTimer;
   int _decimals = 18;
-  final double _minBNB = 0.000001;
+  final double _minBNB = 0.00001;
   final String _rpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
   late Web3Client _client;
   late Credentials _credentials;
@@ -43,27 +45,60 @@ class WalletTokenSendingController extends GetxController {
   late DeployedContract _transferContract;
   final String _contractAddress = "0xd6A1f22c90fd729794b1f7E528b143c0882cf23C";
   BigInt _feePercentage = BigInt.zero;
-  String _estimatedFee = '';
  final double _defaultBlockTime = 3.0; // Giá trị mặc định nếu không lấy được block time
   final int _confirmationBlocks = 2; // Số block cần xác nhận
   late Network networkStore;
+  TokenSetting? tokenSettings;
 
   @override
-  void onInit() {
+  void onInit() {    
+    super.onInit();
+    
     final params = Get.arguments is WalletTokenSendingPageParam
         ? Get.arguments as WalletTokenSendingPageParam
         : null;
-    initialize(params);
-    super.onInit();
+    initialize(params);    
   }
-
-  Future<void> initialize(WalletTokenSendingPageParam? params) async {
-    if (params != null) {
-      walletsInfo = params.wallet;
-      await _initializeWeb3();
-      await _fetchFeePercentage();
-      await _fetchTokenInfo();
+  Future<void> _loadTokenSettings() async {
+  try {
+    final settings = await Storage().getTokenSetting();
+    print(settings!.bscScanApiKey);
+    if (settings != null) {
+      tokenSettings = settings;
+    } else {
+       final blockchainWalletController = Get.find<BlockchangeWalletController>();
+       await blockchainWalletController.getTokenConfigs();
+      // Xử lý khi không có dữ liệu trong Storage
+      tokenSettings = blockchainWalletController.tokenSettings;            
     }
+  } catch (e) {        
+    // Có thể gán giá trị mặc định khi có lỗi
+    tokenSettings = TokenSetting(
+      bscScanApiKey: '',
+      contractAddressSend: _contractAddress,
+      contractFunction: 'sendBNBAndToken',
+      minBNB: 0.00001,
+      wsUrls: [],
+    );
+  }
+    update(["wallet-token-sending-page"]);
+}
+  Future<void> initialize(WalletTokenSendingPageParam? params) async {
+    isLoading.value=true;
+    try{
+      await _loadTokenSettings();
+      isLoading.value=false;
+      if (params != null) {
+        walletsInfo = params.wallet;
+        await _initializeWeb3();
+        await _fetchFeePercentage();
+        await _fetchTokenInfo();
+      }
+    }catch(e){
+      debugPrint("initialize $e");
+    }finally{
+      isLoading.value=false;
+    }        
   }
 
   Future<void> _initializeWeb3() async {
@@ -75,7 +110,7 @@ class WalletTokenSendingController extends GetxController {
     networkStore = networkStores;
     _client = Web3Client(networkStore.rpcUrl?? _rpcUrl, http.Client());    
     _credentials = await _client.credentialsFromPrivateKey(decryptText(walletsInfo!.privateKey!, ""));
-    const String transferAbi = '''[
+    final String transferAbi = '''[
       {
         "inputs": [
           {"internalType": "address", "name": "token", "type": "address"},
@@ -84,7 +119,7 @@ class WalletTokenSendingController extends GetxController {
           {"internalType": "uint256", "name": "bnbAmount", "type": "uint256"},
           {"internalType": "uint256", "name": "minBNB", "type": "uint256"}
         ],
-        "name": "sendBNBAndToken",
+        "name": "${tokenSettings!.contractFunction}",
         "outputs": [],
         "stateMutability": "payable",
         "type": "function"
@@ -109,7 +144,7 @@ class WalletTokenSendingController extends GetxController {
 
     _transferContract = DeployedContract(
       ContractAbi.fromJson(transferAbi, 'HkcTransferBNBAndBEP20'),
-      EthereumAddress.fromHex(_contractAddress),
+      EthereumAddress.fromHex(tokenSettings!.contractAddressSend),
     );
   }
 
@@ -174,7 +209,7 @@ class WalletTokenSendingController extends GetxController {
         function: contract.function('allowance'),
         params: [
           EthereumAddress.fromHex(walletsInfo!.walletAddress!), // Ví người gửi: 0x62e545E56909863EEffe0bAB0Dcfd720ba5Fb53b
-          EthereumAddress.fromHex(_contractAddress), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
+          EthereumAddress.fromHex(tokenSettings!.contractAddressSend), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
         ],
       );
       final allowance = result[0] as BigInt;     
@@ -221,7 +256,7 @@ class WalletTokenSendingController extends GetxController {
         Transaction(
           to: EthereumAddress.fromHex(walletsInfo!.contractAddress!), // Hợp đồng token BEP-20
           data: approveFunction.encodeCall([
-            EthereumAddress.fromHex(_contractAddress), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
+            EthereumAddress.fromHex(tokenSettings!.contractAddressSend), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
             amountInWei,
           ]),
         ),
@@ -313,10 +348,10 @@ class WalletTokenSendingController extends GetxController {
       }
 
       // Gửi giao dịch chuyển tiền qua hợp đồng trung gian
-      final function = _transferContract.function('sendBNBAndToken');
+      final function = _transferContract.function(tokenSettings!.contractFunction);//sendBNBAndToken
       final gasPrice = await _client.getGasPrice();
       final transaction = Transaction(
-        to: EthereumAddress.fromHex(_contractAddress),
+        to: EthereumAddress.fromHex(tokenSettings!.contractAddressSend),
         value: EtherAmount.inWei(minBNBInWei),
         gasPrice: gasPrice,
         data: function.encodeCall([
@@ -601,10 +636,7 @@ class WalletTokenSendingController extends GetxController {
       if (estimatedFee['success']) {
         maxGasFee.value = estimatedFee['gasFee'].toString().toDouble();// .toStringAsFixed(8);
         estimatedTime.value = estimatedFee['estimatedTime'];
-        _estimatedFee =
-            'Gas Fee: ${estimatedFee['gasFee'].toStringAsFixed(8)} BNB\nService Fee: ${estimatedFee['serviceFee'].toStringAsFixed(8)} BNB\nTotal: ${estimatedFee['totalBNB'].toStringAsFixed(8)} BNB';
       } else {
-        _estimatedFee = estimatedFee['message'];
         estimatedTime.value = 'N/A';
       }
     }else{      
@@ -703,7 +735,7 @@ class WalletTokenSendingController extends GetxController {
       }
 
       // Ước tính gas cho sendBNBAndToken
-      final function = _transferContract.function('sendBNBAndToken');
+      final function = _transferContract.function(tokenSettings!.contractFunction);
       final gasPrice = await _client.getGasPrice().catchError((e) {
         print('Failed to get gas price: $e');
         throw Exception('Failed to get gas price: $e');
@@ -712,7 +744,7 @@ class WalletTokenSendingController extends GetxController {
       try {
         final transferGas = await _client.estimateGas(
           sender: _credentials.address,
-          to: EthereumAddress.fromHex(_contractAddress), // 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
+          to: EthereumAddress.fromHex(tokenSettings!.contractAddressSend??_contractAddress), // 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
           value: EtherAmount.inWei(minBNBInWei),
           data: function.encodeCall([
             EthereumAddress.fromHex(isBNB ? '0x0000000000000000000000000000000000000000' : walletsInfo!.contractAddress!),
@@ -759,17 +791,16 @@ class WalletTokenSendingController extends GetxController {
 }
 String _formatEstimatedTime(double seconds) {
     if (seconds < 60) {
-      return '${seconds.toStringAsFixed(0)} giây';
+      return tr("Account.wallet.SendPage.EstimatedTime.Second").replaceAll('{0}',seconds.toStringAsFixed(0));
     } else {
       final minutes = (seconds / 60).floor();
       final remainingSeconds = (seconds % 60).toStringAsFixed(0);
-      return '$minutes phút $remainingSeconds giây';
+      return tr("Account.wallet.SendPage.EstimatedTime").replaceAll('{0}',minutes.toString()).replaceAll('{1}', remainingSeconds);      
     }
   }
 Future<double> _getBlockTime() async {
   try {
-    final startBlock = await _client.getBlockNumber();   
-    //await Future.delayed(const Duration(seconds: 1)); // Chờ 10 giây
+    final startBlock = await _client.getBlockNumber();       
     final endBlock = await _client.getBlockNumber();    
     final blocks = endBlock - startBlock;
     if (blocks > 0) {

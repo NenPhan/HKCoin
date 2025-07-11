@@ -12,23 +12,25 @@ import 'package:hkcoin/data.models/blockchain_transaction.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_info.dart';
 import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:hkcoin/data.models/wallet.dart';
 import 'package:hkcoin/data.repositories/wallet_repository.dart';
+import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 
 class WalletTokenDetailController extends GetxController {
-  final bscScanApiKey="Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4";
-  final wsUrls = [
-      'wss://go.getblock.us/83a3f76dee6b4ef889fc38a7d22215dd',
-      'wss://bsc-rpc.publicnode.com',
-      'wss://bsc-testnet-rpc.publicnode.com',
-      'wss://bsc-ws-node.nariox.org:443',
-      'wss://bsc-dataseed1.binance.org:443',
-      'wss://bsc-dataseed2.binance.org:443',
-      'wss://bsc-dataseed3.binance.org:443',
-    ];
+  // final bscScanApiKey="Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4";
+  // final wsUrls = [
+  //     'wss://go.getblock.us/83a3f76dee6b4ef889fc38a7d22215dd',
+  //     'wss://bsc-rpc.publicnode.com',
+  //     'wss://bsc-testnet-rpc.publicnode.com',
+  //     'wss://bsc-ws-node.nariox.org:443',
+  //     'wss://bsc-dataseed1.binance.org:443',
+  //     'wss://bsc-dataseed2.binance.org:443',
+  //     'wss://bsc-dataseed3.binance.org:443',
+  //   ];
      late final BlockchainService _blockchainService;
  // final Rx<BlockchainService?> _blockchainService = Rx<BlockchainService?>(null);
   final formKey = GlobalKey<FormState>();
@@ -49,23 +51,47 @@ class WalletTokenDetailController extends GetxController {
   late EthereumAddress walletAddress;
   late EthereumAddress tokenContract;
   late bool hasRunService = false;
+  TokenSetting? tokenSetting;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    getNetworks();
+    await _loadTokenSettings();
+    await getNetworks();
     final walletId = Get.arguments as int?;
     if (walletId != null) {
-      getWalletInfo(walletId);
+      await getWalletInfo(walletId);
     } else {
       Get.snackbar('Lỗi', 'ID ví không hợp lệ');
+    }
+  }
+  Future<void> _loadTokenSettings() async {
+    try {
+      final settings = await Storage().getTokenSetting();
+      if (settings != null) {
+        tokenSetting = settings;
+      } else {
+        final blockchainWalletController = Get.find<BlockchangeWalletController>();
+        await blockchainWalletController.getTokenConfigs();
+        // Xử lý khi không có dữ liệu trong Storage
+        tokenSetting = blockchainWalletController.tokenSettings;            
+      }
+    } catch (e) {        
+      // Có thể gán giá trị mặc định khi có lỗi
+      tokenSetting = TokenSetting(
+        bscScanApiKey: 'Z9JBDKUZG93MHRGU21KFF81EAD287KD3E4',
+        contractAddressSend: '',
+        contractFunction: 'sendBNBAndToken',
+        minBNB: 0.00001,
+        wsUrls: [],
+      );
     }
   }
   Future<void> _initTracking(Web3Client web3Client) async {
     if(!hasRunService){
       _blockchainService = BlockchainService(
-        wsUrls: wsUrls,
-        bscScanApiKey: bscScanApiKey,
+        wsUrls: tokenSetting!.wsUrls,
+        bscScanApiKey: tokenSetting!.bscScanApiKey,
         web3Client: web3Client
       );
       await _blockchainService.init();
