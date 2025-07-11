@@ -8,7 +8,7 @@ import 'package:hkcoin/presentation.pages/login_page.dart';
 
 class SplashController extends GetxController {
   void checkAuth() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));     
     await applyLanguage();
     if (Storage().getToken != null) {
       Get.offAllNamed(HomePage.route);

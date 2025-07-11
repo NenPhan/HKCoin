@@ -334,11 +334,11 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
   }
   @override
   void onClose() {
-    super.onClose();
     for (var wallet in walletsInfo!.walletAddressModel!) {
       _blockchainService.stopTrackingBalance(EthereumAddress.fromHex(wallet.walletAddress));
     }
     _blockchainService.dispose();
+    super.onClose();    
   }
 
   String _formatAddress(String? address) {

@@ -62,7 +62,6 @@ class WalletTokenSendingController extends GetxController {
   Future<void> _loadTokenSettings() async {
   try {
     final settings = await Storage().getTokenSetting();
-    print(settings!.bscScanApiKey);
     if (settings != null) {
       tokenSettings = settings;
     } else {

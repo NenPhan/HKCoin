@@ -13,7 +13,7 @@ import 'package:hkcoin/firebase_options.dart';
 import 'package:hkcoin/presentation.controllers/private_message_controller.dart';
 
 Future<void> initializeFirebaseService() async {
-  log('Firebase -----initializeFirebaseService-----', name: "FIREBASE");
+  //log('Firebase -----initializeFirebaseService-----', name: "FIREBASE");
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -27,23 +27,23 @@ Future<void> initializeFirebaseService() async {
 
   var settings = await messaging.requestPermission();
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    log('Firebase -----User Granted Permission-----', name: "FIREBASE");
+    //log('Firebase -----User Granted Permission-----', name: "FIREBASE");
   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
     log(
       'Firebase -----User Granted Provisional Permission-----',
       name: "FIREBASE",
     );
   } else {
-    log('Firebase -----User Declined Permission-----', name: "FIREBASE");
+    //log('Firebase -----User Declined Permission-----', name: "FIREBASE");
     return;
   }
 
-  try {
-    var token = await messaging.getToken();
-    log('Firebase FCM token $token', name: "FIREBASE");
-  } catch (e) {
-    print(e);
-  }
+  // try {
+  //   var token = await messaging.getToken();
+  //   log('Firebase FCM token $token', name: "FIREBASE");
+  // } catch (e) {
+  //   print(e);
+  // }
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -60,9 +60,9 @@ Future<void> initializeFirebaseService() async {
   FirebaseMessaging.onMessage.listen(onMessage);
   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-    log('Firebase -----FCM new token $token-----', name: "FIREBASE");
+    //log('Firebase -----FCM new token $token-----', name: "FIREBASE");
   });
-  log('Firebase -----FirebaseService Initialized-----', name: "FIREBASE");
+  //log('Firebase -----FirebaseService Initialized-----', name: "FIREBASE");
 
   // check for tapping background message
   final notificationService = NotificationService();
@@ -72,14 +72,14 @@ Future<void> initializeFirebaseService() async {
 }
 
 void _handleMessage(RemoteMessage message, [bool isInit = false]) async {
-  log('Firebase -----_handleMessage----- ${message.toMap()}', name: "FIREBASE");
+  //log('Firebase -----_handleMessage----- ${message.toMap()}', name: "FIREBASE");
 
   NotificationService.handleClickNotification(jsonEncode(message.data), isInit);
 }
 
 Future<void> onBackgroundMessage(RemoteMessage message) async {
-  log('Firebase -----onBackgroundMessage-----', name: "FIREBASE");
-  log('Firebase ${message.toMap()}', name: "FIREBASE");
+  //log('Firebase -----onBackgroundMessage-----', name: "FIREBASE");
+  //log('Firebase ${message.toMap()}', name: "FIREBASE");
 
   Get.find<PrivateMessageController>().getPrivateMessageCount();
   if (Platform.isAndroid) {
@@ -97,8 +97,8 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
 }
 
 Future<void> onMessage(RemoteMessage message) async {
-  log('Firebase -----onMessage-----', name: "FIREBASE");
-  log('Firebase ${message.toMap()}', name: "FIREBASE");
+  //log('Firebase -----onMessage-----', name: "FIREBASE");
+  //log('Firebase ${message.toMap()}', name: "FIREBASE");
 
   Get.find<PrivateMessageController>().getPrivateMessageCount();
   if (Platform.isAndroid) {

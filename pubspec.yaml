@@ -1,7 +1,7 @@
 name: hkcoin
 description: "HKCoin Mobile App"
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 1.0.8+14
+version: 1.0.10+16
 
 environment:
   sdk: ^3.7.0

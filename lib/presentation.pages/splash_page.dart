@@ -15,8 +15,10 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    SplashController().checkAuth();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SplashController().checkAuth();
+    });
   }
 
   @override
@@ -33,6 +35,7 @@ class _SplashPageState extends State<SplashPage> {
               child: Assets.images.hkcLogo.image(
                 width: 300,
                 fit: BoxFit.fitWidth,
+                cacheWidth: (MediaQuery.of(context).size.width * 0.6 * MediaQuery.of(context).devicePixelRatio).toInt(),
               ),
             ),
           ),
