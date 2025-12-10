@@ -195,7 +195,7 @@ class _LanguageProSheet extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      lang.isDefault == true ? "Default" : iso,
+                      lang.isDefault == true ? context.tr("Admin.Common.Standard") : iso,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.55),
                         fontSize: 13,
