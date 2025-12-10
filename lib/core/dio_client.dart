@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -27,18 +26,13 @@ class DioClient {
   late AppConfig _appConfig;
   final Dio dio;
   Future<dynamic> call(DioParams fields, {String? contentType}) async {
-    String url = '';
     if (fields.host == null) {
-      url = '${AppConfig().apiUrl}${fields.endpoint}';
     } else {
-      url = '${fields.host}${fields.endpoint}';
     }
     if (fields.params != null) {
-      url += '?';
 
       if (fields.params != null) {
         fields.params!.forEach((key, value) {
-          url += '$key=$value&';
         });
       }
     }
@@ -46,11 +40,17 @@ class DioClient {
     //String logString =
      //   '======>API REQUEST<===============================================================================';
     if (fields.needAccessToken) {
-      //after login succes storage had token, if first init storage dont need init
-      if (_storage == null && Storage.hadInited) {
-        _storage = Storage();
+      //after login succes storage had token, if first init storage dont need init     
+      if (_storage == null) {
+        if (Storage.hadInited) {
+          _storage = Storage();// ← Không gọi factory Storage()
+        } else {
+          _storage = null; // chưa init → token = null
+        }
       }
+
       String? token = _storage?.getToken;
+
       header['accessToken'] = token ?? "";
       // logString += '\nAccess Token: $token\n';
     }

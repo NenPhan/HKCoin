@@ -1,7 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:hkcoin/presentation.controllers/create_wallet_controller.dart';
 import 'package:hkcoin/presentation.pages/add_phase_mnemonic_page.dart';

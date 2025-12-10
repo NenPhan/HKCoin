@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
@@ -8,6 +8,7 @@ import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/count_badge.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/pagination_scroll_widget.dart';
+import 'package:intl/intl.dart';
 
 class PrivateMessagePage extends StatefulWidget {
   const PrivateMessagePage({super.key});

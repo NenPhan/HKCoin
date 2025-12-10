@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,6 +22,7 @@ import 'package:hkcoin/presentation.pages/update_kyc_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_page.dart';
 import 'package:hkcoin/widgets/custom_drop_down_button.dart';
 import 'package:hkcoin/widgets/expandale_button.dart';
+import 'package:hkcoin/widgets/language_selector.dart';
 import 'package:hkcoin/widgets/qrcode_widget.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
 
@@ -143,11 +144,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Text(
                                 controller.customerInfo?.fullName ?? "",
-                                style: textTheme(context).titleLarge,
+                                style: textTheme(context).titleLarge?.copyWith(color: Colors.white),
                               ),
                               Text(
                                 controller.customerInfo?.email ?? "",
-                                style: textTheme(context).bodyMedium,
+                                style: textTheme(context).bodyMedium?.copyWith(color: Colors.white),
                               ),
                             ],
                           ),
@@ -317,52 +318,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    Positioned(
+                    const Positioned(
                       right: 10,
                       top: 15,
-                      child: CustomDropDownButton(
-                        buttonWidth: scrSize(context).width * 0.4,
-                        dropdownWidth: scrSize(context).width * 0.4,
-                        buttonHeight: 50,
-                        selectedValue:
-                            Get.find<LocaleController>().listLanguage
-                                .where(
-                                  (e) =>
-                                      e.isoCode ==
-                                      Get.find<LocaleController>()
-                                          .localeIsoCode,
-                                )
-                                .first,
-                        items: Get.find<LocaleController>().listLanguage,
-                        onChanged: (language) async {
-                          inspect(language);
-                          var locale = language!.isoCode!.toLocaleFromIsoCode();
-                          await context.setLocale(locale);
-                          await Get.updateLocale(locale);
-                          await Get.find<LocaleController>().setLanguage(
-                            language.id,
-                            locale,
-                          );
-                          // Restart.restartApp();
-                        },
-                        itemDesign: (item) {
-                          return SpacingRow(
-                            spacing: scrSize(context).width * 0.02,
-                            children: [
-                              Image.network(
-                                item.flagImageFileName ?? "",
-                                width: 20,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  item.shortName ?? "",
-                                  style: textTheme(context).bodyMedium,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                      child: LanguageSelectorPro(textColor: Colors.white),
                     ),
                   ],
                 ),

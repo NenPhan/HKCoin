@@ -1,18 +1,20 @@
 import 'dart:math';
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/time_converter.dart';
 import 'package:hkcoin/data.models/blockchain_transaction.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_detail_controller.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_received_page.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_send_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
+import 'package:intl/intl.dart';
 
 class WalletTokenDetailPage extends StatefulWidget {
   const WalletTokenDetailPage({super.key});

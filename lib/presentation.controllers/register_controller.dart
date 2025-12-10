@@ -1,11 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
-import 'package:hkcoin/data.models/recovery_password.dart';
 import 'package:hkcoin/data.models/register_form.dart';
 import 'package:hkcoin/data.repositories/customer_repository.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 
 class RegisterController extends GetxController {
   final formKey = GlobalKey<FormState>();

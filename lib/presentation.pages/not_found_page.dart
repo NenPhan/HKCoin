@@ -1,7 +1,7 @@
 // lib/presentation/pages/not_found_page.dart
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 
 class NotFoundPage extends StatefulWidget {

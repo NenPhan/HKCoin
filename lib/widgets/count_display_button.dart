@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class CountDisplay extends StatefulWidget {
@@ -41,7 +43,6 @@ class _CountDisplayState extends State<CountDisplay> {
                 onPressed: widget.onTap,
                 icon: widget.icon!,
               ),
-
             // Hiển thị count badge nếu count > 0
             if (widget.count > 0)
               Positioned(

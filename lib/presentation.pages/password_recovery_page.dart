@@ -1,9 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/recover_password_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/main_button.dart';

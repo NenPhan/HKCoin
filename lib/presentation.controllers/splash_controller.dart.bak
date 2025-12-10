@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:hkcoin/core/deep_link_manager.dart';
-import 'package:hkcoin/core/firebase_service.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
@@ -16,12 +15,6 @@ class SplashController extends GetxController {
     } else {
       Get.offAllNamed(LoginPage.route);
     }
-     await initializeFirebaseService();
-
-    // Nếu Injection.setup() nặng, chuyển nó từ main sang đây:
-    // await Injection.setupAsync(); // hoặc lại gọi setup() ở đây nếu đã bỏ ở main
-
-    // Deeplink init (không phải check link, chỉ init SDK, channel)    
     await DeeplinkManager.checkInitLink();
   }
   applyLanguage() async {

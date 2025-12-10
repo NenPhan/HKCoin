@@ -3,11 +3,11 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/err/exception.dart';
 import 'package:hkcoin/core/err/failures.dart';
 import 'package:hkcoin/core/toast.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 
 Future<T> handleRemoteRequest<T>(
   Future<T> Function() onRequest, {

@@ -1,17 +1,15 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/data.models/checkout_data.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/wallet_token_payment_controller.dart';
 import 'package:hkcoin/presentation.pages/qr_scan_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/fee_loading_effect.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
-import 'package:hkcoin/widgets/main_text_field.dart';
 import 'package:hkcoin/widgets/screen_popup_widget.dart';
 import 'package:hkcoin/widgets/token_icon_widget.dart';
 

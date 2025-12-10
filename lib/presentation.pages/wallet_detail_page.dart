@@ -1,6 +1,6 @@
 // ignore_for_file: unused_element
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,6 +9,7 @@ import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/toast.dart';
 import 'package:hkcoin/core/utils.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/create_wallet_contract_controller.dart';
 import 'package:hkcoin/presentation.controllers/wallet_detail_controller.dart';
 import 'package:hkcoin/presentation.pages/qr_scan_page.dart';

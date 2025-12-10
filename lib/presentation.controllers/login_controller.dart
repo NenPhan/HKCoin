@@ -1,8 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.repositories/customer_repository.dart';
+import 'package:hkcoin/localization/localization_scope.dart';
 import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 
 class LoginController extends GetxController {
@@ -36,11 +36,20 @@ class LoginController extends GetxController {
     isLoading.value = false;
   }
 
-  applyLanguage() async {
-    var localController = Get.find<LocaleController>();
-    await localController.initLocale();
-    var locale = localController.locale;
-    await Get.context?.setLocale(locale);
+ Future<void> applyLanguage() async {
+    final ctx = Get.context;
+    if (ctx == null) return;
+
+    final localeController = Get.find<LocaleController>();
+    await localeController.initLocale();
+
+    final locale = localeController.locale;
+
+    // đổi locale realtime trong LocalizationScope
+    // ignore: use_build_context_synchronously
+    await LocalizationScope.of(ctx).setLocale(locale);
+
+    // update cho GetX UI
     await Get.updateLocale(locale);
   }
 }

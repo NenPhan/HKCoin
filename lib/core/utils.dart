@@ -1,6 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
+import 'package:intl/intl.dart';
 
 oCcy({String? format}) => NumberFormat(format ?? "#,##0.000", "en_US");
 

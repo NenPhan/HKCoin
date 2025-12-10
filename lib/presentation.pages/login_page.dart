@@ -3,13 +3,15 @@ import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/login_controller.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/password_recovery_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../widgets/language_selector.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,7 +36,14 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Bitcoin and chart illustration
-                SizedBox(height: scrSize(context).height * 0.1),
+                 const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    LanguageSelectorPro(),
+                  ],
+                ),
+
+                SizedBox(height: scrSize(context).height * 0.08),
                 Hero(
                   tag: "main-logo",
                   child: Assets.images.hkcLogo.image(
@@ -113,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[900],
+                    backgroundColor: const Color(0xFFC8925A),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

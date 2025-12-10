@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:web3dart/web3dart.dart';
 
 BigInt preciseAmountToWei(double amount, int decimals) {

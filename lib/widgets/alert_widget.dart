@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:hkcoin/localization/localization_context_extension.dart';
 
 // Enum for alert types
 enum AlertType { error, success, info, warning }

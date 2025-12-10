@@ -1,15 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:hkcoin/core/deep_link_manager.dart';
-import 'package:hkcoin/core/firebase_service.dart';
 import 'package:hkcoin/core/injection.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
+import 'package:hkcoin/localization/localization_scope.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();  
   AppConfig.init(
     appName: "HKCoin",
     flavorName: AppFlavor.DEV,
@@ -21,15 +17,20 @@ void main() async {
         'Basic NDY2OTc4YjU5YTQ1MzcxMzg1MWFjYTI5OGM0NmY2NjU6NTliZTZmMzljZTdmYWU1YzEyNTkyNmJiOGJkNWNiODU=',
   );
   await Injection.setup();
-  await initializeFirebaseService();
-  DeeplinkManager.initDeepLinks();
+  //await initializeFirebaseService();
+  //DeeplinkManager.initDeepLinks();
   runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
-      startLocale: const Locale("en", "US"),
-      path: "http://aps.hakacoin.net/translations",
-      assetLoader: const HttpAssetLoader(),
-      child: const CustomMaterialApp(),
+    const LocalizationScope(
+      remotePath: "https://aps.hakacoin.net/translations",
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('vi', 'VN'),
+        Locale('th', 'TH'),
+        Locale('lo', 'LA'),
+        Locale('km', 'KH'),
+      ],
+      fallbackLocale: Locale('en', 'US'),
+      child: CustomMaterialApp(),
     ),
-  );
+  );  
 }

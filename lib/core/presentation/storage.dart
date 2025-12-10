@@ -12,6 +12,7 @@ class KeyStorage {
   final notiKey = "/noti_key";
   final networkKey = "/network_key";
   final tokenSettingKey = "/token_setting_key";
+   final localLanguage = "/local_language";
 }
 
 class Storage {
@@ -47,6 +48,7 @@ class Storage {
     await preferences?.remove(_key.customerKey);
     await preferences?.remove(_key.networkKey);
     await preferences?.remove(_key.tokenSettingKey);
+    await preferences?.remove(_key.localLanguage);
   }
 }
 
@@ -120,5 +122,16 @@ extension TokenSettingStorage on Storage {
 
   Future deleteNetWork() async {
     await preferences!.remove(_key.tokenSettingKey);
+  }
+}
+extension LocalLanguageStorage on Storage {
+  Future<void> saveLocalLanguage(String value) async {
+    await preferences!.setString(_key.localLanguage, value);
+  }
+
+  String? get getLocalLanguage => preferences!.getString(_key.localLanguage);
+
+  Future deleteLocalLanguage() async {
+    await preferences!.remove(_key.localLanguage);
   }
 }
