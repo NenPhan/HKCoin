@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
-import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/login_controller.dart';
 import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:hkcoin/presentation.pages/home_page.dart';
@@ -9,7 +8,7 @@ import 'package:hkcoin/presentation.pages/password_recovery_page.dart';
 import 'package:hkcoin/presentation.pages/register_page.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:hkcoin/widgets/stores/store_brand_widget.dart';
 
 import '../widgets/language_selector.dart';
 
@@ -22,7 +21,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final LoginController controller = Get.put(LoginController());   
+  final LoginController controller = Get.put(LoginController());
+  final FocusNode usernameFocus = FocusNode();
+  final FocusNode passwordFocus = FocusNode();
+  @override
+  void dispose() {
+    usernameFocus.dispose();
+    passwordFocus.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,21 +44,35 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Bitcoin and chart illustration
-                 const Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    LanguageSelectorPro(),
-                  ],
+                  children: [LanguageSelectorPro()],
                 ),
 
                 SizedBox(height: scrSize(context).height * 0.08),
-                Hero(
-                  tag: "main-logo",
-                  child: Assets.images.hkcLogo.image(
-                    height: 100,
-                    fit: BoxFit.fitHeight,
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.7,
+                    ),
+                    child: StoreBrandWidget(
+                      type: StoreBrandType.full,
+                      textTransform: TextTransform.uppercase,
+                      logoSize: 250,
+                      subtitle: 'subtitle',
+                      titleStyle: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      subtitleStyle: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
                   ),
                 ),
+
                 const SizedBox(height: 32),
                 const Text(
                   'Let\'s Get Started',
@@ -73,6 +95,12 @@ class _LoginPageState extends State<LoginPage> {
                           MainTextField(
                             controller: controller.usernameController,
                             hintText: "Account.Login.Fields.UserName",
+                            focusNode: usernameFocus,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(
+                                context,
+                              ).requestFocus(passwordFocus);
+                            },
                             validator:
                                 (value) =>
                                     value != "" && value != null
@@ -85,6 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                           MainTextField(
                             controller: controller.passwordController,
                             obscureText: true,
+                            focusNode: passwordFocus,
+                            onFieldSubmitted: (_) => _triggerLogin(),
                             hintText: "Account.Login.Fields.Password",
                             validator:
                                 (value) =>
@@ -149,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(width: 5),
                       InkWell(
                         onTap: () async {
-                           Get.toNamed(PasswordRecoveryPage.route);                          
+                          Get.toNamed(PasswordRecoveryPage.route);
                         },
                         child: Text(
                           context.tr("Account.Login.ForgotPassword.Click"),
@@ -163,12 +193,21 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                ),                
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _triggerLogin() {
+    if (controller.isLoading.value) return;
+
+    controller.login(() async {
+      await Future.delayed(const Duration(milliseconds: 500));
+      Get.offAllNamed(HomePage.route);
+    });
   }
 }

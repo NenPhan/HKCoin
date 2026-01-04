@@ -1,14 +1,15 @@
+import 'package:hkcoin/core/presentation/bindings/app_bindings.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/config/app_routes.dart';
 import 'package:hkcoin/core/presentation/widgets/app_navigator_observer.dart';
 import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.pages/splash_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class CustomMaterialApp extends StatelessWidget {
   const CustomMaterialApp({super.key});
@@ -20,9 +21,11 @@ class CustomMaterialApp extends StatelessWidget {
       child: ToastificationWrapper(
         child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
+          initialBinding: AppBindings(),
 
           // ⭐ LOCALE từ LocalizationService
-          locale: LocalizationService.instance.currentLocale ??
+          locale:
+              LocalizationService.instance.currentLocale ??
               const Locale("en", "US"),
 
           supportedLocales: const [
@@ -50,9 +53,7 @@ class CustomMaterialApp extends StatelessWidget {
           getPages: AppGetRoutes.routes,
           initialRoute: SplashPage.route,
 
-          navigatorObservers: [
-            AppNavigatorObserver(),
-          ],
+          navigatorObservers: [AppNavigatorObserver()],
 
           defaultTransition: Transition.rightToLeft,
         ),

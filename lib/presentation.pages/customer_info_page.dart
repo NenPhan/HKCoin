@@ -1,3 +1,5 @@
+import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/core/extensions/enum_type_extension.dart';
 import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +9,7 @@ import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/customer_info_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/disable_widget.dart';
+import 'package:hkcoin/widgets/dropdown_popup.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 
@@ -48,7 +51,9 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                                 DisableWidget(
                                   child: MainTextField(
                                     controller: controller.usernameController,
-                                    label: context.tr("Account.Fields.Username"),
+                                    label: context.tr(
+                                      "Account.Fields.Username",
+                                    ),
                                   ),
                                 ),
                                 MainTextField(
@@ -69,9 +74,85 @@ class _CustomerInfoPageState extends State<CustomerInfoPage> {
                                         "Account.Register.Errors.LastNameIsNotProvided",
                                       ),
                                 ),
+                                GetBuilder<CustomerInfoController>(
+                                  id: "gender",
+                                  builder: (controller) {
+                                    return PopupDropdown<GenderType>(
+                                      title: context.tr(
+                                        "Account.Fields.Gender",
+                                      ),
+                                      labelColor: Colors.white,
+                                      textColor: Colors.white,
+                                      items:
+                                          GenderType.values
+                                              .where(
+                                                (g) =>
+                                                    g !=
+                                                    GenderType.defaultValue,
+                                              )
+                                              .toList(),
+
+                                      selectedItem:
+                                          controller.selectedGender.value ==
+                                                  GenderType.defaultValue
+                                              ? null
+                                              : controller.selectedGender.value,
+
+                                      placeholder: context.tr(
+                                        "Account.Fields.Gender.Select",
+                                      ),
+
+                                      iconBuilder: (item) {
+                                        if (item == null) {
+                                          return Icon(
+                                            Icons.wc,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            size: 20,
+                                          );
+                                        }
+                                        switch (item) {
+                                          case GenderType.nam:
+                                            return const Icon(
+                                              Icons.male,
+                                              color: Colors.blue,
+                                            );
+                                          case GenderType.nu:
+                                            return const Icon(
+                                              Icons.female,
+                                              color: Colors.pink,
+                                            );
+                                          default:
+                                            return const Icon(
+                                              Icons.help_outline,
+                                            );
+                                        }
+                                      },
+
+                                      itemLabel: (g) => g.display(context),
+
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return context.tr(
+                                            "Account.Fields.Gender.Required",
+                                          );
+                                        }
+                                        return null;
+                                      },
+
+                                      onChanged: (value) {
+                                        controller.setGender(
+                                          value ?? GenderType.defaultValue,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                                 MainTextField(
                                   controller: controller.emailController,
-                                  label: context.tr("Account.Login.Fields.Email"),
+                                  label: context.tr(
+                                    "Account.Login.Fields.Email",
+                                  ),
                                   validator:
                                       (value) => requiredValidator(
                                         value,

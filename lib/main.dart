@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hkcoin/core/deep_link_manager.dart';
 import 'package:hkcoin/core/injection.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/presentation/widgets/custom_material_app.dart';
@@ -16,9 +17,9 @@ void main() async {
     basicAuthorization:
         'Basic NDY2OTc4YjU5YTQ1MzcxMzg1MWFjYTI5OGM0NmY2NjU6NTliZTZmMzljZTdmYWU1YzEyNTkyNmJiOGJkNWNiODU=',
   );
-  await Injection.setup();  
+  await Injection.setup();
   //await initializeFirebaseService();
- // DeeplinkManager.initDeepLinks();
+  DeeplinkManager.initDeepLinks();
   runApp(
     const LocalizationScope(
       remotePath: "https://api.hakacoin.net/translations",

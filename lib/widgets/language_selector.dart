@@ -8,8 +8,8 @@ import 'package:hkcoin/presentation.controllers/locale_controller.dart';
 class LanguageSelectorPro extends StatelessWidget {
   const LanguageSelectorPro({
     super.key,
-    this.textColor,     // ⭐ Màu chữ truyền từ ngoài
-    this.arrowColor,    // ⭐ Màu icon dropdown (nếu null → dùng textColor)
+    this.textColor, // ⭐ Màu chữ truyền từ ngoài
+    this.arrowColor, // ⭐ Màu icon dropdown (nếu null → dùng textColor)
   });
 
   final Color? textColor;
@@ -62,8 +62,9 @@ class LanguageSelectorPro extends StatelessWidget {
         width: size,
         height: size,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) =>
-            Icon(Icons.flag, color: Colors.grey[400], size: size),
+        errorBuilder:
+            (_, __, ___) =>
+                Icon(Icons.flag, color: Colors.grey[400], size: size),
       ),
     );
   }
@@ -83,7 +84,7 @@ class LanguageSelectorPro extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: _LanguageProSheet(
-              textColor: textColor,   // ⭐ truyền xuống sheet
+              textColor: textColor, // ⭐ truyền xuống sheet
             ),
           ),
         );
@@ -107,7 +108,7 @@ class _LanguageProSheet extends StatelessWidget {
   final Color? textColor;
   static const Color _defaultCopper = Color(0xFFC48A3F);
 
-  _LanguageProSheet({super.key, this.textColor});
+  _LanguageProSheet({this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +174,10 @@ class _LanguageProSheet extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? finalTextColor.withOpacity(0.20)
-                        : Colors.white.withOpacity(0.06),
+                    color:
+                        isSelected
+                            ? finalTextColor.withOpacity(0.20)
+                            : Colors.white.withOpacity(0.06),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected ? finalTextColor : Colors.transparent,
@@ -195,21 +197,31 @@ class _LanguageProSheet extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      lang.isDefault == true ? context.tr("Admin.Common.Standard") : iso,
+                      lang.isDefault == true
+                          ? context.tr("Admin.Common.Standard")
+                          : iso,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.55),
                         fontSize: 13,
                       ),
                     ),
-                    trailing: isSelected
-                        ? Icon(Icons.check_circle,
-                            color: finalTextColor, size: 26)
-                        : const Icon(Icons.circle_outlined,
-                            color: Colors.white38),
+                    trailing:
+                        isSelected
+                            ? Icon(
+                              Icons.check_circle,
+                              color: finalTextColor,
+                              size: 26,
+                            )
+                            : const Icon(
+                              Icons.circle_outlined,
+                              color: Colors.white38,
+                            ),
                     onTap: () async {
                       Navigator.pop(context);
-                      await LocalizationBridge.instance
-                          .changeLocale(context, locale);
+                      await LocalizationBridge.instance.changeLocale(
+                        context,
+                        locale,
+                      );
                     },
                   ),
                 );
@@ -231,8 +243,9 @@ class _LanguageProSheet extends StatelessWidget {
         width: size,
         height: size,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) =>
-            Icon(Icons.flag_outlined, color: Colors.grey[600], size: size),
+        errorBuilder:
+            (_, __, ___) =>
+                Icon(Icons.flag_outlined, color: Colors.grey[600], size: size),
       ),
     );
   }

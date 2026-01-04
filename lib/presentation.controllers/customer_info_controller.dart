@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/core/extensions/enum_type_extension.dart';
 import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/core/toast.dart';
@@ -13,6 +15,7 @@ class CustomerInfoController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
+  final selectedGender = GenderType.defaultValue.obs;
 
   RxBool isLoadingSaveButton = false.obs;
 
@@ -24,11 +27,12 @@ class CustomerInfoController extends GetxController {
 
   void getCustomerInfo() async {
     handleEither(await CustomerRepository().getCustomerInfo(), (r) {
-      fNameController.text = r.firstName??"";
-      lNameController.text = r.lastName??"";
+      fNameController.text = r.firstName ?? "";
+      lNameController.text = r.lastName ?? "";
       emailController.text = r.email;
-      phoneController.text = r.phone??"";
+      phoneController.text = r.phone ?? "";
       usernameController.text = r.username;
+      selectedGender.value = GenderTypeX.mapGenderFromInt(r.genderId);
     });
     update(["customer-info-page"]);
   }
@@ -41,6 +45,7 @@ class CustomerInfoController extends GetxController {
       customerInfo.lastName = lNameController.text;
       customerInfo.email = emailController.text;
       customerInfo.phone = phoneController.text;
+      customerInfo.genderId = selectedGender.value.toApiValue();
       handleEither(
         await CustomerRepository().updateCustomerInfo(customerInfo),
         (r) {
@@ -51,5 +56,10 @@ class CustomerInfoController extends GetxController {
     }
 
     isLoadingSaveButton.value = false;
+  }
+
+  void setGender(GenderType gender) {
+    selectedGender.value = gender;
+    update(["gender"]);
   }
 }

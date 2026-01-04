@@ -1,3 +1,4 @@
+import 'package:hkcoin/data.models/withdrawals_profit.dart';
 import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +7,7 @@ import 'package:hkcoin/core/presentation/widgets/spacing.dart';
 import 'package:hkcoin/core/utils.dart';
 import 'package:hkcoin/presentation.controllers/withdrawal_profit_controller.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
-import 'package:hkcoin/widgets/custom_drop_down_button.dart';
+import 'package:hkcoin/widgets/dropdown_popup.dart';
 import 'package:hkcoin/widgets/loading_widget.dart';
 import 'package:hkcoin/widgets/main_text_field.dart';
 
@@ -60,25 +61,39 @@ class _ProfitWithdrawalContentPageState
                                       flex: 2,
                                       child: Stack(
                                         children: [
-                                          CustomDropDownButton(
+                                          PopupDropdown<AviableWithDrawalSwaps>(
+                                            title: context.tr(
+                                              "Account.WithDrawalRequest.WithDrawalSwap",
+                                            ),
                                             items:
                                                 controller
                                                     .aviableWithDrawalSwaps,
-                                            isRequired: true,
-                                            selectedValue:
+                                            selectedItem:
                                                 controller
                                                     .selectedWithDrawalSwap,
-                                            title:
-                                                "Account.WithDrawalRequest.WithDrawalSwap",
-                                            onChanged: (p0) {
-                                              controller.amountController
-                                                  .clear();
-                                              controller.isLoading.value
-                                                  ? null // Vô hiệu hóa khi loading
-                                                  : controller.onSwapChanged(
-                                                    p0,
-                                                  );
+                                            placeholder: context.tr(
+                                              "Account.WithDrawalRequest.Fields.WithDrawalSwap",
+                                            ),
+
+                                            iconBuilder:
+                                                (item) => const Icon(
+                                                  Icons.monetization_on,
+                                                ),
+
+                                            itemLabel: (item) => item.name,
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return context.tr(
+                                                  "Account.WithDrawalRequest.WithDrawalSwap.Required",
+                                                );
+                                              }
+                                              return null;
                                             },
+                                            onChanged: (value) {
+                                              controller.onSwapChanged(value);
+                                            },
+                                            labelColor: Colors.white,
+                                            textColor: Colors.white,
                                           ),
                                           if (controller.isLoading.value)
                                             const Positioned(

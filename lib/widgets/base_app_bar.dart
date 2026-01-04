@@ -9,72 +9,86 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool isBackEnabled;
   final bool enableHomeButton;
-  final int? cartCount;
   final Widget? actionWidget;
   final Color? backgroundColor;
-  final bool centerTitle; // Thêm thuộc tính mới để kiểm soát vị trí title
+  final bool centerTitle;
+  final Color? titleColor;
+  final Alignment actionAlignment;
 
   const BaseAppBar({
     super.key,
     this.title,
     this.isBackEnabled = true,
-    this.cartCount,
-    this.backgroundColor,
-    this.actionWidget,
     this.enableHomeButton = true,
-    this.centerTitle = false, // Mặc định là false để giữ behavior cũ
+    this.actionWidget,
+    this.backgroundColor,
+    this.centerTitle = false,
+    this.titleColor,
+    this.actionAlignment = Alignment.centerRight,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double topInset = MediaQuery.of(context).padding.top;
+    final Color resolvedTitleColor =
+        titleColor ??
+        Theme.of(context).appBarTheme.titleTextStyle?.color ??
+        Colors.white;
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: scrSize(context).width * 0.03,
-        vertical: scrSize(context).height * 0.015,
-      ),
-      color: backgroundColor ?? Colors.grey[900],
+      color: backgroundColor ?? Colors.grey.shade900,
+      padding: EdgeInsets.fromLTRB(12, topInset + 8, 12, 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (isBackEnabled)
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios, size: 32),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          else
-            const SizedBox(),                  
-          // Spacer sẽ khác nhau tùy theo centerTitle
-          if (centerTitle) ...[
-            Expanded(
-              child: Center(
-                child: Text(
-                  context.tr(title ?? ""),
-                  style: textTheme(context).titleMedium,
-                ),
+          // ---- LEFT ----
+          SizedBox(
+            width: 48,
+            child:
+                isBackEnabled
+                    ? IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 22,
+                        color: resolvedTitleColor,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                    : const SizedBox(),
+          ),
+
+          // ---- TITLE ----
+          Expanded(
+            child: Text(
+              title != null ? context.tr(title!) : "",
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme(context).titleMedium?.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: resolvedTitleColor,
               ),
             ),
-          ] else ...[
-          if (title != null) 
-              Text(
-                context.tr(title!),
-                style: textTheme(context).titleMedium,
-              ),
-            if (actionWidget != null)              
-              actionWidget!,
-            const Expanded(child: SizedBox()),     
-          ],
+          ),
 
-          // Logo bên phải
-          Hero(
-            tag: "main-logo",
-            child: GestureDetector(
-              onTap: () {
-                if (enableHomeButton) {
-                  Get.offNamedUntil(HomePage.route, (route) => false);
-                }
-              },
-              child: Assets.icons.hkcLogoIcon.image(height: 35),
+          // ---- ACTION ----
+          SizedBox(
+            // width: 70,
+            child: Align(
+              alignment: actionAlignment, // ✅ GIỜ MỚI CÓ TÁC DỤNG
+              child:
+                  actionWidget ??
+                  GestureDetector(
+                    onTap: () {
+                      if (enableHomeButton) {
+                        Get.offNamedUntil(HomePage.route, (route) => false);
+                      }
+                    },
+                    child: Hero(
+                      tag: "main-logo",
+                      child: Assets.icons.hkcLogoIcon.image(height: 28),
+                    ),
+                  ),
             ),
           ),
         ],

@@ -2,7 +2,6 @@ import 'package:hkcoin/localization/localization_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -84,9 +83,19 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                 _buildTextInfoWidget(
                                   title: "Order.OrderTotal",
                                   content:
-                                      (controller.data?.order.orderWalletTotal ??0) >0
-                                          ? controller.data?.order.orderWalletTotalStr ?? ""
-                                          : controller.data?.order.orderTotal ?? "",
+                                      (controller
+                                                      .data
+                                                      ?.order
+                                                      .orderWalletTotal ??
+                                                  0) >
+                                              0
+                                          ? controller
+                                                  .data
+                                                  ?.order
+                                                  .orderWalletTotalStr ??
+                                              ""
+                                          : controller.data?.order.orderTotal ??
+                                              "",
                                   contentStyle: textTheme(
                                     context,
                                   ).bodyMedium?.copyWith(
@@ -112,53 +121,70 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                                     );
                                   },
                                 ),
-                                const SizedBox(width: 10), 
-                                MainButton(                  
-                                  visible: !controller.data!.order.coinExtension!.contains("HTX") && (controller.data!.order.status !=OrderStatus.complete && controller.data!.order.status !=OrderStatus.cancelled),
-                                  icon: const Icon(Icons.payment, color: Colors.white),
+                                const SizedBox(width: 10),
+                                MainButton(
+                                  visible:
+                                      !controller.data!.order.coinExtension!
+                                          .contains("HTX") &&
+                                      (controller.data!.order.status !=
+                                              OrderStatus.complete &&
+                                          controller.data!.order.status !=
+                                              OrderStatus.cancelled),
+                                  icon: const Icon(
+                                    Icons.payment,
+                                    color: Colors.white,
+                                  ),
                                   text: tr("Checkout.Payment.IPay"),
                                   backgroundColor: Colors.lightGreen,
                                   onTap: () {
-                                     final String qrData ="https://hakacoin.net/ipay/?orderid=${controller.data!.order.id}";
-                                      xPopUpDialog(
-                                        context,
-                                        title: context.tr(
-                                          "Account.CustomerInfo.Popup.QRCode.Title",
-                                        ),
-                                        description: context.tr(
-                                          "Checkout.Payment.Popup.QRCode.Description",
-                                        ).replaceAll('{0}', controller.data!.order.orderNumber!),
-                                        child: QRCodeWidget(
-                                          data: qrData, // Dữ liệu QR code
-                                          size: 250, // Kích thước
-                                          logoWidget: TokenIconWidget(
-                                            imageProvider:  Assets.images.hkcIcon.image(height: 45).image,
-                                            width: 24,
-                                            height: 24,
-                                            hasBorder: false,
-                                            backgroundColor: Colors.transparent,
-                                            placeholder:
-                                                const CircularProgressIndicator(),
-                                            errorWidget: const Icon(
-                                              Icons.token,
-                                              size: 24,
-                                            ),
-                                            padding: const EdgeInsets.all(2),
+                                    final String qrData =
+                                        "https://hakacoin.net/ipay/?orderid=${controller.data!.order.id}";
+                                    xPopUpDialog(
+                                      context,
+                                      title: context.tr(
+                                        "Account.CustomerInfo.Popup.QRCode.Title",
+                                      ),
+                                      description: context
+                                          .tr(
+                                            "Checkout.Payment.Popup.QRCode.Description",
+                                          )
+                                          .replaceAll(
+                                            '{0}',
+                                            controller.data!.order.orderNumber!,
                                           ),
-                                          backgroundColor:
-                                              Colors.white, // Màu nền
-                                          fileName:
-                                              'affiliateLink_ipay.png', // Tùy chọn tên file khi lưu
+                                      child: QRCodeWidget(
+                                        data: qrData, // Dữ liệu QR code
+                                        size: 250, // Kích thước
+                                        logoWidget: TokenIconWidget(
+                                          imageProvider:
+                                              Assets.images.hkcIcon
+                                                  .image(height: 45)
+                                                  .image,
+                                          width: 24,
+                                          height: 24,
+                                          hasBorder: false,
+                                          backgroundColor: Colors.transparent,
+                                          placeholder:
+                                              const CircularProgressIndicator(),
+                                          errorWidget: const Icon(
+                                            Icons.token,
+                                            size: 24,
+                                          ),
+                                          padding: const EdgeInsets.all(2),
                                         ),
-                                        centerTitle: true, // Căn giữa tiêu đề
-                                        centerDescription:
-                                            true, // Căn giữa mô tả
-                                      );
+                                        backgroundColor:
+                                            Colors.white, // Màu nền
+                                        fileName:
+                                            'affiliateLink_ipay.png', // Tùy chọn tên file khi lưu
+                                      ),
+                                      centerTitle: true, // Căn giữa tiêu đề
+                                      centerDescription: true, // Căn giữa mô tả
+                                    );
                                   },
                                 ),
                               ],
                             ),
-                          ),                          
+                          ),
                         ],
                       ),
                     ),
@@ -211,28 +237,24 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
             child: Text(context.tr("Account.Order.Fields.BillingAddress")),
           ),
           _buildAlert(data?.notifiesAlert ?? ""),
-          if (data?.infoPayment?.qRCodePayment != null)            
+          if (data?.infoPayment?.qRCodePayment != null)
             Center(
-              child:QRCodeWidget(
+              child: QRCodeWidget(
                 data: data!.infoPayment!.walletAddress!,
                 size: scrSize(context).width * 0.6,
                 backgroundColor: Colors.white,
                 logoWidget: TokenIconWidget(
-                  imageProvider:  Assets.images.hkcIcon.image(height: 45).image,
+                  imageProvider: Assets.images.hkcIcon.image(height: 45).image,
                   width: 24,
                   height: 24,
                   hasBorder: false,
                   backgroundColor: Colors.transparent,
-                  placeholder:
-                      const CircularProgressIndicator(),
-                  errorWidget: const Icon(
-                    Icons.token,
-                    size: 24,
-                  ),
+                  placeholder: const CircularProgressIndicator(),
+                  errorWidget: const Icon(Icons.token, size: 24),
                   padding: const EdgeInsets.all(2),
                 ),
                 showShare: true,
-                showSaveStore: true,                                    
+                showSaveStore: true,
               ),
               // child: SvgPicture.string(
               //   data!.infoPayment!.qRCodePayment!,
@@ -251,37 +273,49 @@ class _CheckoutCompletePageState extends State<CheckoutCompletePage> {
                 MainButton(
                   width: scrSize(context).width * 0.25,
                   icon: const Icon(Icons.copy, color: Colors.white),
-                  text: "Common.Copy",      
-                  backgroundColor: const Color(0xFF504F4F),            
+                  text: "Common.Copy",
+                  backgroundColor: const Color(0xFF504F4F),
                   onTap: () {
                     try {
                       if (data?.infoPayment?.walletAddress != null) {
                         Clipboard.setData(
-                          ClipboardData(text: data!.infoPayment!.walletAddress!),
+                          ClipboardData(
+                            text: data!.infoPayment!.walletAddress!,
+                          ),
                         );
                       }
-                      Toast.showSuccessToast("Common.CopyToClipboard.Succeeded");
+                      Toast.showSuccessToast(
+                        "Common.CopyToClipboard.Succeeded",
+                      );
                     } catch (e) {
                       Toast.showErrorToast("Common.CopyToClipboard.Failded");
                     }
                   },
                 ),
-                const SizedBox(width: 10), 
-                MainButton(                  
-                  visible: !data!.order.coinExtension!.contains("HTX") && (controller.data!.order.status !=OrderStatus.complete && controller.data!.order.status !=OrderStatus.cancelled),
+                const SizedBox(width: 10),
+                MainButton(
+                  visible:
+                      !data!.order.coinExtension!.contains("HTX") &&
+                      (controller.data!.order.status != OrderStatus.complete &&
+                          controller.data!.order.status !=
+                              OrderStatus.cancelled),
                   icon: const Icon(Icons.payment, color: Colors.white),
-                  text: tr("Checkout.Payment.Wallet").replaceAll('{0}', data.order.coinExtension??""),
+                  text: tr(
+                    "Checkout.Payment.Wallet",
+                  ).replaceAll('{0}', data.order.coinExtension ?? ""),
                   backgroundColor: Colors.lightBlue,
                   onTap: () {
                     Get.toNamed(
                       WalletPaymmentOrderPage.route,
-                      arguments: WalletPaymmentOrderParam(order: controller.data!),
+                      arguments: WalletPaymmentOrderParam(
+                        order: controller.data!,
+                      ),
                     );
                   },
                 ),
               ],
             ),
-          )          
+          ),
         ],
       ),
     );

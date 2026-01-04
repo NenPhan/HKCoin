@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.models/network.dart';
+import 'package:hkcoin/data.models/stores/store_config.dart';
 import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +13,9 @@ class KeyStorage {
   final notiKey = "/noti_key";
   final networkKey = "/network_key";
   final tokenSettingKey = "/token_setting_key";
-   final localLanguage = "/local_language";
+  final localLanguage = "/local_language";
+  final storeKey = "/store_key";
+  final refreshTokenKey = "/refresh_token_key";
 }
 
 class Storage {
@@ -49,6 +52,7 @@ class Storage {
     await preferences?.remove(_key.networkKey);
     await preferences?.remove(_key.tokenSettingKey);
     await preferences?.remove(_key.localLanguage);
+    await preferences?.remove(_key.refreshTokenKey); // ⭐ NEW
   }
 }
 
@@ -62,6 +66,18 @@ extension TokenStorage on Storage {
   }
 
   String? get getToken => preferences!.getString(_key.tokenKey);
+}
+
+extension RefreshTokenStorage on Storage {
+  Future<void> saveRefreshToken(String value) async {
+    await preferences!.setString(_key.refreshTokenKey, value);
+  }
+
+  String? get getRefreshToken => preferences!.getString(_key.refreshTokenKey);
+
+  Future<void> deleteRefreshToken() async {
+    await preferences!.remove(_key.refreshTokenKey);
+  }
 }
 
 extension CustomerStorage on Storage {
@@ -94,36 +110,42 @@ extension NotiStorage on Storage {
     await preferences!.remove(_key.notiKey);
   }
 }
+
 extension NetworkStorage on Storage {
-  Future<void> saveNetWork(Network network) async {    
+  Future<void> saveNetWork(Network network) async {
     await preferences!.setString(_key.networkKey, jsonEncode(network.toJson()));
   }
 
   Future<Network?> getNetWork() async {
-    var savedString = preferences!.getString(_key.networkKey);     
+    var savedString = preferences!.getString(_key.networkKey);
     if (savedString == null) return null;
-    return Network.fromJson(jsonDecode(savedString));    
+    return Network.fromJson(jsonDecode(savedString));
   }
 
   Future deleteNetWork() async {
     await preferences!.remove(_key.networkKey);
   }
 }
+
 extension TokenSettingStorage on Storage {
-  Future<void> saveTokenSetting(TokenSetting tokenSetting) async {    
-    await preferences!.setString(_key.tokenSettingKey, jsonEncode(tokenSetting.toJson()));
+  Future<void> saveTokenSetting(TokenSetting tokenSetting) async {
+    await preferences!.setString(
+      _key.tokenSettingKey,
+      jsonEncode(tokenSetting.toJson()),
+    );
   }
 
   Future<TokenSetting?> getTokenSetting() async {
-    var savedString = preferences!.getString(_key.tokenSettingKey);     
+    var savedString = preferences!.getString(_key.tokenSettingKey);
     if (savedString == null) return null;
-    return TokenSetting.fromJson(jsonDecode(savedString));    
+    return TokenSetting.fromJson(jsonDecode(savedString));
   }
 
   Future deleteNetWork() async {
     await preferences!.remove(_key.tokenSettingKey);
   }
 }
+
 extension LocalLanguageStorage on Storage {
   Future<void> saveLocalLanguage(String value) async {
     await preferences!.setString(_key.localLanguage, value);
@@ -133,5 +155,21 @@ extension LocalLanguageStorage on Storage {
 
   Future deleteLocalLanguage() async {
     await preferences!.remove(_key.localLanguage);
+  }
+}
+
+extension CurrentStorage on Storage {
+  Future<void> saveStore(StoreConfig value) async {
+    await preferences!.setString(_key.storeKey, jsonEncode(value.toJson()));
+  }
+
+  Future<StoreConfig?> getStore() async {
+    var savedString = preferences!.getString(_key.storeKey);
+    if (savedString == null) return null;
+    return StoreConfig.fromJson(jsonDecode(savedString));
+  }
+
+  Future deleteStore() async {
+    await preferences!.remove(_key.storeKey);
   }
 }

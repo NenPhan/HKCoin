@@ -20,7 +20,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final RegisterController registerController = Get.put(RegisterController()); 
+  final RegisterController registerController = Get.put(RegisterController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,10 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const BaseAppBar(title:"Account.Register", enableHomeButton: false),
+            const BaseAppBar(
+              title: "Account.Register",
+              enableHomeButton: false,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -101,7 +104,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller:
                                   registerController.confirmPasswordController,
-                              label: context.tr("Account.Fields.ConfirmPassword"),
+                              label: context.tr(
+                                "Account.Fields.ConfirmPassword",
+                              ),
                               obscureText: true,
                               validator:
                                   (value) => requiredValidator(
@@ -112,8 +117,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             MainTextField(
                               controller:
                                   registerController.referralCodeController,
-                              label: context.tr("Account.Register.ReferralCode"),
-                              readOnly: registerController.referralCodeController.text.isNotEmpty,
+                              label: context.tr(
+                                "Account.Register.ReferralCode",
+                              ),
+                              readOnly:
+                                  registerController
+                                      .referralCodeController
+                                      .text
+                                      .isNotEmpty,
                               validator:
                                   (value) => requiredValidator(
                                     value,
@@ -132,13 +143,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             isLoading: registerController.isLoadingSubmit.value,
                             width: double.infinity,
                             text: "Common.Submit",
-                            onTap: () async {                                                
-                              var result = await registerController.register();  
-                              if(result['success']==true)  
-                               _showResult(context, result);                                                                        
+                            onTap: () async {
+                              var result = await registerController.register();
+                              if (result['success'] == true) {
+                                _showResult(context, result);
+                              }
                             },
-                          )
-                        )                           
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -150,32 +162,34 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
   void _showResult(BuildContext context, Map<String, dynamic> result) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(tr("Account.Register")),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [                                    
-            const SizedBox(height: 8),
-            SelectableText(
-              result['message'],
-              style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.left,
-            ),         
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {       
-              Navigator.of(context).pop();        
-              Get.back();
-            },
-            child: Text(tr("Common.Close")),
+      builder:
+          (context) => AlertDialog(
+            title: Text(tr("Account.Register")),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                SelectableText(
+                  result['message'],
+                  style: const TextStyle(fontSize: 12),
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Get.back();
+                },
+                child: Text(tr("Common.Close")),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }

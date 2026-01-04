@@ -4,21 +4,18 @@ import 'package:hkcoin/core/dio_client.dart';
 import 'package:hkcoin/core/enums.dart';
 import 'package:hkcoin/core/config/app_config.dart';
 import 'package:hkcoin/core/request_handler.dart';
-import 'package:hkcoin/data.models/store.dart';
+import 'package:hkcoin/data.models/stores/store_config.dart';
 
 class StoreDatasource {
   final dioClient = DioClient(dio: Dio(), appConfig: AppConfig());
 
-  Future<Store> getCurrentStore() async {
+  Future<StoreConfig> getCurrentStore() async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
-        DioParams(
-          HttpMethod.GET,
-          endpoint: Endpoints.getCurrentStore,          
-        ),
+        DioParams(HttpMethod.GET, endpoint: Endpoints.getCurrentStore),
       );
 
-      return Store.fromJson(response["Data"]);
+      return StoreConfig.fromJson(response["Data"]);
     });
   }
 }

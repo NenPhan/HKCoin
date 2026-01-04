@@ -58,7 +58,9 @@ class _WalletHistoryPageState extends State<WalletHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: SafeArea(
+        bottom: false,
         child: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(

@@ -17,7 +17,7 @@ class AppColor {
   static const Color lightYellow = Color(0xFFFEF1B5);
 
   /// Color: #ffcb47
-  static const Color main01 = Color(0xFFFFCB47);
+  static const Color main01 = Color(0xFFBD5602);
 
   /// Color: #2fc7c4
   static const Color main02 = Color(0xFF2FC7C4);

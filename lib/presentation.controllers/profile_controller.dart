@@ -4,11 +4,12 @@ import 'package:hkcoin/core/presentation/storage.dart';
 import 'package:hkcoin/core/request_handler.dart';
 import 'package:hkcoin/data.models/customer_info.dart';
 import 'package:hkcoin/data.repositories/customer_repository.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ProfileController extends GetxController {
   CustomerInfo? customerInfo;
   RxBool isLoggingOut = false.obs;
-
+  final RxString appVersion = '1.0.0'.obs;
   @override
   void onInit() {
     getProfileData();
@@ -28,5 +29,11 @@ class ProfileController extends GetxController {
     });
     isLoggingOut.value = false;
     update(["logout-button"]);
+  }
+
+  Future<void> loadAppInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    appVersion.value = info.version;
+    update(['profile']); // 🔥 BẮT BUỘC
   }
 }

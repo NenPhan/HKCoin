@@ -14,6 +14,7 @@ import 'package:hkcoin/widgets/base_app_bar.dart';
 import 'package:hkcoin/widgets/formated_number_widget.dart';
 import 'package:hkcoin/widgets/main_button.dart';
 import 'package:hkcoin/widgets/screen_popup_widget.dart';
+import 'package:hkcoin/widgets/shimmer_skeleton.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
@@ -37,7 +38,7 @@ class _WalletPageState extends State<WalletPage> {
     return GetBuilder<BlockchangeWalletController>(
       id: "wallet-info-page",
       builder: (controller) {
-        return Scaffold(         
+        return Scaffold(
           body: RefreshIndicator(
             onRefresh: _onRefresh,
             child: SafeArea(
@@ -49,255 +50,262 @@ class _WalletPageState extends State<WalletPage> {
                   ),
                   child: Column(
                     children: [
-                     BaseAppBar(isBackEnabled: false,
-                      actionWidget:Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width* 0.7,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.settings),
-                              onPressed: () {
-                                ScreenPopup(
-                                  title: "Account.wallet.Network.Selected",
-                                  isDismissible: false,
-                                  backgroundColor: const Color(0xFF1B1B1B),
-                                  heightFactor: .75,
-                                  //onShow: () =>controller.getNetworks(),
-                                  child: Obx(
-                                    () => Column(
-                                      children: [
-                                        const SizedBox(height: 10),
-                                        TextField(
-                                          controller:
-                                              controller.searchController,
-                                          decoration: const InputDecoration(
-                                            hintText:
-                                                'Account.wallet.Network.Filter',
-                                            prefixIcon: Icon(Icons.search),
-                                            border: OutlineInputBorder(),
-                                            filled: true,
-                                            fillColor: Colors.white10,
-                                          ),
-                                          onChanged: (value) {
-                                            //controller.filterNetworks(value);
-                                          },
-                                        ),
-                                        const SizedBox(height: 10),
-                                        SizedBox(
-                                          height:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.height *
-                                              0.55,
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount:
-                                                controller
-                                                    .listNetwork
-                                                    .length, // Fix null list
-                                            itemBuilder: (ctx, index) {
-                                              final network =
-                                                  controller
-                                                      .listNetwork[index];
-                                              final isSelected =
-                                                  controller
-                                                      .selectedNetwork
-                                                      .value
-                                                      ?.id ==
-                                                  network
-                                                      .id; // Fix null selected
-                                              return Card(
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 4,
-                                                      vertical: 4,
-                                                    ),
-                                                color:
-                                                    isSelected
-                                                        ? const Color(
-                                                          0xFF353434,
-                                                        )
-                                                        : null,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        4,
-                                                      ),
-                                                ),
-                                                child: Stack(
-                                                  children: [
-                                                    if (isSelected)
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        bottom: 0,
-                                                        child: Container(
-                                                          width: 4,
-                                                          height: 15,
-                                                          decoration: const BoxDecoration(
-                                                            color:
-                                                                Colors.blue,
-                                                            borderRadius:
-                                                                BorderRadius.only(
-                                                                  topLeft:
-                                                                      Radius.circular(
-                                                                        4,
-                                                                      ),
-                                                                  bottomLeft:
-                                                                      Radius.circular(
-                                                                        4,
-                                                                      ),
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ListTile(
-                                                      contentPadding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 8,
-                                                            vertical: 4,
-                                                          ),
-                                                      leading: const Icon(
-                                                        Icons.wifi,
-                                                        color: Colors.white70,
-                                                        size: 24,
-                                                      ),
-                                                      title: Text(
-                                                        network.name ??
-                                                            "Unnamed Wallet",
-                                                        style:
-                                                            const TextStyle(
-                                                              color:
-                                                                  Colors
-                                                                      .white,
-                                                            ),
-                                                      ),
-                                                      trailing: const Icon(
-                                                        Icons.more_vert,
-                                                        color: Colors.white70,
-                                                      ),
-                                                      onTap: () {
-                                                        controller
-                                                            .selectNetwork(
-                                                              network,
-                                                            );
-                                                        Navigator.pop(
-                                                          context,
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                      BaseAppBar(
+                        isBackEnabled: false,
+                        actionWidget: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.7,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.settings),
+                                onPressed: () {
+                                  ScreenPopup(
+                                    title: "Account.wallet.Network.Selected",
+                                    isDismissible: false,
+                                    backgroundColor: const Color(0xFF1B1B1B),
+                                    heightFactor: .75,
+                                    child: Obx(
+                                      () => Column(
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          TextField(
+                                            controller:
+                                                controller.searchController,
+                                            decoration: const InputDecoration(
+                                              hintText:
+                                                  'Account.wallet.Network.Filter',
+                                              prefixIcon: Icon(Icons.search),
+                                              border: OutlineInputBorder(),
+                                              filled: true,
+                                              fillColor: Colors.white10,
+                                            ),
+                                            onChanged: (value) {
+                                              //controller.filterNetworks(value);
                                             },
                                           ),
+                                          const SizedBox(height: 10),
+                                          SizedBox(
+                                            height:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.height *
+                                                0.55,
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              itemCount:
+                                                  controller
+                                                      .listNetwork
+                                                      .length, // Fix null list
+                                              itemBuilder: (ctx, index) {
+                                                final network =
+                                                    controller
+                                                        .listNetwork[index];
+                                                final isSelected =
+                                                    controller
+                                                        .selectedNetwork
+                                                        .value
+                                                        ?.id ==
+                                                    network
+                                                        .id; // Fix null selected
+                                                return Card(
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 4,
+                                                        vertical: 4,
+                                                      ),
+                                                  color:
+                                                      isSelected
+                                                          ? const Color(
+                                                            0xFF353434,
+                                                          )
+                                                          : null,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          4,
+                                                        ),
+                                                  ),
+                                                  child: Stack(
+                                                    children: [
+                                                      if (isSelected)
+                                                        Positioned(
+                                                          left: 0,
+                                                          top: 0,
+                                                          bottom: 0,
+                                                          child: Container(
+                                                            width: 4,
+                                                            height: 15,
+                                                            decoration: const BoxDecoration(
+                                                              color:
+                                                                  Colors.blue,
+                                                              borderRadius:
+                                                                  BorderRadius.only(
+                                                                    topLeft:
+                                                                        Radius.circular(
+                                                                          4,
+                                                                        ),
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                          4,
+                                                                        ),
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ListTile(
+                                                        contentPadding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 8,
+                                                              vertical: 4,
+                                                            ),
+                                                        leading: const Icon(
+                                                          Icons.wifi,
+                                                          color: Colors.white70,
+                                                          size: 24,
+                                                        ),
+                                                        title: Text(
+                                                          network.name ??
+                                                              "Unnamed Wallet",
+                                                          style:
+                                                              const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                        ),
+                                                        trailing: const Icon(
+                                                          Icons.more_vert,
+                                                          color: Colors.white70,
+                                                        ),
+                                                        onTap: () {
+                                                          controller
+                                                              .selectNetwork(
+                                                                network,
+                                                              );
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ).show(context);
+                                },
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap:
+                                        () => _showWalletPopup(
+                                          context,
+                                          controller,
+                                        ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          controller.walletsInfo?.name ??
+                                              context.tr(
+                                                "Account.wallet.Addnew",
+                                              ),
+                                          style: textTheme(
+                                            context,
+                                          ).titleMedium?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_drop_down,
+                                          size: 20,
                                         ),
                                       ],
                                     ),
                                   ),
-                                ).show(context);
-                              },
-                            ),                            
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                child: GestureDetector(
-                                  onTap: () => _showWalletPopup(context, controller),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        controller.walletsInfo?.name ??
-                                            context.tr(
-                                              "Account.wallet.Addnew",
-                                            ),
-                                        style: textTheme(
-                                          context,
-                                        ).titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      const Icon(
-                                        Icons.arrow_drop_down,
-                                        size: 20,
-                                      ),                                      
-                                    ],
-                                  ),                                        
                                 ),
                               ),
-                            ),
-                          ],                                          
-                        ),  
-                      ),                                                                                                             
-                     ),
-                      // Header Row
-                      const SizedBox(height: 10,),     
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [        
-                          Flexible(
-                            child: Text(
-                              controller.walletsInfo?.walletAddressFormat ?? "",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                              overflow: TextOverflow.ellipsis, // Cắt ngắn văn bản nếu quá dài
-                              maxLines: 1, // Giới hạn chỉ 1 dòng
-                            ),
+                            ],
                           ),
-                          const SizedBox(width: 8),   
-                          IconButton(
-                            icon: const Icon(
-                              Icons.copy,
-                              size: 16,
+                        ),
+                      ),
+                      // Header Row
+                      const SizedBox(height: 10),
+                      if (controller.isLoading.value ||
+                          controller.walletsInfo == null) ...[
+                        // 👉 SHIMMER HEADER (2 ROW: nhỏ + to)
+                        AppSkeleton(blocks: WalletHeaderSkeleton.build()),
+                        const SizedBox(height: 40),
+                      ] else ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                controller.walletsInfo?.walletAddressFormat ??
+                                    "",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                                overflow:
+                                    TextOverflow
+                                        .ellipsis, // Cắt ngắn văn bản nếu quá dài
+                                maxLines: 1, // Giới hạn chỉ 1 dòng
+                              ),
                             ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () {
-                              if (controller
-                                      .walletsInfo
-                                      ?.walletAddress !=
-                                  null) {
-                                Clipboard.setData(
-                                  ClipboardData(
-                                    text:
-                                        controller
-                                            .walletsInfo!
-                                            .walletAddress!,
-                                  ),
-                                );
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      context.tr(
-                                        "Common.CopyToClipboard",
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(Icons.copy, size: 16),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: () {
+                                if (controller.walletsInfo?.walletAddress !=
+                                    null) {
+                                  Clipboard.setData(
+                                    ClipboardData(
+                                      text:
+                                          controller
+                                              .walletsInfo!
+                                              .walletAddress!,
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        context.tr("Common.CopyToClipboard"),
                                       ),
                                     ),
-                                  ),
-                                );
-                              }
-                            },
-                          ),                          
-                        ],
-                      ),
-                      const SizedBox(height: 40),
-                      // Balance
-                      FormattedNumber(
-                        value: controller.walletsInfo?.totalBalance ?? 0,
-                        decimalDigits: 3,
-                        style: const TextStyle(fontSize: 22),
-                        prefix: r"$",
-                      ),
-                      const SizedBox(height: 40),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        // Balance
+                        FormattedNumber(
+                          value: controller.walletsInfo?.totalBalance ?? 0,
+                          decimalDigits: 3,
+                          style: const TextStyle(fontSize: 22),
+                          prefix: r"$",
+                        ),
+                        const SizedBox(height: 40),
+                      ],
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -346,111 +354,117 @@ class _WalletPageState extends State<WalletPage> {
                           ),
                         ),
                       ), // Hide widget when walletInfo is null
-                      SizedBox(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.walletInfos.length,
-                          itemBuilder: (context, index) {
-                            final wallet = controller.walletInfos[index];
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(12),
-                                onTap: () {
-                                  Get.toNamed(
-                                    WalletTokenDetailPage.route,
-                                    arguments: wallet.id,
-                                  );
-                                },
-                                child: Card(
-                                  margin: EdgeInsets.zero,
-                                  color: const Color(0xFF1E1E1E),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Row(
-                                      children: [
-                                        // Chain Logo/Icon
-                                        Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.blue.withOpacity(0.2),
-                                          ),
-                                          child: const Icon(
-                                            Icons.account_balance_wallet,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        // Chain Info
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                wallet.chain.name,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white,
-                                                ),
+                      if (controller.isLoadingList.value) ...[
+                        AppSkeleton(blocks: TokenListSkeleton.build(count: 3)),
+                      ] else ...[
+                        SizedBox(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: controller.walletInfos.length,
+                            itemBuilder: (context, index) {
+                              final wallet = controller.walletInfos[index];
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () {
+                                    Get.toNamed(
+                                      WalletTokenDetailPage.route,
+                                      arguments: wallet.id,
+                                    );
+                                  },
+                                  child: Card(
+                                    margin: EdgeInsets.zero,
+                                    color: const Color(0xFF1E1E1E),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Row(
+                                        children: [
+                                          // Chain Logo/Icon
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.blue.withOpacity(
+                                                0.2,
                                               ),
-                                              // const SizedBox(height: 4),
-                                              // Text(
-                                              //   wallet.walletAddress,
-                                              //   style: const TextStyle(
-                                              //     fontSize: 12,
-                                              //     color: Colors.grey,
-                                              //   ),
-                                              //   maxLines: 1,
-                                              //   overflow: TextOverflow.ellipsis,
-                                              // ),
+                                            ),
+                                            child: const Icon(
+                                              Icons.account_balance_wallet,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          // Chain Info
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  wallet.chain.name,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                // const SizedBox(height: 4),
+                                                // Text(
+                                                //   wallet.walletAddress,
+                                                //   style: const TextStyle(
+                                                //     fontSize: 12,
+                                                //     color: Colors.grey,
+                                                //   ),
+                                                //   maxLines: 1,
+                                                //   overflow: TextOverflow.ellipsis,
+                                                // ),
+                                              ],
+                                            ),
+                                          ),
+                                          // Balance Info
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              FormattedNumber(
+                                                value: wallet.totalBalance,
+                                                decimalDigits:
+                                                    wallet.chain == Chain.BNB
+                                                        ? 5
+                                                        : 3,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                                suffix: wallet.chain.name,
+                                              ),
+                                              const SizedBox(height: 4),
+                                              FormattedNumber(
+                                                value: wallet.totalBalanceUSD,
+                                                decimalDigits: 3,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey,
+                                                ),
+                                                prefix: r"$",
+                                              ),
                                             ],
                                           ),
-                                        ),
-                                        // Balance Info
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            FormattedNumber(
-                                              value: wallet.totalBalance,
-                                              decimalDigits:
-                                                  wallet.chain == Chain.BNB
-                                                      ? 5
-                                                      : 3,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                              suffix: wallet.chain.name,
-                                            ),
-                                            const SizedBox(height: 4),
-                                            FormattedNumber(
-                                              value: wallet.totalBalanceUSD,
-                                              decimalDigits: 3,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey,
-                                              ),
-                                              prefix: r"$",
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
+                      ],
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Row(
@@ -519,19 +533,24 @@ class _WalletPageState extends State<WalletPage> {
       },
     );
   }
-  Widget _buildSubmitButton(BuildContext context, BlockchangeWalletController controller) {
-    return MainButton(      
-        width: double.infinity,
-        text: "HomePage",
-        onTap: () async {
-          Get.offNamedUntil(
-              HomePage.route,
-              (route) => false,
-            );
-        },
-      );    
+
+  Widget _buildSubmitButton(
+    BuildContext context,
+    BlockchangeWalletController controller,
+  ) {
+    return MainButton(
+      width: double.infinity,
+      text: "HomePage",
+      onTap: () async {
+        Get.offNamedUntil(HomePage.route, (route) => false);
+      },
+    );
   }
-  void _showWalletPopup(BuildContext context, BlockchangeWalletController controller) {
+
+  void _showWalletPopup(
+    BuildContext context,
+    BlockchangeWalletController controller,
+  ) {
     ScreenPopup(
       title: "Account.wallet.List",
       isDismissible: false,
@@ -546,7 +565,8 @@ class _WalletPageState extends State<WalletPage> {
             child: GetBuilder<BlockchangeWalletController>(
               id: "blockchange-wallets",
               builder: (controller) {
-                if (controller.isLoadingWallets.value || controller.wallets.isEmpty) {
+                if (controller.isLoadingWallets.value ||
+                    controller.wallets.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 return ListView.builder(
@@ -563,9 +583,7 @@ class _WalletPageState extends State<WalletPage> {
                           Get.back(result: true);
                         }
                       },
-                      title: Text(
-                        wallet.name ?? "Unnamed Wallet",
-                      ),
+                      title: Text(wallet.name ?? "Unnamed Wallet"),
                       subtitle: FormattedNumber(
                         value: wallet.balance ?? 0,
                         decimalDigits: 2,
@@ -640,5 +658,52 @@ class _WalletPageState extends State<WalletPage> {
         ],
       ),
     ).show(context);
+  }
+}
+
+class WalletHeaderSkeleton {
+  static List<SkeletonBlock> build() {
+    return [
+      const SkeletonBlock(
+        hasBackground: false,
+        padding: EdgeInsets.symmetric(vertical: 24),
+        rows: [
+          SkeletonRow(
+            alignment: MainAxisAlignment.center,
+            items: [SkeletonItem(width: 120, height: 12)],
+          ),
+          SkeletonRow(
+            alignment: MainAxisAlignment.center,
+            items: [SkeletonItem(width: 180, height: 28)],
+          ),
+        ],
+      ),
+    ];
+  }
+}
+
+class TokenListSkeleton {
+  static List<SkeletonBlock> build({int count = 3}) {
+    return List.generate(count, (_) => TokenRowSkeleton.build());
+  }
+}
+
+class TokenRowSkeleton {
+  static SkeletonBlock build() {
+    return SkeletonBlock(
+      rows: [
+        SkeletonRow(
+          items: [
+            SkeletonItem(
+              width: 40,
+              height: 40,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            const SkeletonItem(expand: true, height: 14),
+          ],
+        ),
+        const SkeletonRow(items: [SkeletonItem(width: 120, height: 12)]),
+      ],
+    );
   }
 }

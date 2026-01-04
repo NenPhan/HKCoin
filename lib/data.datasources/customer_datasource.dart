@@ -32,6 +32,7 @@ class CustomerDatasource {
       );
 
       Storage().saveToken(response["Data"]["accessToken"]);
+      Storage().saveRefreshToken(response["Data"]["refreshToken"]);
     });
   }
 
@@ -58,17 +59,22 @@ class CustomerDatasource {
       var body = form.toJson();
 
       var response = await dioClient.call(
-        DioParams(HttpMethod.POST, endpoint: Endpoints.register, body: body,
+        DioParams(
+          HttpMethod.POST,
+          endpoint: Endpoints.register,
+          body: body,
           headers: {
             "Accept-Language": Get.find<LocaleController>().localeIsoCode,
-          }),
+          },
+        ),
         contentType: "application/json",
       );
       return RegisterForm.fromJson(response["Data"]);
     });
   }
+
   Future<RecoveryPassword> recoveryPassword(RecoveryPassword form) async {
-     return await handleRemoteRequest(() async {
+    return await handleRemoteRequest(() async {
       var body = form.toJson();
       var response = await dioClient.call(
         DioParams(
@@ -84,7 +90,7 @@ class CustomerDatasource {
       );
 
       return RecoveryPassword.fromJson(response["Data"]);
-    });   
+    });
   }
 
   Future<CustomerInfo> getCustomerInfo() async {
@@ -160,7 +166,8 @@ class CustomerDatasource {
       return tokens.map((e) => WalletToken.fromJson(e)).toList();
     });
   }
-   Future<AddWalletToken> addWalletToken() async {
+
+  Future<AddWalletToken> addWalletToken() async {
     return await handleRemoteRequest(() async {
       var response = await dioClient.call(
         DioParams(
@@ -169,9 +176,10 @@ class CustomerDatasource {
           needAccessToken: true,
         ),
       );
-        return AddWalletToken.fromJson(response["Data"]);   
+      return AddWalletToken.fromJson(response["Data"]);
     });
   }
+
   Future<AddWalletToken> submitWalletToken(AddWalletToken form) async {
     return await handleRemoteRequest(() async {
       var body = form.toJson();
@@ -187,7 +195,6 @@ class CustomerDatasource {
       return AddWalletToken.fromJson(response["Data"]);
     });
   }
-
 
   Future<WalletHistoriesPagination> getWalletHistoresData({
     int page = 1,

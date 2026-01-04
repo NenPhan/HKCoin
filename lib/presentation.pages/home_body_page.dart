@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/config/app_theme.dart';
 import 'package:hkcoin/core/presentation/widgets/spacing.dart';
-import 'package:hkcoin/gen/assets.gen.dart';
 import 'package:hkcoin/presentation.controllers/cart_controller.dart';
 import 'package:hkcoin/presentation.controllers/home_body_controller.dart';
 import 'package:hkcoin/presentation.controllers/private_message_controller.dart';
 import 'package:hkcoin/presentation.pages/cart_page.dart';
-import 'package:hkcoin/presentation.pages/home_page.dart';
 import 'package:hkcoin/presentation.pages/private_message_page.dart';
 import 'package:hkcoin/widgets/coin_exchange_rate_widget.dart';
 import 'package:hkcoin/widgets/count_display_button.dart';
 import 'package:hkcoin/widgets/custom_icon_button.dart';
+import 'package:hkcoin/widgets/gscankit-main/barcode_scanner.dart';
 import 'package:hkcoin/widgets/home_banner_widget.dart';
 import 'package:hkcoin/widgets/home_product_widget.dart';
 import 'package:hkcoin/widgets/news_widget.dart';
 import 'package:hkcoin/widgets/shimmer_container.dart';
 import 'package:hkcoin/widgets/show_update_dialog_widget.dart';
+import 'package:hkcoin/widgets/stores/store_brand_widget.dart';
 
 class HomeBodyPage extends StatefulWidget {
   const HomeBodyPage({super.key});
@@ -55,11 +55,66 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
             children: [
               Row(
                 children: [
-                  Hero(
-                    tag: "main-logo",
-                    child: Assets.images.hkcLogo.image(height: 45),
+                  const StoreBrandWidget(
+                    type: StoreBrandType.full,
+                    logoSize: 170,
                   ),
+                  // Hero(
+                  //   tag: "main-logo",
+                  //   child: Assets.images.hkcLogo.image(height: 45),
+                  // ),
                   const Spacer(),
+                  CustomIconButton(
+                    icon: const Icon(Icons.qr_code_scanner_rounded, size: 30),
+                    onTap: () {
+                      Get.to(
+                        () => GscanKit(
+                          onInitstate: () {},
+                          appBar: (context, controller) {
+                            return AppBar(
+                              title: Text(
+                                context.tr("QRCode.Scan"),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              leading: InkWell(
+                                onTap: () => Get.back(),
+                                child: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              backgroundColor: Colors.transparent,
+                            );
+                          },
+                          flashHintText: context.tr("QRCode.Scan.Flash.Tip"),
+                          scanResultHandler: UniversalQrHandler(
+                            purpose: ScanPurpose.generic,
+                          ),
+                          enabledActionButtons: const {
+                            ScannerAction.cameraSwitch,
+                            ScannerAction.torch,
+                            ScannerAction.gallery,
+                          },
+                          gscanOverlayConfig: const GscanOverlayConfig(
+                            scannerScanArea: ScannerScanArea.center,
+                            scannerBorder: ScannerBorder.visible,
+                            scannerBorderPulseEffect:
+                                ScannerBorderPulseEffect.enabled,
+                            borderColor: Colors.white,
+                            borderRadius: 24.0,
+                            scannerLineAnimationColor: Colors.green,
+                            scannerOverlayBackground:
+                                ScannerOverlayBackground.blur,
+                            scannerLineAnimation: ScannerLineAnimation.enabled,
+                          ),
+                        ),
+                        fullscreenDialog: true, // 🔥 rất nên dùng cho camera
+                      );
+                    },
+                  ),
                   GetBuilder<CartController>(
                     id: "home-cart-icon",
                     builder: (controller) {
@@ -186,7 +241,7 @@ class _HomeBodyPageState extends State<HomeBodyPage> {
                   );
                 },
               ),
-              const SizedBox(height: homeBottomPadding),
+              // const SizedBox(height: homeBottomPadding),
             ],
           ),
         ),

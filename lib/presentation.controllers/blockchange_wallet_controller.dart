@@ -22,6 +22,7 @@ class BlockchangeWalletController extends GetxController {
   final walletInfos = <WalletsModel>[].obs;
   var selectedNetwork = Rxn<Network>();
   final RxBool isLoading = false.obs;
+  final RxBool isLoadingList = false.obs;
   final RxBool isLoadingWallets = false.obs;
   BlockchangeWalletInfo? walletsInfo;
   final TextEditingController searchController = TextEditingController();
@@ -42,15 +43,16 @@ class BlockchangeWalletController extends GetxController {
   @override
   Future<void> onInit() async {
     await getTokenConfigs();
-    await getNetworks();    
-    await getWalletInfo();    
+    await getNetworks();
+    await getWalletInfo();
     super.onInit();
   }
-Future<void> getTokenConfigs() async {
-  await handleEitherReturn(
-    await WalletRepository().getTokenSettings(),
-    (r) async {
-      try {        
+
+  Future<void> getTokenConfigs() async {
+    await handleEitherReturn(await WalletRepository().getTokenSettings(), (
+      r,
+    ) async {
+      try {
         debugPrint(r.bscScanApiKey);
         final storedSettings = await Storage().getTokenSetting();
         // Chỉ cập nhật nếu giá trị mới khác giá trị hiện tại hoặc stored
@@ -65,19 +67,21 @@ Future<void> getTokenConfigs() async {
         debugPrint("getTokenConfigs $e");
         rethrow;
       }
-    },
-  );  
-}
+    });
+  }
 
-// Hàm so sánh 2 TokenSetting
-bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
-  return a.bscScanApiKey == b.bscScanApiKey &&
-      a.contractAddressSend == b.contractAddressSend &&
-      a.minBNB == b.minBNB &&
-      listEquals(a.wsUrls, b.wsUrls) &&
-      listEquals(a.tokens?.map((t) => t.toJson()).toList(), 
-                b.tokens?.map((t) => t.toJson()).toList());
-} 
+  // Hàm so sánh 2 TokenSetting
+  bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
+    return a.bscScanApiKey == b.bscScanApiKey &&
+        a.contractAddressSend == b.contractAddressSend &&
+        a.minBNB == b.minBNB &&
+        listEquals(a.wsUrls, b.wsUrls) &&
+        listEquals(
+          a.tokens?.map((t) => t.toJson()).toList(),
+          b.tokens?.map((t) => t.toJson()).toList(),
+        );
+  }
+
   Future getNetworks() async {
     await handleEitherReturn(await WalletRepository().getNetworks(), (r) async {
       final uniqueNetworks = {for (var e in r) e.id: e}.values.toList();
@@ -125,17 +129,19 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
       ); // Lọc mạng theo tên
     }
   }
+
   Future<void> _initTracking(Web3Client web3Client) async {
-    if(!hasRunService){
+    if (!hasRunService) {
       _blockchainService = BlockchainService(
         wsUrls: tokenSettings!.wsUrls,
         bscScanApiKey: tokenSettings!.bscScanApiKey,
-        web3Client: web3Client
+        web3Client: web3Client,
       );
       await _blockchainService.init();
-      hasRunService=true;
-    }           
+      hasRunService = true;
+    }
   }
+
   Future<void> selectNetwork(Network network) async {
     selectedNetwork.value = network; // Cập nhật mạng được chọn
     await Storage().saveNetWork(network); // Lưu mạng đã chọn
@@ -164,7 +170,7 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
   Future getWallets() async {
     isLoadingWallets.value = true;
     update(["blockchange-wallets"]);
-    await handleEither(await WalletRepository().getWallets(), (r) async {     
+    await handleEither(await WalletRepository().getWallets(), (r) async {
       //wallets.value = r;
       await fetchWalletsBalance(r);
     });
@@ -176,12 +182,15 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
   Future getWalletInfo() async {
     isLoading.value = true;
     update(["wallet-info-page"]);
-    
-    final web3Client = Web3Client(selectedNetwork.value?.rpcUrl??"https://bsc-dataseed.binance.org/", http.Client());           
-    _initTracking(web3Client);   
+
+    final web3Client = Web3Client(
+      selectedNetwork.value?.rpcUrl ?? "https://bsc-dataseed.binance.org/",
+      http.Client(),
+    );
+    _initTracking(web3Client);
     await handleEither(await WalletRepository().getWalletInfo(), (r) {
       if (r != null) {
-        walletsInfo = r;   
+        walletsInfo = r;
         fetchWalletBalance(walletsInfo!);
       }
     });
@@ -190,13 +199,17 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
     update(["wallet-info-page"]);
   }
 
-  Future fetchWalletBalance(BlockchangeWalletInfo wallets) async {   
+  Future fetchWalletBalance(BlockchangeWalletInfo wallets) async {
     walletInfos.clear();
+    isLoadingList.value = true;
     wallets.walletAddressFormat = _formatAddress(wallets.walletAddress);
-    final web3Client = Web3Client(selectedNetwork.value?.rpcUrl??"https://bsc-dataseed.binance.org/", http.Client());
+    final web3Client = Web3Client(
+      selectedNetwork.value?.rpcUrl ?? "https://bsc-dataseed.binance.org/",
+      http.Client(),
+    );
     double totalBalance = 0.0;
     double totalBalanceUSD = 0.0;
-    for (var wallet in walletsInfo!.walletAddressModel!) {             
+    for (var wallet in walletsInfo!.walletAddressModel!) {
       try {
         if (wallet.chain == Chain.BNB) {
           var bnb = await web3Client.getBalance(
@@ -206,8 +219,11 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
           wallet.totalBalanceUSD = wallet.totalBalance! * await fetchBnbPrice();
           walletInfos.add(wallet);
           totalBalance += wallet.totalBalanceUSD!;
-        } else if (wallet.chain != Chain.BNB) {            
-          _blockchainService.trackToken(EthereumAddress.fromHex(wallet.contractAddress), EthereumAddress.fromHex(wallet.walletAddress));                   
+        } else if (wallet.chain != Chain.BNB) {
+          _blockchainService.trackToken(
+            EthereumAddress.fromHex(wallet.contractAddress),
+            EthereumAddress.fromHex(wallet.walletAddress),
+          );
           final result = await getTokenBalance(
             wallet.walletAddress,
             wallet.contractAddress,
@@ -216,43 +232,47 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
           wallet.totalBalance = result['balance'].toDouble();
           walletInfos.add(wallet);
           if (wallet.chain == Chain.USDT) {
-            wallet.totalBalanceUSD = wallet.totalBalance! * await fetchUsdtPrice();
+            wallet.totalBalanceUSD =
+                wallet.totalBalance! * await fetchUsdtPrice();
             totalBalance += wallet.totalBalanceUSD!;
           }
         }
       } catch (e) {
-        debugPrint('Lỗi khi lấy số dư BNB blc_controller: $e');        
+        debugPrint('Lỗi khi lấy số dư BNB blc_controller: $e');
       }
     }
     wallets.totalBalance = totalBalance;
     update(["wallet-info-page"]);
     wallets.balanceUSD = totalBalanceUSD;
-     _blockchainService.watchTokenTransfers().listen((tx) async {
-       final to = tx.to.hex.toLowerCase();         
-        final watchedAddresses = walletsInfo!.walletAddressModel!
-        .map((w) => w.walletAddress.toLowerCase())
-        .toSet();         
-       if (watchedAddresses.contains(to)) {
-          final wallet = walletInfos.firstWhereOrNull(
-            (w) => w.walletAddress.toLowerCase() == to,
+    _blockchainService.watchTokenTransfers().listen((tx) async {
+      final to = tx.to.hex.toLowerCase();
+      final watchedAddresses =
+          walletsInfo!.walletAddressModel!
+              .map((w) => w.walletAddress.toLowerCase())
+              .toSet();
+      if (watchedAddresses.contains(to)) {
+        final wallet = walletInfos.firstWhereOrNull(
+          (w) => w.walletAddress.toLowerCase() == to,
+        );
+        if (wallet != null && wallet.chain != Chain.BNB) {
+          final updated = await getTokenBalance(
+            wallet.walletAddress,
+            wallet.contractAddress,
+            web3Client,
           );
-          if (wallet != null && wallet.chain != Chain.BNB) {
-            final updated = await getTokenBalance(
-              wallet.walletAddress,
-              wallet.contractAddress,
-              web3Client,
-            );
-            wallet.totalBalance = updated['balance'].toDouble();
-            if (wallet.chain == Chain.USDT) {
-              totalBalance += wallet.totalBalance!;
-              wallets.totalBalance =totalBalance;
-            }
-            update(["wallet-info-page"]);
+          wallet.totalBalance = updated['balance'].toDouble();
+          if (wallet.chain == Chain.USDT) {
+            totalBalance += wallet.totalBalance!;
+            wallets.totalBalance = totalBalance;
           }
+          update(["wallet-info-page"]);
+        }
       }
-    });    
+    });
     web3Client.dispose();
-  }  
+    isLoadingList.value = false;
+  }
+
   Future fetchWalletsBalance(List<BlockchangeWallet> ws) async {
     final networkStore = await Storage().getNetWork() ?? selectedNetwork.value;
     if (networkStore == null) {
@@ -288,7 +308,7 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
     }
     wallets.sort((a, b) {
       if (a.selected == true && b.selected != true) return -1; // a comes first
-      if (a.selected != true && b.selected == true) return 1;  // b comes first
+      if (a.selected != true && b.selected == true) return 1; // b comes first
       return 0; // Maintain original order for equal selected status
     });
     wallets.refresh(); // Cập nhật UI nếu dùng GetX
@@ -315,6 +335,7 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
       return 600.0; // Giá trị mặc định
     }
   }
+
   Future<double> fetchUsdtPrice() async {
     try {
       final response = await http.get(
@@ -323,22 +344,25 @@ bool _areSettingsEqual(TokenSetting a, TokenSetting b) {
         ),
       );
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);         
+        final data = jsonDecode(response.body);
         return data['tether']['usd'].toDouble();
-      } else {        
+      } else {
         return 1.0; // Giá trị mặc định (USDT thường ~1 USD)
       }
-    } catch (e) {      
+    } catch (e) {
       return 1.0; // Giá trị mặc định
     }
   }
+
   @override
   void onClose() {
     for (var wallet in walletsInfo!.walletAddressModel!) {
-      _blockchainService.stopTrackingBalance(EthereumAddress.fromHex(wallet.walletAddress));
+      _blockchainService.stopTrackingBalance(
+        EthereumAddress.fromHex(wallet.walletAddress),
+      );
     }
     _blockchainService.dispose();
-    super.onClose();    
+    super.onClose();
   }
 
   String _formatAddress(String? address) {

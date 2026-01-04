@@ -4,6 +4,8 @@ import 'package:hkcoin/data.models/product.dart';
 import 'package:hkcoin/data.models/slide.dart';
 import 'package:hkcoin/presentation.controllers/home_body_controller.dart';
 import 'package:hkcoin/presentation.pages/product_detail_page.dart';
+import 'package:hkcoin/widgets/app_image.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeSlideWidget extends StatefulWidget {
@@ -32,6 +34,9 @@ class _HomeSlideWidgetState extends State<HomeSlideWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isLoading || widget.slides.isEmpty) {
+      return const WalletInfoShimmer();
+    }
     return SizedBox(
       height: 180,
       child: PageView(
@@ -73,10 +78,19 @@ class _HomeSlideWidgetState extends State<HomeSlideWidget> {
                 child: SizedBox(
                   // width: 150,
                   // height: 150,
-                  child: Image.network(
-                    url.contains("http") ? url : "https:$url",
+                  child: AppImage(
+                    url: _getSafeImageUrl(url), // ⭐ URL hợp lệ
+                    aspectRatio: 16 / 9,
                     fit: BoxFit.cover,
+                    hideOnError: true,
+                    lazyLoad: false,
+                    enableBorderRadius: false,
                   ),
+                  // Base64ImageView(
+                  //   base64: imgBase64,
+                  //   fit: BoxFit.cover,
+                  //   width: double.infinity,
+                  // ),
                 ),
               ),
             ),
@@ -106,6 +120,49 @@ class _HomeSlideWidgetState extends State<HomeSlideWidget> {
         content: Text(message),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  String _getSafeImageUrl(String imageUrl) {
+    if (imageUrl.startsWith("http")) return imageUrl;
+    if (imageUrl.startsWith("//")) return "https:$imageUrl";
+    if (imageUrl.startsWith("/")) return "https://api.hakacoin.net$imageUrl";
+    return "https://$imageUrl";
+  }
+}
+
+class WalletInfoShimmer extends StatelessWidget {
+  const WalletInfoShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade800,
+      highlightColor: Colors.grey.shade600,
+      child: Row(children: [Expanded(child: _column(size))]),
+    );
+  }
+
+  Widget _column(Size size) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ===== ROW 1: TITLE =====
+        _box(width: size.width, height: size.width * .42),
+      ],
+    );
+  }
+
+  Widget _box({required double width, required double height}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade700,
+        borderRadius: BorderRadius.circular(6),
       ),
     );
   }

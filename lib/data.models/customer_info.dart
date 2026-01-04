@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:hkcoin/core/enums.dart';
+import 'package:hkcoin/core/extensions/enum_type_extension.dart';
+
 CustomerInfo customerInfoFromJson(String str) =>
     CustomerInfo.fromJson(json.decode(str));
 
@@ -17,11 +20,12 @@ class CustomerInfo {
   String? fullName;
   String customerNumber;
   dynamic birthDate;
-  dynamic gender;
   int countryId;
   dynamic sponsorCode;
   String affiliateLink;
   Settings settings;
+  int? genderId;
+  GenderType? gender;
 
   CustomerInfo({
     required this.id,
@@ -33,9 +37,10 @@ class CustomerInfo {
     this.firstName,
     this.lastName,
     this.fullName,
+    this.genderId,
+    this.gender,
     required this.customerNumber,
     required this.birthDate,
-    required this.gender,
     required this.countryId,
     required this.sponsorCode,
     required this.affiliateLink,
@@ -47,17 +52,19 @@ class CustomerInfo {
     customerGuid: json["CustomerGuid"],
     username: json["Username"],
     email: json["Email"],
-    phone: json["Phone"]??"",
+    phone: json["Phone"] ?? "",
     active: json["Active"],
-    firstName: json["FirstName"]??"",
-    lastName: json["LastName"]??"",
-    fullName: json["FullName"]??"",
+    firstName: json["FirstName"] ?? "",
+    lastName: json["LastName"] ?? "",
+    fullName: json["FullName"] ?? "",
     customerNumber: json["CustomerNumber"],
-    birthDate: json["BirthDate"],
-    gender: json["Gender"],
+    birthDate:
+        json['BirthDate'] != null ? DateTime.parse(json['BirthDate']) : null,
+    genderId: json["GenderId"],
+    gender: GenderTypeX.mapGenderFromInt(json["GenderId"]),
     countryId: json["CountryId"],
     sponsorCode: json["SponsorCode"],
-    affiliateLink: json["AffiliateLink"]??"",
+    affiliateLink: json["AffiliateLink"] ?? "",
     settings: Settings.fromJson(json["Settings"]),
   );
 
@@ -72,7 +79,8 @@ class CustomerInfo {
     "LastName": lastName,
     "FullName": fullName,
     "CustomerNumber": customerNumber,
-    "BirthDate": birthDate,
+    "BirthDate": birthDate?.toIso8601String(),
+    "GenderId": genderId,
     "Gender": gender,
     "CountryId": countryId,
     "SponsorCode": sponsorCode,
@@ -84,6 +92,7 @@ class CustomerInfo {
     "LastName": lastName,
     "Email": email,
     "Phone": phone,
+    "GenderId": genderId,
   };
 }
 

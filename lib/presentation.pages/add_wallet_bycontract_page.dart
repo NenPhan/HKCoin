@@ -76,7 +76,7 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                         context.tr(
                                           "Account.wallet.withContract.NetWork",
                                         ),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           // Thêm style cho label nếu cần
                                         ),
                                       ),
@@ -227,7 +227,7 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                         controller:
                                             controller.contractSymbolController,
                                         label:
-                                            "Account.wallet.withContract.Symbol",                                        
+                                            "Account.wallet.withContract.Symbol",
                                       ),
                                     ],
                                   ),
@@ -249,7 +249,7 @@ class _AddWalletWithContractPageState extends State<AddWalletWithContractPage> {
                                                 .contractDecimalController,
                                         label: context.tr(
                                           "Account.wallet.withContract.Decimal",
-                                        ),                                        
+                                        ),
                                       ),
                                     ],
                                   ),

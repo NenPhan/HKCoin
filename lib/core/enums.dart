@@ -5,19 +5,21 @@ enum HttpMethod { GET, POST, PUT, DELETE, PATCH }
 enum CreateWalletType { None, Mnemonic, PrivateKey }
 
 enum EthereumNetwork { Default, BEP20, TRON, ERC20 }
-enum PasswordRecoveryResultState{Success,Error}
+
+enum PasswordRecoveryResultState { Success, Error }
 
 enum Chain { None, HKC, USDT, HTX, BNB }
+
 enum OrderStatus {
   pending(10),
   processing(20),
   complete(30),
   cancelled(40),
   withdrawal(50);
+
   final int value;
   const OrderStatus(this.value);
 }
-
 
 extension ChainExtension on Chain {
   String get name {
@@ -82,6 +84,7 @@ extension StringToChain on String {
     }
   }
 }
+
 extension OrderStatusExtension on OrderStatus {
   String get displayName {
     switch (this) {
@@ -96,7 +99,7 @@ extension OrderStatusExtension on OrderStatus {
       case OrderStatus.withdrawal:
         return 'Withdrawal';
     }
-  } 
+  }
 }
 
 extension IntToOrderStatus on int {
@@ -117,28 +120,33 @@ extension IntToOrderStatus on int {
     }
   }
 }
+
 extension StringToPasswordRecoveryResultState on String {
   PasswordRecoveryResultState toPasswordRecoveryResultState() {
     switch (toLowerCase()) {
       case 'success':
         return PasswordRecoveryResultState.Success;
       case 'error':
-        return PasswordRecoveryResultState.Error;     
+        return PasswordRecoveryResultState.Error;
       default:
-        return PasswordRecoveryResultState.Success; // Hoặc throw Exception nếu muốn bắt lỗi
+        return PasswordRecoveryResultState
+            .Success; // Hoặc throw Exception nếu muốn bắt lỗi
     }
   }
 }
-extension StringToPasswordRecoveryResultStateExtension on PasswordRecoveryResultState {
+
+extension StringToPasswordRecoveryResultStateExtension
+    on PasswordRecoveryResultState {
   String get name {
     switch (this) {
       case PasswordRecoveryResultState.Success:
         return 'Success';
       case PasswordRecoveryResultState.Error:
-        return 'Error';    
+        return 'Error';
     }
   }
 }
+
 extension BooleanToOrderStatus on int {
   PasswordRecoveryResultState toValuePasswordRecoveryResultState() {
     switch (this) {
@@ -150,4 +158,35 @@ extension BooleanToOrderStatus on int {
         throw ArgumentError('Invalid OrderStatus value: $this');
     }
   }
+}
+
+enum MenuLinkType { route, url, entity }
+
+enum PopupLevel { warning, error }
+
+enum GenderType {
+  defaultValue, // -1
+  nam, // 1
+  nu, // 0
+  khac, // 2
+}
+
+enum PopupStatus { normal, warning, error }
+
+enum RelationshipType {
+  unknown, // -1
+  // Cha mẹ
+  cha, // 1
+  me, // 2
+  // Anh chị em
+  anh, // 3
+  chi, // 4
+  em, // 5
+  // Con cháu
+  con, // 6
+  chau, // 7
+  // Ông bà (nếu cần)
+  ong, // 8
+  ba,
+  other, // 9
 }

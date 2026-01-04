@@ -17,7 +17,10 @@ class LocalizationBridge {
     final localeController = Get.find<LocaleController>();
 
     // 1. cập nhật vào controller (backend or storage)
-    await localeController.setLanguage(localeController.currentLanguage.id, newLocale);
+    await localeController.setLanguage(
+      localeController.currentLanguage.id,
+      newLocale,
+    );
 
     // 2. cập nhật UI bằng LocalizationScope
     // ignore: use_build_context_synchronously

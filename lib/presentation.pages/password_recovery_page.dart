@@ -19,7 +19,9 @@ class PasswordRecoveryPage extends StatefulWidget {
 }
 
 class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
-  final RecoverPasswordController recoveryController = Get.put(RecoverPasswordController()); 
+  final RecoverPasswordController recoveryController = Get.put(
+    RecoverPasswordController(),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +29,10 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const BaseAppBar(title:"Account.PasswordRecovery", enableHomeButton: false),
+            const BaseAppBar(
+              title: "Account.PasswordRecovery",
+              enableHomeButton: false,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -43,7 +48,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                           spacing: 15,
                           children: [
                             const SizedBox(height: 20),
-                             Container(
+                            Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -54,17 +59,19 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                 tr("Account.PasswordRecovery.Tooltip"),
                                 style: const TextStyle(color: Colors.orange),
                               ),
-                            ),                            
+                            ),
                             MainTextField(
                               controller: recoveryController.emailController,
                               keyboardType: TextInputType.emailAddress,
-                              label: context.tr("Account.PasswordRecovery.Email"),
+                              label: context.tr(
+                                "Account.PasswordRecovery.Email",
+                              ),
                               validator:
                                   (value) => requiredValidator(
                                     value,
                                     "Account.Fields.Email.Required",
                                   ),
-                            ),                            
+                            ),
                           ],
                         ),
                       ),
@@ -77,13 +84,15 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                             isLoading: recoveryController.isLoadingSubmit.value,
                             width: double.infinity,
                             text: "Common.Submit",
-                            onTap: () async {                              
-                              final result = await recoveryController.recoveryPassword();   
-                              if(result['success']== true)                                                           
+                            onTap: () async {
+                              final result =
+                                  await recoveryController.recoveryPassword();
+                              if (result['success'] == true) {
                                 _showResult(context, result['message']);
+                              }
                             },
-                          )
-                        )                                                
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -95,31 +104,30 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       ),
     );
   }
+
   void _showResult(BuildContext context, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(tr("Account.PasswordRecovery")),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [            
-            const SizedBox(height: 8),
-            SelectableText(
-              message,
-              style: const TextStyle(fontSize: 12),
-            ),         
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Get.back();
-            },
-            child: Text(tr("Common.Close")),
+      builder:
+          (context) => AlertDialog(
+            title: Text(tr("Account.PasswordRecovery")),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                SelectableText(message, style: const TextStyle(fontSize: 12)),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Get.back();
+                },
+                child: Text(tr("Common.Close")),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }

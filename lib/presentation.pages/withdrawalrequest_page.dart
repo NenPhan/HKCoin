@@ -7,6 +7,7 @@ import 'package:hkcoin/presentation.pages/withdrawal_investment_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawal_profit_page.dart';
 import 'package:hkcoin/presentation.pages/withdrawalrequest_histories_page.dart';
 import 'package:hkcoin/widgets/base_app_bar.dart';
+import 'package:shimmer/shimmer.dart';
 
 class WithDrawRequestPage extends StatefulWidget {
   const WithDrawRequestPage({super.key});
@@ -43,72 +44,77 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: SpacingColumn(
-                              spacing: size.height * 0.01,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  context.tr("Account.Report.Shopping"),
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontSize: size.width * 0.05,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[300],
+                      Obx(() {
+                        if (controller.isLoadingWallet.value) {
+                          return const WalletInfoShimmer();
+                        }
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: SpacingColumn(
+                                spacing: size.height * 0.01,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    context.tr("Account.Report.Shopping"),
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontSize: size.width * 0.05,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[300],
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  controller.walletInfo?.walletShopping ??
-                                      "N/A",
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontSize: size.width * 0.05,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  Text(
+                                    controller.walletInfo?.walletShopping ??
+                                        "N/A",
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontSize: size.width * 0.05,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  controller.walletInfo?.profitsShopping ??
-                                      "N/A",
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    color: Colors.grey[600],
-                                    fontSize: size.width * 0.04,
+                                  Text(
+                                    controller.walletInfo?.profitsShopping ??
+                                        "N/A",
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      color: Colors.grey[600],
+                                      fontSize: size.width * 0.04,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: SpacingColumn(
-                              spacing: size.height * 0.01,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  context.tr("Account.Report.Walletmain"),
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontSize: size.width * 0.05,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[300],
+                            Expanded(
+                              child: SpacingColumn(
+                                spacing: size.height * 0.01,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    context.tr("Account.Report.Walletmain"),
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontSize: size.width * 0.05,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[300],
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  controller.walletInfo?.walletMain ?? "N/A",
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontSize: size.width * 0.05,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
+                                  Text(
+                                    controller.walletInfo?.walletMain ?? "N/A",
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontSize: size.width * 0.05,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -168,6 +174,56 @@ class _WithDrawRequestPagePageState extends State<WithDrawRequestPage>
           ),
         );
       },
+    );
+  }
+}
+
+class WalletInfoShimmer extends StatelessWidget {
+  const WalletInfoShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade800,
+      highlightColor: Colors.grey.shade600,
+      child: Row(
+        children: [
+          Expanded(child: _column(size)),
+          const SizedBox(width: 10),
+          Expanded(child: _column(size)),
+        ],
+      ),
+    );
+  }
+
+  Widget _column(Size size) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ===== ROW 1: TITLE =====
+        _box(width: size.width * 0.25, height: size.width * 0.035),
+        const SizedBox(height: 10),
+
+        // ===== ROW 2: BIG AMOUNT =====
+        _box(width: double.infinity, height: size.width * 0.055),
+        const SizedBox(height: 10),
+
+        // ===== ROW 3: SMALL AMOUNT =====
+        _box(width: size.width * 0.22, height: size.width * 0.03),
+      ],
+    );
+  }
+
+  Widget _box({required double width, required double height}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade700,
+        borderRadius: BorderRadius.circular(6),
+      ),
     );
   }
 }

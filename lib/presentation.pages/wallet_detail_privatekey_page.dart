@@ -52,22 +52,26 @@ class _WalletExportPrivateKeyPageState
       _loadState();
     }
   }
+
   Future<void> _loadState() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _isActive = prefs.getBool('isBackupKey') ?? false; // Mặc định là false
     });
   }
+
   Future<void> _saveState(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isBackupKey', value);
   }
+
   void _toggleState() {
     setState(() {
       _isActive = !_isActive;
       _saveState(_isActive); // Lưu trạng thái mới
     });
   }
+
   @override
   void dispose() {
     privateKeyController.dispose();
@@ -164,7 +168,7 @@ class _WalletExportPrivateKeyPageState
           _showQrCode = !_showQrCode;
         });
       },
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: Stack(
           alignment: Alignment.center,

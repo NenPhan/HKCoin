@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:hkcoin/core/enums.dart';
-
 UpdateOrderStatusParam addAddressParamFromJson(String str) =>
     UpdateOrderStatusParam.fromJson(json.decode(str));
 
@@ -44,12 +42,12 @@ class UpdateOrderStatusParam {
         to: json["To"],
         amount: json["Amount"],
         chain: json["Chain"],
-        network: json["Network"]
+        network: json["Network"],
       );
 
   Map<String, dynamic> toJson() => {
     "Id": id,
-    "OrderGuid":orderGuid,
+    "OrderGuid": orderGuid,
     "WalletAddress": walletAddress,
     "TransactionHash": transactionHash ?? "",
     "BlockNumber": blockNumber ?? "",
@@ -57,6 +55,6 @@ class UpdateOrderStatusParam {
     "To": to,
     "Amount": amount,
     "Chain": chain,
-    "Network": network
+    "Network": network,
   };
 }

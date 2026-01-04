@@ -32,7 +32,7 @@ class AppLocalizations {
     // Handle positional args: {0}, {1}, ...
     if (args != null) {
       for (int i = 0; i < args.length; i++) {
-        value = value.replaceAll('{${i}}', args[i].toString());
+        value = value.replaceAll('{$i}', args[i].toString());
       }
     }
 

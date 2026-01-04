@@ -59,8 +59,9 @@ class QRScannerController {
   }
 
   Future<void> toggleFlash() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized)
+    if (_cameraController == null || !_cameraController!.value.isInitialized) {
       return;
+    }
     _isFlashOn = !_isFlashOn;
     isFlashOn.value = _isFlashOn;
     await _cameraController!.setFlashMode(

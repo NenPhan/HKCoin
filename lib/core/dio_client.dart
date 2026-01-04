@@ -27,23 +27,20 @@ class DioClient {
   final Dio dio;
   Future<dynamic> call(DioParams fields, {String? contentType}) async {
     if (fields.host == null) {
-    } else {
-    }
+    } else {}
     if (fields.params != null) {
-
       if (fields.params != null) {
-        fields.params!.forEach((key, value) {
-        });
+        fields.params!.forEach((key, value) {});
       }
     }
     Map<String, String> header = fields.headers ?? <String, String>{};
     //String logString =
-     //   '======>API REQUEST<===============================================================================';
+    //   '======>API REQUEST<===============================================================================';
     if (fields.needAccessToken) {
-      //after login succes storage had token, if first init storage dont need init     
+      //after login succes storage had token, if first init storage dont need init
       if (_storage == null) {
         if (Storage.hadInited) {
-          _storage = Storage();// ← Không gọi factory Storage()
+          _storage = Storage(); // ← Không gọi factory Storage()
         } else {
           _storage = null; // chưa init → token = null
         }
@@ -61,7 +58,7 @@ class DioClient {
         // logString += '\nAuthorization: $basicAuth\n';
       }
     }
-   // logString +=
+    // logString +=
     //    ('\n${fields.httpMethod}: $url ${fields.body != null ? fields.body.toString() : ""}\n==================================================================================================');
     //log(logString);
     // log(header.toString());
@@ -124,19 +121,35 @@ extension ResponseExtension on Response {
     // Điều hướng đến màn hình login
     Get.offAllNamed(LoginPage.route);
   }
+
   Future<void> _redirectToNotFound() async {
     Get.offAllNamed(NotFoundPage.route);
   }
 
   // handle return data from server side to client
-  Map<String, dynamic> handleError(List<int> allowedStatusCodes) {
+  Future<Map<String, dynamic>> handleError(List<int> allowedStatusCodes) async {
     String defaultErr = Get.context?.tr('Identity.Error.DefaultError') ?? "";
     if (data == null) return {};
     try {
       Map<String, dynamic> json;
       if (statusCode == 401) {
-        _performLogout();
-      }else if (statusCode == 404) {
+        final refreshed = await _tryRefreshToken();
+
+        if (refreshed) {
+          // ⭐ Gọi lại API cũ
+          final RequestOptions request = requestOptions;
+          final Dio dio = Dio();
+
+          // Gắn token mới vào header
+          request.headers["accessToken"] = Storage().getToken;
+
+          final retryResponse = await dio.fetch(request);
+          return retryResponse.data;
+        }
+
+        // Refresh token thất bại → logout
+        await _performLogout();
+      } else if (statusCode == 404) {
         _redirectToNotFound();
         throw ServerException(message: 'Page Not Found');
       }
@@ -175,6 +188,36 @@ extension ResponseExtension on Response {
       } else {
         throw ServerException(message: defaultErr);
       }
+    }
+  }
+
+  Future<bool> _tryRefreshToken() async {
+    final refresh = Storage().getRefreshToken;
+
+    if (refresh == null || refresh.isEmpty) return false;
+
+    try {
+      final Dio dio = Dio();
+      final res = await dio.post(
+        "${AppConfig().apiUrl}/auth/refresh",
+        data: {"refreshToken": refresh},
+      );
+
+      final newToken = res.data["accessToken"];
+      final newRefresh = res.data["refreshToken"];
+
+      if (newToken == null) {
+        return false;
+      }
+
+      await Storage().saveToken(newToken);
+      if (newRefresh != null) {
+        await Storage().saveRefreshToken(newRefresh);
+      }
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class CountDisplay extends StatefulWidget {
@@ -21,9 +19,10 @@ class CountDisplay extends StatefulWidget {
   final Color countTextColor;
   final bool hideIcon;
   final Offset? badgePosition;
-   @override
+  @override
   State<CountDisplay> createState() => _CountDisplayState();
 }
+
 class _CountDisplayState extends State<CountDisplay> {
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,10 @@ class _CountDisplayState extends State<CountDisplay> {
                 right: widget.badgePosition?.dx ?? 0,
                 top: widget.badgePosition?.dy ?? 0,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: widget.countColor,
                     shape: BoxShape.circle,

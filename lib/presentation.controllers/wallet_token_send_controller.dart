@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hkcoin/core/enums.dart';
@@ -11,8 +10,10 @@ import 'package:hkcoin/data.models/blockchange_wallet_token_info.dart';
 import 'package:hkcoin/data.models/network.dart';
 import 'package:hkcoin/data.models/token_settings.dart';
 import 'package:hkcoin/data.models/wallet.dart';
+import 'package:hkcoin/localization/localization_service.dart';
 import 'package:hkcoin/presentation.controllers/blockchange_wallet_controller.dart';
 import 'package:hkcoin/presentation.pages/wallet_token_send_page.dart';
+import 'package:intl/intl.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,7 +27,8 @@ class WalletTokenSendingController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isLoadingWallets = false.obs;
   BlockchangeWalletTokenInfo? walletsInfo;
-  final TextEditingController walletRecipientController = TextEditingController();
+  final TextEditingController walletRecipientController =
+      TextEditingController();
   final TextEditingController walletAmountController = TextEditingController();
   final RxBool isLoadingSubmit = false.obs;
   final RxDouble gasFee = 0.0.obs;
@@ -45,59 +47,64 @@ class WalletTokenSendingController extends GetxController {
   late DeployedContract _transferContract;
   final String _contractAddress = "0xd6A1f22c90fd729794b1f7E528b143c0882cf23C";
   BigInt _feePercentage = BigInt.zero;
- final double _defaultBlockTime = 3.0; // Giá trị mặc định nếu không lấy được block time
+  final double _defaultBlockTime =
+      3.0; // Giá trị mặc định nếu không lấy được block time
   final int _confirmationBlocks = 2; // Số block cần xác nhận
   late Network networkStore;
   TokenSetting? tokenSettings;
 
   @override
-  void onInit() {    
+  void onInit() {
     super.onInit();
-    
-    final params = Get.arguments is WalletTokenSendingPageParam
-        ? Get.arguments as WalletTokenSendingPageParam
-        : null;
-    initialize(params);    
+
+    final params =
+        Get.arguments is WalletTokenSendingPageParam
+            ? Get.arguments as WalletTokenSendingPageParam
+            : null;
+    initialize(params);
   }
+
   Future<void> _loadTokenSettings() async {
-  try {
-    final settings = await Storage().getTokenSetting();
-    if (settings != null) {
-      tokenSettings = settings;
-    } else {
-       final blockchainWalletController = Get.find<BlockchangeWalletController>();
-       await blockchainWalletController.getTokenConfigs();
-      // Xử lý khi không có dữ liệu trong Storage
-      tokenSettings = blockchainWalletController.tokenSettings;            
+    try {
+      final settings = await Storage().getTokenSetting();
+      if (settings != null) {
+        tokenSettings = settings;
+      } else {
+        final blockchainWalletController =
+            Get.find<BlockchangeWalletController>();
+        await blockchainWalletController.getTokenConfigs();
+        // Xử lý khi không có dữ liệu trong Storage
+        tokenSettings = blockchainWalletController.tokenSettings;
+      }
+    } catch (e) {
+      // Có thể gán giá trị mặc định khi có lỗi
+      tokenSettings = TokenSetting(
+        bscScanApiKey: '',
+        contractAddressSend: _contractAddress,
+        contractFunction: 'sendBNBAndToken',
+        minBNB: 0.00001,
+        wsUrls: [],
+      );
     }
-  } catch (e) {        
-    // Có thể gán giá trị mặc định khi có lỗi
-    tokenSettings = TokenSetting(
-      bscScanApiKey: '',
-      contractAddressSend: _contractAddress,
-      contractFunction: 'sendBNBAndToken',
-      minBNB: 0.00001,
-      wsUrls: [],
-    );
-  }
     update(["wallet-token-sending-page"]);
-}
+  }
+
   Future<void> initialize(WalletTokenSendingPageParam? params) async {
-    isLoading.value=true;
-    try{
+    isLoading.value = true;
+    try {
       await _loadTokenSettings();
-      isLoading.value=false;
+      isLoading.value = false;
       if (params != null) {
         walletsInfo = params.wallet;
         await _initializeWeb3();
         await _fetchFeePercentage();
         await _fetchTokenInfo();
       }
-    }catch(e){
+    } catch (e) {
       debugPrint("initialize $e");
-    }finally{
-      isLoading.value=false;
-    }        
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> _initializeWeb3() async {
@@ -107,8 +114,10 @@ class WalletTokenSendingController extends GetxController {
       return;
     }
     networkStore = networkStores;
-    _client = Web3Client(networkStore.rpcUrl?? _rpcUrl, http.Client());    
-    _credentials = await _client.credentialsFromPrivateKey(decryptText(walletsInfo!.privateKey!, ""));
+    _client = Web3Client(networkStore.rpcUrl ?? _rpcUrl, http.Client());
+    _credentials = await _client.credentialsFromPrivateKey(
+      decryptText(walletsInfo!.privateKey!, ""),
+    );
     final String transferAbi = '''[
       {
         "inputs": [
@@ -147,8 +156,11 @@ class WalletTokenSendingController extends GetxController {
     );
   }
 
-  Future<BigInt> _checkAllowance(double amount) async {   
-    final web3Client = Web3Client(networkStore.rpcUrl ?? _rpcUrl, http.Client());
+  Future<BigInt> _checkAllowance(double amount) async {
+    final web3Client = Web3Client(
+      networkStore.rpcUrl ?? _rpcUrl,
+      http.Client(),
+    );
     if (walletsInfo!.symbol == 'BNB') return BigInt.from(0);
 
     const String tokenAbi = '''[
@@ -196,10 +208,12 @@ class WalletTokenSendingController extends GetxController {
       }
     ]''';
 
-    final amountInWei =amount.toWei(decimals: _decimals);
+    final amountInWei = amount.toWei(decimals: _decimals);
     final contract = DeployedContract(
       ContractAbi.fromJson(tokenAbi, 'BEP20Token'),
-      EthereumAddress.fromHex(walletsInfo!.contractAddress!), // Hợp đồng token BEP-20: 0x377482392014118EBe37662f022939E0b5E5479a
+      EthereumAddress.fromHex(
+        walletsInfo!.contractAddress!,
+      ), // Hợp đồng token BEP-20: 0x377482392014118EBe37662f022939E0b5E5479a
     );
 
     try {
@@ -207,11 +221,15 @@ class WalletTokenSendingController extends GetxController {
         contract: contract,
         function: contract.function('allowance'),
         params: [
-          EthereumAddress.fromHex(walletsInfo!.walletAddress!), // Ví người gửi: 0x62e545E56909863EEffe0bAB0Dcfd720ba5Fb53b
-          EthereumAddress.fromHex(tokenSettings!.contractAddressSend), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
+          EthereumAddress.fromHex(
+            walletsInfo!.walletAddress!,
+          ), // Ví người gửi: 0x62e545E56909863EEffe0bAB0Dcfd720ba5Fb53b
+          EthereumAddress.fromHex(
+            tokenSettings!.contractAddressSend,
+          ), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
         ],
       );
-      final allowance = result[0] as BigInt;     
+      final allowance = result[0] as BigInt;
       return allowance >= amountInWei ? allowance : BigInt.zero;
     } catch (e) {
       print('Error in _checkAllowance: $e');
@@ -222,8 +240,11 @@ class WalletTokenSendingController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>> approveToken(double amount) async {    
-    final web3Client = Web3Client(networkStore.rpcUrl ?? _rpcUrl, http.Client());
+  Future<Map<String, dynamic>> approveToken(double amount) async {
+    final web3Client = Web3Client(
+      networkStore.rpcUrl ?? _rpcUrl,
+      http.Client(),
+    );
     if (walletsInfo!.symbol == 'BNB') {
       return {'success': true, 'message': 'No approval needed for BNB'};
     }
@@ -243,19 +264,27 @@ class WalletTokenSendingController extends GetxController {
 
     final tokenContract = DeployedContract(
       ContractAbi.fromJson(tokenAbi, 'BEP20Token'),
-      EthereumAddress.fromHex(walletsInfo!.contractAddress!), // Hợp đồng token BEP-20: 0x377482392014118EBe37662f022939E0b5E5479a
+      EthereumAddress.fromHex(
+        walletsInfo!.contractAddress!,
+      ), // Hợp đồng token BEP-20: 0x377482392014118EBe37662f022939E0b5E5479a
     );
 
-    final amountInWei =amount.toWei(decimals: _decimals);// BigInt.from(amount * 1e18);
+    final amountInWei = amount.toWei(
+      decimals: _decimals,
+    ); // BigInt.from(amount * 1e18);
     print("rpc approveToken: $amountInWei");
     try {
       final approveFunction = tokenContract.function('approve');
       final approveTx = await web3Client.sendTransaction(
         _credentials,
         Transaction(
-          to: EthereumAddress.fromHex(walletsInfo!.contractAddress!), // Hợp đồng token BEP-20
+          to: EthereumAddress.fromHex(
+            walletsInfo!.contractAddress!,
+          ), // Hợp đồng token BEP-20
           data: approveFunction.encodeCall([
-            EthereumAddress.fromHex(tokenSettings!.contractAddressSend), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
+            EthereumAddress.fromHex(
+              tokenSettings!.contractAddressSend,
+            ), // Hợp đồng trung gian: 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
             amountInWei,
           ]),
         ),
@@ -267,10 +296,10 @@ class WalletTokenSendingController extends GetxController {
       final receipt = await web3Client.getTransactionReceipt(approveTx);
       // if (receipt == null || receipt.status == false) {
       //   throw Exception('Approval transaction failed');
-      // }      
+      // }
       // Kiểm tra lại allowance sau khi phê duyệt
       final newAllowance = await _checkAllowance(amount);
-     // print('New allowance after approve: $newAllowance');
+      // print('New allowance after approve: $newAllowance');
 
       return {
         'success': true,
@@ -278,25 +307,33 @@ class WalletTokenSendingController extends GetxController {
         'newAllowance': newAllowance,
       };
     } catch (e) {
-      print('Error in approveToken: $e');     
+      print('Error in approveToken: $e');
       Get.snackbar('Error', 'Failed to approve token: ${e.toString()}');
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
+
   Future<Map<String, dynamic>> validateBalances() async {
-    try{                
-      var amount = walletAmountController.text.isNotEmpty?walletAmountController.text.toDouble():0.toDouble();
-      var amountInWei = walletAmountController.text.isNotEmpty?walletAmountController.text.toDouble().toWei(decimals: _decimals):BigInt.from(0);
+    try {
+      var amount =
+          walletAmountController.text.isNotEmpty
+              ? walletAmountController.text.toDouble()
+              : 0.toDouble();
+      var amountInWei =
+          walletAmountController.text.isNotEmpty
+              ? walletAmountController.text.toDouble().toWei(
+                decimals: _decimals,
+              )
+              : BigInt.from(0);
       if (walletsInfo!.symbol != 'BNB') {
         final tokenBalance = await getTokenBalance(
           walletsInfo!.walletAddress!,
           walletsInfo!.contractAddress!,
           _client,
-        );        
-        final balanceInWei =BigInt.from(tokenBalance['balance']).toWei(decimals: _decimals);// BigInt.from(tokenBalance['balance'] * pow(10, _decimals));        
+        );
+        final balanceInWei = BigInt.from(tokenBalance['balance']).toWei(
+          decimals: _decimals,
+        ); // BigInt.from(tokenBalance['balance'] * pow(10, _decimals));
         if (balanceInWei < amountInWei) {
           return {
             'success': false,
@@ -306,31 +343,35 @@ class WalletTokenSendingController extends GetxController {
                 .replaceAll('{2}', '${walletsInfo!.totalBalance}'),
           };
         }
-      }    
-      final estimatedFee = await _estimateGasFee(walletRecipientController.text, amount);       
-      if (!estimatedFee['success']) {
-        return {
-          'success': false,
-          'message': estimatedFee['message'],
-        };
       }
-    
-      return {'success': true};    
-    }catch(e){
+      final estimatedFee = await _estimateGasFee(
+        walletRecipientController.text,
+        amount,
+      );
+      if (!estimatedFee['success']) {
+        return {'success': false, 'message': estimatedFee['message']};
+      }
+
+      return {'success': true};
+    } catch (e) {
       return {
         'success': false,
         'message': tr("Account.wallet.BalanceCheckFailed"),
       };
     }
   }
-  Future<Map<String, dynamic>> sendBNBAndToken(String recipient, double amount) async {
+
+  Future<Map<String, dynamic>> sendBNBAndToken(
+    String recipient,
+    double amount,
+  ) async {
     try {
       final isBNB = walletsInfo!.symbol == 'BNB';
       final amountInWei = amount.toWei(decimals: _decimals, isBNB: isBNB);
       // final amountInWei = isBNB
       //     ? BigInt.parse((amount * 1e18).toStringAsFixed(0))
       //     : BigInt.from(amount * 1e18);
-      final minBNBInWei =_minBNB.toWei(decimals: _decimals); 
+      final minBNBInWei = _minBNB.toWei(decimals: _decimals);
 
       // Kiểm tra và phê duyệt allowance nếu cần
       if (!isBNB && amountInWei > BigInt.zero) {
@@ -347,14 +388,20 @@ class WalletTokenSendingController extends GetxController {
       }
 
       // Gửi giao dịch chuyển tiền qua hợp đồng trung gian
-      final function = _transferContract.function(tokenSettings!.contractFunction);//sendBNBAndToken
+      final function = _transferContract.function(
+        tokenSettings!.contractFunction,
+      ); //sendBNBAndToken
       final gasPrice = await _client.getGasPrice();
       final transaction = Transaction(
         to: EthereumAddress.fromHex(tokenSettings!.contractAddressSend),
         value: EtherAmount.inWei(minBNBInWei),
         gasPrice: gasPrice,
         data: function.encodeCall([
-          EthereumAddress.fromHex(isBNB ? '0x0000000000000000000000000000000000000000' : walletsInfo!.contractAddress!),
+          EthereumAddress.fromHex(
+            isBNB
+                ? '0x0000000000000000000000000000000000000000'
+                : walletsInfo!.contractAddress!,
+          ),
           EthereumAddress.fromHex(recipient), // Ví người nhận
           isBNB ? BigInt.zero : amountInWei,
           isBNB ? amountInWei : BigInt.zero,
@@ -367,53 +414,48 @@ class WalletTokenSendingController extends GetxController {
         transaction,
         chainId: networkStore.chainId, // BSC Testnet chain ID 97,56
       );
-      
 
       // Chờ giao dịch được xác nhận
       final receipt = await waitForTransactionReceipt(txHash, confirmations: 1);
-     // final receipt = await _client.getTransactionReceipt(txHash);
+      // final receipt = await _client.getTransactionReceipt(txHash);
       if (receipt == null || receipt.status == false) {
         throw Exception('Transaction failed');
-      }      
-      return {
-        'success': true,
-        'txHash': txHash,
-      };
+      }
+      return {'success': true, 'txHash': txHash};
     } catch (e) {
       print('Error in sendBNBAndToken: $e');
       Get.snackbar('Error', 'Failed to send transaction: ${e.toString()}');
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
+
   Future<TransactionReceipt?> waitForTransactionReceipt(
     String txHash, {
     int confirmations = 1,
     Duration timeout = const Duration(minutes: 1),
   }) async {
     final deadline = DateTime.now().add(timeout);
-    
+
     while (DateTime.now().isBefore(deadline)) {
       final receipt = await _client.getTransactionReceipt(txHash);
-      
+
       if (receipt != null) {
         if (confirmations <= 1) return receipt;
-        
+
         final current = await _client.getBlockNumber();
         final confirmedBlocks = current - receipt.blockNumber.blockNum;
-        
+
         if (confirmedBlocks >= confirmations) {
           return receipt;
         }
       }
-      
+
       await Future.delayed(const Duration(seconds: 1));
     }
-    
+
     throw TimeoutException('Transaction not confirmed after $timeout');
   }
+
   Future<void> _fetchFeePercentage() async {
     try {
       final function = _transferContract.function('feePercentage');
@@ -422,7 +464,7 @@ class WalletTokenSendingController extends GetxController {
         function: function,
         params: [],
       );
-      _feePercentage = result[0] as BigInt;      
+      _feePercentage = result[0] as BigInt;
     } catch (e) {
       print('Error in _fetchFeePercentage: $e');
     }
@@ -485,12 +527,12 @@ class WalletTokenSendingController extends GetxController {
         EthereumAddress.fromHex(walletsInfo!.contractAddress!),
       );
       // Fetch decimals from the token contract
-    final decimalsResult = await _client.call(
-      contract: _tokenContract!,
-      function: _tokenContract!.function('decimals'),
-      params: [],
-    );
-    _decimals = (decimalsResult[0] as BigInt).toInt();
+      final decimalsResult = await _client.call(
+        contract: _tokenContract!,
+        function: _tokenContract!.function('decimals'),
+        params: [],
+      );
+      _decimals = (decimalsResult[0] as BigInt).toInt();
       await _checkTokenBalance();
     } catch (e) {
       print('Lỗi _fetchTokenInfo: $e');
@@ -514,14 +556,16 @@ class WalletTokenSendingController extends GetxController {
           var bnb = await web3Client.getBalance(
             EthereumAddress.fromHex(walletsInfo!.walletAddress!),
           );
-          walletsInfo!.totalBalance = bnb.getInWei.toDouble().fromWeiToBNB(decimals: _decimals);
+          walletsInfo!.totalBalance = bnb.getInWei.toDouble().fromWeiToBNB(
+            decimals: _decimals,
+          );
           walletsInfo!.balanceUSD = walletsInfo!.totalBalance! * 665;
-        } else if (walletsInfo!.chain != Chain.BNB) {         
+        } else if (walletsInfo!.chain != Chain.BNB) {
           final result = await getTokenBalance(
             walletsInfo!.walletAddress!,
             walletsInfo!.contractAddress!,
             web3Client,
-          );         
+          );
           walletsInfo!.totalBalance = result['balance'].toDouble();
         }
       } catch (e) {
@@ -533,7 +577,7 @@ class WalletTokenSendingController extends GetxController {
         contract: _tokenContract!,
         function: function,
         params: [EthereumAddress.fromHex(_credentials.address.hex)],
-      );      
+      );
     } catch (e) {
       print('Lỗi _checkTokenBalance: $e');
     }
@@ -547,7 +591,10 @@ class WalletTokenSendingController extends GetxController {
   }
 
   Future<Map<String, dynamic>> getTokenBalance(
-      String walletAddress, String tokenAddress, Web3Client web3client) async {
+    String walletAddress,
+    String tokenAddress,
+    Web3Client web3client,
+  ) async {
     const tokenAbi = '''[
       {
         "constant": true,
@@ -588,7 +635,8 @@ class WalletTokenSendingController extends GetxController {
       );
       final rawBalance = balance[0] as BigInt;
 
-      final balanceValue = rawBalance / BigInt.from(10).pow(decimalsValue.toInt());
+      final balanceValue =
+          rawBalance / BigInt.from(10).pow(decimalsValue.toInt());
 
       return {
         'balance': balanceValue.toDouble(),
@@ -599,7 +647,7 @@ class WalletTokenSendingController extends GetxController {
       throw Exception('Failed to get token balance: $e');
     }
   }
- 
+
   String formatNumber(double number) {
     final formatter = NumberFormat("#,##0.00", "en_US");
     return formatter.format(number);
@@ -629,187 +677,223 @@ class WalletTokenSendingController extends GetxController {
     isFeeLoading.value = true;
     update(["wallet-token-sending-page"]);
     final recipient = walletRecipientController.text;
-    amount = walletAmountController.text.isEmpty ? 0 : walletAmountController.text.toDouble();
+    amount =
+        walletAmountController.text.isEmpty
+            ? 0
+            : walletAmountController.text.toDouble();
     if (recipient.isNotEmpty && amount > 0) {
-      final estimatedFee = await _estimateGasFee(recipient, amount);    
+      final estimatedFee = await _estimateGasFee(recipient, amount);
       if (estimatedFee['success']) {
-        maxGasFee.value = estimatedFee['gasFee'].toString().toDouble();// .toStringAsFixed(8);
+        maxGasFee.value =
+            estimatedFee['gasFee']
+                .toString()
+                .toDouble(); // .toStringAsFixed(8);
         estimatedTime.value = estimatedFee['estimatedTime'];
       } else {
         estimatedTime.value = 'N/A';
       }
-    }else{      
-        estimatedTime.value = 'N/A';
+    } else {
+      estimatedTime.value = 'N/A';
     }
 
     await Future.delayed(const Duration(milliseconds: 500));
     gasFee.value = maxGasFee.value;
-   // estimatedTime.value = '<5,222 giây';
+    // estimatedTime.value = '<5,222 giây';
     totalAmount.value = amount + gasFee.value;
     isFeeLoading.value = false;
     update(["wallet-token-sending-page"]);
   }
 
-  Future<Map<String, dynamic>> _estimateGasFee(String recipient, double amount) async {
-  try {
-    // Kiểm tra địa chỉ người nhận
-    if (!RegExp(r'^0x[a-fA-F0-9]{40}$').hasMatch(recipient)) {    
-      return {
+  Future<Map<String, dynamic>> _estimateGasFee(
+    String recipient,
+    double amount,
+  ) async {
+    try {
+      // Kiểm tra địa chỉ người nhận
+      if (!RegExp(r'^0x[a-fA-F0-9]{40}$').hasMatch(recipient)) {
+        return {
           'success': false,
-          'message': tr("Checkout.Payment.Order.Recipient")
-        }; 
-    }
-   
-    final isBNB = walletsInfo!.symbol == 'BNB';
-    final amountInWei =amount.toWei(decimals: _decimals,isBNB: isBNB);
-    final minBNBInWei =_minBNB.toWei(decimals: _decimals);
-    
-    // Kiểm tra số dư BNB của ví người gửi
-    final bnbBalance = await _client.getBalance(EthereumAddress.fromHex(walletsInfo!.walletAddress!));   
-    if (isBNB && bnbBalance.getInWei < amountInWei) {
-      return {
-        'success': false,
-        'message': tr("Checkout.Payment.Order.InsufficientBNBForFee").replaceAll('{0}', '${bnbBalance.getInWei.toDouble().fromWeiToBNB(decimals: _decimals)} BNB')
-      };       
-    }
-    if (isBNB) {
-      // Ước tính gas cho chuyển BNB
-      final gasPrice = await _client.getGasPrice();
-      final transferGas = await _client.estimateGas(
-        sender: _credentials.address,
-        to: EthereumAddress.fromHex(recipient),
-        value: EtherAmount.inWei(amountInWei),
+          'message': tr("Checkout.Payment.Order.Recipient"),
+        };
+      }
+
+      final isBNB = walletsInfo!.symbol == 'BNB';
+      final amountInWei = amount.toWei(decimals: _decimals, isBNB: isBNB);
+      final minBNBInWei = _minBNB.toWei(decimals: _decimals);
+
+      // Kiểm tra số dư BNB của ví người gửi
+      final bnbBalance = await _client.getBalance(
+        EthereumAddress.fromHex(walletsInfo!.walletAddress!),
       );
-      
-      final gasFeeInWei = gasPrice.getInWei * transferGas;
-      final gasFeeInBNB = gasFeeInWei / BigInt.from(10).pow(_decimals);
+      if (isBNB && bnbBalance.getInWei < amountInWei) {
+        return {
+          'success': false,
+          'message': tr(
+            "Checkout.Payment.Order.InsufficientBNBForFee",
+          ).replaceAll(
+            '{0}',
+            '${bnbBalance.getInWei.toDouble().fromWeiToBNB(decimals: _decimals)} BNB',
+          ),
+        };
+      }
+      if (isBNB) {
+        // Ước tính gas cho chuyển BNB
+        final gasPrice = await _client.getGasPrice();
+        final transferGas = await _client.estimateGas(
+          sender: _credentials.address,
+          to: EthereumAddress.fromHex(recipient),
+          value: EtherAmount.inWei(amountInWei),
+        );
 
-      // Tính thời gian ước tính
-      final blockTime = await _getBlockTime();
-      final estimatedSeconds = blockTime * _confirmationBlocks;
-      final formattedEstimatedTime = _formatEstimatedTime(estimatedSeconds);
+        final gasFeeInWei = gasPrice.getInWei * transferGas;
+        final gasFeeInBNB = gasFeeInWei / BigInt.from(10).pow(_decimals);
 
-      return {
-        'success': true,
-        'gasFee': gasFeeInBNB.toDouble(),
-        'serviceFee': 0.0, // Không có phí dịch vụ cho chuyển BNB thông thường
-        'totalBNB': gasFeeInBNB.toDouble(),
-        'estimatedTime': formattedEstimatedTime,
-      };
-    }else{
-      // Kiểm tra số dư token (nếu không phải BNB)
-      BigInt approveGas = BigInt.zero;
-      BigInt allowance = BigInt.zero;
-      if (!isBNB && amountInWei > BigInt.zero) {
-        final tokenBalance = await getTokenBalance(
-          walletsInfo!.walletAddress!, // 0x62e545E56909863EEffe0bAB0Dcfd720ba5Fb53b
-          walletsInfo!.contractAddress!, // 0x377482392014118EBe37662f022939E0b5E5479a
-          _client,
-        );              
-        var balance = BigInt.from(tokenBalance['balance'].toDouble()).toWei(decimals: _decimals);        
-        if (balance < amountInWei) {
-          return {
-            'success': false,
-            'message': tr('Insufficient token balance. Available: ${tokenBalance['balance']}')
-          };             
-        }
+        // Tính thời gian ước tính
+        final blockTime = await _getBlockTime();
+        final estimatedSeconds = blockTime * _confirmationBlocks;
+        final formattedEstimatedTime = _formatEstimatedTime(estimatedSeconds);
 
-        // Kiểm tra allowance
-        allowance = await _checkAllowance(amount);      
-        if (allowance < amountInWei) {
-          if (_tokenContract == null) {
+        return {
+          'success': true,
+          'gasFee': gasFeeInBNB.toDouble(),
+          'serviceFee': 0.0, // Không có phí dịch vụ cho chuyển BNB thông thường
+          'totalBNB': gasFeeInBNB.toDouble(),
+          'estimatedTime': formattedEstimatedTime,
+        };
+      } else {
+        // Kiểm tra số dư token (nếu không phải BNB)
+        BigInt approveGas = BigInt.zero;
+        BigInt allowance = BigInt.zero;
+        if (!isBNB && amountInWei > BigInt.zero) {
+          final tokenBalance = await getTokenBalance(
+            walletsInfo!
+                .walletAddress!, // 0x62e545E56909863EEffe0bAB0Dcfd720ba5Fb53b
+            walletsInfo!
+                .contractAddress!, // 0x377482392014118EBe37662f022939E0b5E5479a
+            _client,
+          );
+          var balance = BigInt.from(
+            tokenBalance['balance'].toDouble(),
+          ).toWei(decimals: _decimals);
+          if (balance < amountInWei) {
             return {
               'success': false,
-              'message': 'Token contract not initialized'
-            };               
+              'message': tr(
+                'Insufficient token balance. Available: ${tokenBalance['balance']}',
+              ),
+            };
           }
-          final approveResult = await approveToken(amount);
+
+          // Kiểm tra allowance
+          allowance = await _checkAllowance(amount);
+          if (allowance < amountInWei) {
+            if (_tokenContract == null) {
+              return {
+                'success': false,
+                'message': 'Token contract not initialized',
+              };
+            }
+            final approveResult = await approveToken(amount);
             if (!approveResult['success']) {
               return {
                 'success': false,
                 'error': 'Approval failed: ${approveResult['error']}',
               };
-            }       
+            }
+          }
         }
-      }
 
-      // Ước tính gas cho sendBNBAndToken
-      final function = _transferContract.function(tokenSettings!.contractFunction);
-      final gasPrice = await _client.getGasPrice().catchError((e) {
-        print('Failed to get gas price: $e');
-        throw Exception('Failed to get gas price: $e');
-      });    
+        // Ước tính gas cho sendBNBAndToken
+        final function = _transferContract.function(
+          tokenSettings!.contractFunction,
+        );
+        final gasPrice = await _client.getGasPrice().catchError((e) {
+          print('Failed to get gas price: $e');
+          throw Exception('Failed to get gas price: $e');
+        });
 
-      try {
-        final transferGas = await _client.estimateGas(
-          sender: _credentials.address,
-          to: EthereumAddress.fromHex(tokenSettings!.contractAddressSend??_contractAddress), // 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
-          value: EtherAmount.inWei(minBNBInWei),
-          data: function.encodeCall([
-            EthereumAddress.fromHex(isBNB ? '0x0000000000000000000000000000000000000000' : walletsInfo!.contractAddress!),
-            EthereumAddress.fromHex(recipient),
-            isBNB ? BigInt.zero : amountInWei,
-            isBNB ? amountInWei : BigInt.zero,
-            minBNBInWei,
-          ]),
-        );      
-        final gasFeeInWei = gasPrice.getInWei * (approveGas + transferGas);
-        final totalBNBInWei = gasFeeInWei + minBNBInWei;
-        final totalBNB = totalBNBInWei / BigInt.from(10).pow(_decimals);
+        try {
+          final transferGas = await _client.estimateGas(
+            sender: _credentials.address,
+            to: EthereumAddress.fromHex(
+              tokenSettings!.contractAddressSend ?? _contractAddress,
+            ), // 0xd6A1f22c90fd729794b1f7E528b143c0882cf23C
+            value: EtherAmount.inWei(minBNBInWei),
+            data: function.encodeCall([
+              EthereumAddress.fromHex(
+                isBNB
+                    ? '0x0000000000000000000000000000000000000000'
+                    : walletsInfo!.contractAddress!,
+              ),
+              EthereumAddress.fromHex(recipient),
+              isBNB ? BigInt.zero : amountInWei,
+              isBNB ? amountInWei : BigInt.zero,
+              minBNBInWei,
+            ]),
+          );
+          final gasFeeInWei = gasPrice.getInWei * (approveGas + transferGas);
+          final totalBNBInWei = gasFeeInWei + minBNBInWei;
+          final totalBNB = totalBNBInWei / BigInt.from(10).pow(_decimals);
 
-        final serviceFeeInWei = (minBNBInWei * _feePercentage) / BigInt.from(10000);
-        final serviceFeeInBNB = BigInt.from(serviceFeeInWei) / BigInt.from(10).pow(_decimals);
-        final blockTime = await _getBlockTime();
+          final serviceFeeInWei =
+              (minBNBInWei * _feePercentage) / BigInt.from(10000);
+          final serviceFeeInBNB =
+              BigInt.from(serviceFeeInWei) / BigInt.from(10).pow(_decimals);
+          final blockTime = await _getBlockTime();
           final estimatedSeconds = blockTime * _confirmationBlocks;
           final formattedEstimatedTime = _formatEstimatedTime(estimatedSeconds);
 
-        return {
-          'success': true,
-          'gasFee': gasFeeInWei / BigInt.from(10).pow(_decimals),
-          'serviceFee': serviceFeeInBNB,
-          'totalBNB': totalBNB,
-          'minBNB': _minBNB,
-          'needsApproval': !isBNB && amountInWei > BigInt.zero && allowance < amountInWei,
-          'estimatedTime': formattedEstimatedTime,
-        };
-      } catch (e) {
-        print('Failed to estimate transfer gas: $e');
-        return {
-          'success': false,
-          'message': 'Failed to estimate transfer gas: $e',
-        }; 
+          return {
+            'success': true,
+            'gasFee': gasFeeInWei / BigInt.from(10).pow(_decimals),
+            'serviceFee': serviceFeeInBNB,
+            'totalBNB': totalBNB,
+            'minBNB': _minBNB,
+            'needsApproval':
+                !isBNB && amountInWei > BigInt.zero && allowance < amountInWei,
+            'estimatedTime': formattedEstimatedTime,
+          };
+        } catch (e) {
+          print('Failed to estimate transfer gas: $e');
+          return {
+            'success': false,
+            'message': 'Failed to estimate transfer gas: $e',
+          };
+        }
       }
-    }    
-  } catch (e) {
-    print('Error in _estimateGasFee: $e');
-    return {
-      'success': false,
-      'message': 'Error in _estimateGasFee: $e',
-    };
+    } catch (e) {
+      print('Error in _estimateGasFee: $e');
+      return {'success': false, 'message': 'Error in _estimateGasFee: $e'};
+    }
   }
-}
-String _formatEstimatedTime(double seconds) {
+
+  String _formatEstimatedTime(double seconds) {
     if (seconds < 60) {
-      return tr("Account.wallet.SendPage.EstimatedTime.Second").replaceAll('{0}',seconds.toStringAsFixed(0));
+      return tr(
+        "Account.wallet.SendPage.EstimatedTime.Second",
+      ).replaceAll('{0}', seconds.toStringAsFixed(0));
     } else {
       final minutes = (seconds / 60).floor();
       final remainingSeconds = (seconds % 60).toStringAsFixed(0);
-      return tr("Account.wallet.SendPage.EstimatedTime").replaceAll('{0}',minutes.toString()).replaceAll('{1}', remainingSeconds);      
+      return tr("Account.wallet.SendPage.EstimatedTime")
+          .replaceAll('{0}', minutes.toString())
+          .replaceAll('{1}', remainingSeconds);
     }
   }
-Future<double> _getBlockTime() async {
-  try {
-    final startBlock = await _client.getBlockNumber();       
-    final endBlock = await _client.getBlockNumber();    
-    final blocks = endBlock - startBlock;
-    if (blocks > 0) {
-      final blockTime = 10.0 / blocks;      
-      return blockTime;
-    } else {      
-      return _defaultBlockTime;
+
+  Future<double> _getBlockTime() async {
+    try {
+      final startBlock = await _client.getBlockNumber();
+      final endBlock = await _client.getBlockNumber();
+      final blocks = endBlock - startBlock;
+      if (blocks > 0) {
+        final blockTime = 10.0 / blocks;
+        return blockTime;
+      } else {
+        return _defaultBlockTime;
+      }
+    } catch (e) {
+      return _defaultBlockTime; // Trả về giá trị mặc định nếu có lỗi
     }
-  } catch (e) {    
-    return _defaultBlockTime; // Trả về giá trị mặc định nếu có lỗi
   }
-}
 }

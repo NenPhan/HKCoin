@@ -6,14 +6,15 @@ import 'package:hkcoin/widgets/base_app_bar.dart';
 
 class NotFoundPage extends StatefulWidget {
   static const String route = "/not-found";
-  
+
   const NotFoundPage({super.key});
 
   @override
   State<NotFoundPage> createState() => _NotFoundPageState();
 }
 
-class _NotFoundPageState extends State<NotFoundPage> with SingleTickerProviderStateMixin {
+class _NotFoundPageState extends State<NotFoundPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -24,11 +25,8 @@ class _NotFoundPageState extends State<NotFoundPage> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    );
+
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
   }
 
   @override
@@ -56,7 +54,7 @@ class _NotFoundPageState extends State<NotFoundPage> with SingleTickerProviderSt
               ),
             ),
           ),
-          
+
           // Content
           Center(
             child: SingleChildScrollView(
@@ -68,7 +66,7 @@ class _NotFoundPageState extends State<NotFoundPage> with SingleTickerProviderSt
                   ScaleTransition(
                     scale: _animation,
                     child: Column(
-                      children: [                      
+                      children: [
                         const SizedBox(height: 20),
                         Text(
                           '404',
@@ -88,32 +86,34 @@ class _NotFoundPageState extends State<NotFoundPage> with SingleTickerProviderSt
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Message with fade animation
                   FadeTransition(
                     opacity: _controller,
                     child: Text(
                       tr('Common.PageNotFound'),
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 10),
-                  
+
                   // Submessage
                   Text(
                     tr('NotFoundPage.Body'),
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Animated button with hover effect
                   MouseRegion(
                     cursor: SystemMouseCursors.click,
@@ -144,13 +144,15 @@ class _NotFoundPageState extends State<NotFoundPage> with SingleTickerProviderSt
                         borderRadius: BorderRadius.circular(30),
                         child: Text(
                           tr('Account.Login.BackHome'),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
                     ),
-                  ),                                                                       
+                  ),
                 ],
               ),
             ),
